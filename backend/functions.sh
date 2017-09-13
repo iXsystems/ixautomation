@@ -6,7 +6,7 @@ export BUILDTAG
 
 cleanup_workdir()
 {
-  if [ -n "$WORKSPACE" ] ; then return 0 ; fi
+  if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
   if [ -z "$MASTERWRKDIR" ] ; then return 0 ; fi
   if [ ! -d "$MASTERWRKDIR" ] ; then return 0 ; fi
   if [ "$MASTERWRKDIR" = "/" ] ; then return 0 ; fi
@@ -29,7 +29,7 @@ cleanup_workdir()
 
 create_workdir()
 {
-  if [ -n "$WORKSPACE" ] ; then return 0 ; fi
+  if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
   if [ ! -d "/tmp/build" ] ; then
      mkdir /tmp/build
   fi

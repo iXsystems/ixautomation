@@ -10,8 +10,10 @@ TYPE="${1}"
 BUILD="${2}"
 BRANCH="${3}"
 
-# Set JENKINS var
-export USING_JENKINS="YES"
+# Are we using jenkins?
+if [ -n "$WORKSPACE" ] ; then
+  export USING_JENKINS="YES"
+fi
 
 display_usage() {
 
