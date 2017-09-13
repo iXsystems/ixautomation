@@ -7,8 +7,6 @@ cd "${PROGDIR}"
 
 # Set the variables
 TYPE="${1}"
-BUILD="${2}"
-BRANCH="${3}"
 
 # Are we using jenkins?
 if [ -n "$WORKSPACE" ] ; then
