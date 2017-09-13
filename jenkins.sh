@@ -34,9 +34,6 @@ fi
 
 # Source our functions
 cwd="`realpath $0 | xargs dirname`"
-if [ -f "${cwd}/config/build.conf" ] ; then
-  . ${cwd}/config/build.conf
-fi
 . ${cwd}/backend/functions.sh
 
 ######################################################
