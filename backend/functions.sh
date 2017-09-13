@@ -4,6 +4,10 @@
 BUILDTAG="$BUILD"
 export BUILDTAG
 
+# Source our functions
+cwd="`realpath $0 | xargs dirname`"
+. ${cwd}/backend/functions-vm.sh
+
 cleanup_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
@@ -45,6 +49,12 @@ create_workdir()
 
   cd ${MASTERWRKDIR}
   if [ $? -ne 0 ] ; then exit_clean; fi
+}
+
+exit_clean()
+{
+  cleanup_workdir
+  exit 1
 }
 
 jenkins_freenas_tests()
