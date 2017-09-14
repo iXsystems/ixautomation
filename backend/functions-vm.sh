@@ -2,7 +2,7 @@
 
 bhyve_select_iso()
 {
-  if [ -n "$USING_JENKINS" ] ; then return 0 ; fi 
+  if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
   [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
   # If we aren't running as part of the build process, list ISOs in the $ISODIR
@@ -27,9 +27,22 @@ bhyve_select_iso()
 
     # Exit cleanly if no ISO found in $ISODIR
     if [ $iso_cnt -lt 1 ] ; then
-      echo "No local ISO found in \"${ISODIR}\""
-      echo "You can change this path by setting \$IXBUILD_FREENAS_ISODIR in build.conf"
-      exit_clean
+      echo -n "No local ISO found would you like to fetch the latest FreeNAS ISO? (y/n): "
+      read download_confirmed
+      if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
+        cd ${ISODIR}
+        isoname=$(curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"' | cut -d '>' -f 2 | cut -d '<' -f '1')
+        fetch http://download.freenas.org/11/MASTER/latest/x64/$isoname
+        USER=$(sh -c 'echo ${SUDO_USER}')
+        chown $USER *.iso
+        cd -
+      else
+        echo "Please put a FreeNas ISO in \"${ISODIR}\""
+        exit_clean
+      fi
+
+      #echo "You can change this path by setting \$IXBUILD_FREENAS_ISODIR in build.conf"
+
     fi
 
     # Our to-be-determined file name of the ISO to test; must be inside $ISODIR
@@ -39,7 +52,7 @@ bhyve_select_iso()
     if [ $iso_cnt -eq 1 ] ; then
       # Snatch the first (only) ISO listed in the directory
       iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'NR == 1 {print $9}')"
-    else 
+    else
       # Otherwise, loop until we get a valid user selection
       while :
       do
