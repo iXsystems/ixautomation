@@ -61,6 +61,9 @@ jenkins_freenas_tests()
 {
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
+  bhyve_select_iso
+  bhyve_install_iso
+  bhyve_boot
   cleanup_workdir
 }
 
