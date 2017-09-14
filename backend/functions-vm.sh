@@ -77,6 +77,7 @@ bhyve_select_iso()
 # $1 = The path to a FreeNAS/TrueNAS ISO for installation
 bhyve_install_iso()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   if [ ! -f "/usr/local/share/uefi-firmware/BHYVE_UEFI.fd" ] ; then
     echo "File not found: /usr/local/share/uefi-firmware/BHYVE_UEFI.fd"
     echo "Install the \"uefi-edk2-bhyve\" port. Exiting."
@@ -85,19 +86,19 @@ bhyve_install_iso()
 
   # Allow the $IXBUILD_BRIDGE, $IXBUILD_IFACE, $IXBUILD_TAP to be overridden
   [ -z "${IXBUILD_BRIDGE}" ] && export IXBUILD_BRIDGE="ixbuildbridge0"
-  [ -z "${IXBUILD_IFACE}" ] && export IXBUILD_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  # [ -z "${IXBUILD_IFACE}" ] && export IXBUILD_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
   [ -z "${IXBUILD_TAP}" ] && export IXBUILD_TAP="tap"
   [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
-  local ISOFILE=$1
-  local VM_OUTPUT="/tmp/${BUILDTAG}console.log"
+  ISOFILE=/home/jmaloney/projects/ixsystems/ixautomation/freenas/iso/FreeNAS-11.0-U3.iso
+  local VM_OUTPUT="/tmp/${VM}console.log"
   local VOLUME="${IXBUILD_ROOT_ZVOL}"
-  local DATADISKOS="${BUILDTAG}-os"
-  local DATADISK1="${BUILDTAG}-data1"
-  local DATADISK2="${BUILDTAG}-data2"
+  local DATADISKOS="${VM}-os"
+  local DATADISK1="${VM}-data1"
+  local DATADISK2="${VM}-data2"
   local IXBUILD_DNSMASQ=$(test -n "${IXBUILD_DNSMASQ}" && echo "${IXBUILD_DNSMASQ}" || which dnsmasq 2>/dev/null)
-  local BOOT_PIDFILE="/tmp/.cu-${BUILDTAG}-boot.pid"
-  local TAP_LOCKFILE="/tmp/.tap-${BUILDTAG}.lck"
+  local BOOT_PIDFILE="/tmp/.cu-${VM}-boot.pid"
+  local TAP_LOCKFILE="/tmp/.tap-${VM}.lck"
 
   # Verify kernel modules are loaded if this is a BSD system
   if which kldstat >/dev/null 2>/dev/null ; then
@@ -105,21 +106,9 @@ bhyve_install_iso()
     kldstat | grep -q if_bridge || kldload if_bridge
     kldstat | grep -q vmm || kldload vmm
     kldstat | grep -q nmdm || kldload nmdm
+    kldstat | grep -q ipfw_nat || kldload ipfw_nat
+    kldstat | grep -q ipdivert || kldload ipdivert
   fi
-
-  # Shutdown VM, stop output, and cleanup
-  bhyvectl --destroy --vm=$BUILDTAG &>/dev/null &
-  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
-  ifconfig ${IXBUILD_TAP} destroy &>/dev/null
-  rm "${VM_OUTPUT}" &>/dev/null
-  [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
-  [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
-
-  # Destroy zvols from previous runs
-  local zfs_list=$(zfs list | awk 'NR>1 {print $1}')
-  echo ${zfs_list} | grep -q "${VOLUME}/${DATADISKOS}" && zfs destroy ${VOLUME}/${DATADISKOS}
-  echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK1}" && zfs destroy ${VOLUME}/${DATADISK1}
-  echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK2}" && zfs destroy ${VOLUME}/${DATADISK2}
 
   echo "Setting up bhyve network interfaces..."
 
@@ -145,9 +134,9 @@ bhyve_install_iso()
   fi
 
   # Ensure $IXBUILD_IFACE is a member of our bridge.
-  if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
-    ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
-  fi
+  # if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
+  #  ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
+  # fi
 
   # Ensure $IXBUILD_TAP is a member of our bridge.
   if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_TAP}" ; then
@@ -155,7 +144,7 @@ bhyve_install_iso()
   fi
 
   # Finally, have our bridge pickup an IP Address
-  ifconfig ${IXBUILD_BRIDGE} up && dhclient ${IXBUILD_BRIDGE}
+  # ifconfig ${IXBUILD_BRIDGE} up && dhclient ${IXBUILD_BRIDGE}
 
   ###############################################
   # Now lets spin-up bhyve and do an installation
@@ -191,24 +180,24 @@ bhyve_install_iso()
     -s 5:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISKOS} \
     -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
     -l com1,${COM_BROADCAST} \
-    $BUILDTAG ) &
+    $VM ) &
 
   # Run our expect/tcl script to automate the installation dialog
-  ${PROGDIR}/scripts/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  ${PROGDIR}/freenas/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
 
   # Shutdown VM, stop output
   sleep 5
-  bhyvectl --destroy --vm=$BUILDTAG &>/dev/null &
+  bhyvectl --destroy --vm=$VM &>/dev/null &
 
   # If this cmd returned instead of hanging, it would be preferable to use. The alternative writes to a tmp file.
   # local COM_LISTEN=$(boot_bhyve | tee /dev/tty | grep "^Listen: " | sed 's|Listen: ||g')
-  local BHYVE_BOOT_OUTPUT="/tmp/.boot-${BUILDTAG}output"
+  local BHYVE_BOOT_OUTPUT="/tmp/.boot-${VM}output"
   bhyve_boot > ${BHYVE_BOOT_OUTPUT}
   local COM_LISTEN=$(cat ${BHYVE_BOOT_OUTPUT} | grep '^Listen: ' | sed 's|^Listen: ||')
   echo "COM: ${COM_LISTEN}"
-  ${PROGDIR}/scripts/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  ${PROGDIR}/freenas/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
 
   echo -e \\033c # Reset/clear to get native term dimensions
 
@@ -230,11 +219,12 @@ bhyve_install_iso()
 # Boots installed FreeNAS/TrueNAS bhyve VM
 bhyve_boot()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   local VOLUME="${IXBUILD_ROOT_ZVOL}"
-  local DATADISKOS="${BUILDTAG}-os"
-  local DATADISK1="${BUILDTAG}-data1"
-  local DATADISK2="${BUILDTAG}-data2"
-  local TAP_LOCKFILE="/tmp/.tap-${BUILDTAG}.lck"
+  local DATADISKOS="${VM}-os"
+  local DATADISK1="${VM}-data1"
+  local DATADISK2="${VM}-data2"
+  local TAP_LOCKFILE="/tmp/.tap-${VM}.lck"
 
   [ -z "${IXBUILD_TAP}" ] && export IXBUILD_TAP="tap"
 
@@ -274,7 +264,26 @@ bhyve_boot()
     -s 7:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISK2} \
     -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
     -l com1,${COM_BROADCAST} \
-    $BUILDTAG ) & disown
+    $VM ) & 
 
   return 0
+}
+
+bhyve_stop()
+{
+  # Shutdown VM, stop output, and cleanup
+  # export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  # bhyvectl --destroy --vm=$VM &>/dev/null &
+  # ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  # ifconfig ${IXBUILD_TAP} destroy &>/dev/null
+
+  # rm "${VM_OUTPUT}" &>/dev/null
+  # [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
+  # [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
+
+  # Destroy zvols from previous runs
+  # local zfs_list=$(zfs list | awk 'NR>1 {print $1}')
+  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISKOS}" && zfs destroy ${VOLUME}/${DATADISKOS}
+  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK1}" && zfs destroy ${VOLUME}/${DATADISK1}
+  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK2}" && zfs destroy ${VOLUME}/${DATADISK2}
 }

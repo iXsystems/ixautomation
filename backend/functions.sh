@@ -64,6 +64,7 @@ jenkins_freenas_tests()
   bhyve_select_iso
   bhyve_install_iso
   bhyve_boot
+  bhyve_stop
   cleanup_workdir
 }
 
