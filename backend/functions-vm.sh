@@ -27,15 +27,17 @@ bhyve_select_iso()
 
     # Exit cleanly if no ISO found in $ISODIR
     if [ $iso_cnt -lt 1 ] ; then
-      echo -n "No local ISO found would you like to fetch it? (y/n): "
+      echo -n "No local ISO found would you like to fetch the latest FreeNAS ISO? (y/n): "
       read download_confirmed
       if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
         cd ${ISODIR}
         isoname=$(curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"' | cut -d '>' -f 2 | cut -d '<' -f '1')
         fetch http://download.freenas.org/11/MASTER/latest/x64/$isoname
+        USER=$(sh -c 'echo ${SUDO_USER}')
+        chown $USER *.iso
         cd -
       else
-        echo "Please add an ISO in \"${ISODIR}\""
+        echo "Please put a FreeNas ISO in \"${ISODIR}\""
         exit_clean
       fi
 
