@@ -99,7 +99,7 @@ bhyve_install_iso()
 
   # Allow the $IXBUILD_BRIDGE, $IXBUILD_IFACE, $IXBUILD_TAP to be overridden
   [ -z "${IXBUILD_BRIDGE}" ] && export IXBUILD_BRIDGE="ixbuildbridge0"
-  # [ -z "${IXBUILD_IFACE}" ] && export IXBUILD_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  [ -z "${IXBUILD_IFACE}" ] && export IXBUILD_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
   [ -z "${IXBUILD_TAP}" ] && export IXBUILD_TAP="tap"
   [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
@@ -147,9 +147,9 @@ bhyve_install_iso()
   fi
 
   # Ensure $IXBUILD_IFACE is a member of our bridge.
-  # if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
-  #  ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
-  # fi
+  if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
+   ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
+  fi
 
   # Ensure $IXBUILD_TAP is a member of our bridge.
   if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_TAP}" ; then
@@ -291,19 +291,28 @@ bhyve_stop()
   local DATADISKOS="${VM}-os"
   local DATADISK1="${VM}-data1"
   local DATADISK2="${VM}-data2"
+
+  # Destroy the VM
   bhyvectl --destroy --vm=$VM &>/dev/null &
 
-  # Wait for VM to shutdown
+  # Wait for VM to be destroyed
+  sleep 5 
+
+  # Destroy the bridge
+  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+
+  # Wait for bridge to be destroyed first
   sleep 5
 
-  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null
 
+  # Remove log, locking, and pidfiles
   rm "${VM_OUTPUT}" &>/dev/null
   [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
   [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
   
-  # Destroy zvols from previous runs
+  # Destroy zvols
   zfs destroy ${VOLUME}/${DATADISKOS} &>/dev/null &
   zfs destroy ${VOLUME}/${DATADISK1} &>/dev/null &
   zfs destroy ${VOLUME}/${DATADISK2} &>/dev/null &
