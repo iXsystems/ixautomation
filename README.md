@@ -20,6 +20,7 @@ Recommended hardware:
 * Memory: 16GB (For FreeNAS) 48GB (For TrueOS)
 * Disk: 20GB (For FreeNAS) 200GB (For TrueOS)
 * Wired ethernet connection for bhyve bridge
+* At least 1 ZFS pool named tank
 
 Required OS:
 
