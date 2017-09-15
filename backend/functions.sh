@@ -53,19 +53,50 @@ create_workdir()
 
 exit_clean()
 {
+  bhyve_stop
   cleanup_workdir
   exit 1
 }
 
 jenkins_freenas_tests()
 {
-  GITREPO="https://www.github.com/ixsystems/ixbuild.git"
+  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   bhyve_select_iso
   bhyve_install_iso
   bhyve_boot
-  bhyve_stop
-  cleanup_workdir
+  if [ -z $FNASTESTIP ] ; then exit_clean ; fi
+  cd ${MASTERWRKDIR}/freenas/scripts
+  if [ $? -ne 0 ] ; then exit_clean ; fi
+  echo ""
+  sleep 10
+  pkill -F /tmp/vmcu.pid >/dev/null 2>/dev/null	  
+  echo ""
+  echo "Output from REST API calls:"
+  echo "-----------------------------------------"
+  echo "Running API v1.0 test group create 1/3"
+  touch /tmp/$VM-tests-create.log 2>/dev/null
+  tail -f /tmp/$VM-tests-create.log 2>/dev/null &
+  tpid=$!
+  ./9.10-create-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-create.log
+  kill -9 $tpid
+  echo ""
+  echo "Running API v1.0 test group update 2/3" 
+  touch /tmp/$VM-tests-update.log 2>/dev/null
+  tail -f /tmp/$VM-tests-update.log 2>/dev/null &
+  tpid=$!
+  ./9.10-update-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-update.log
+  kill -9 $tpid
+  echo ""
+  echo "Running API v1.0 test group delete 3/3"
+  touch /tmp/$VM-tests-delete.log 2>/dev/null
+  tail -f /tmp/$VM-tests-delete.log 2>/dev/null &
+  tpid=$!
+  ./9.10-delete-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-delete.log
+  kill -9 $tpid
+  echo ""
+  sleep 10
+  exit_clean  
 }
 
 jenkins_freenas_webui_tests()

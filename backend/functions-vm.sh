@@ -232,7 +232,7 @@ bhyve_install_iso()
 
   local EXIT_STATUS=1
   if grep -q "Starting nginx." ${VM_OUTPUT} || grep -q "Plugin loaded: SSHPlugin" ${VM_OUTPUT} ; then
-    local FNASTESTIP="$(awk '$0 ~ /^vtnet0:\ flags=/ {++n;next}; n == 1 && $1 == "inet" {print $2;exit}' ${VM_OUTPUT})"
+    export FNASTESTIP="$(awk '$0 ~ /^vtnet0:\ flags=/ {++n;next}; n == 1 && $1 == "inet" {print $2;exit}' ${VM_OUTPUT})"
     if [ -n "${FNASTESTIP}" ] ; then
       echo "FNASTESTIP=${FNASTESTIP}"
       EXIT_STATUS=0
