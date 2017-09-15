@@ -194,9 +194,9 @@ bhyve_install_iso()
   # Decrease os and data disk sizes if less than 120G is avail on the root mountpoint
   if [ -n "$freespace" -a $freespace -le 120 ] ; then os_size=10; disk_size=5; fi
 
-  zfs create -V ${os_size}G -o volmode=dev ${VOLUME}/${DATADISKOS}
-  zfs create -V ${disk_size}G ${VOLUME}/${DATADISK1}
-  zfs create -V ${disk_size}G ${VOLUME}/${DATADISK2}
+  zfs create -s -V ${os_size}G -o volmode=dev ${VOLUME}/${DATADISKOS}
+  zfs create -s -V ${disk_size}G ${VOLUME}/${DATADISK1}
+  zfs create -s -V ${disk_size}G ${VOLUME}/${DATADISK2}
 
   # Install from our ISO
   ( bhyve -w -A -H -P -c 1 -m 2G \
