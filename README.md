@@ -49,7 +49,8 @@ Using the testing framework
 
 FreeNAS
 ```
-sudo jenkins.sh freenas-tests 
+sudo jenkins.sh freenas-tests
+sudo jenkins.sh freenas-webui-tests
 ```
 
 iocage
@@ -60,4 +61,14 @@ sudo jenkins.sh iocage-tests
 TrueOS
 ```
 sudo jenkins.sh trueos-tests 
+```
+
+TrueView
+```
+sudo jenkins.sh trueview-webui-tests
+```
+
+SysAdm
+```
+sudo jenkins.sh sysadm-cli-tests
 ```
