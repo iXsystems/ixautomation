@@ -25,6 +25,7 @@ bhyve_select_iso()
     # List ISOs in ${ISODIR} and allow the user to select the target
     iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
+
     # Exit cleanly if no ISO found in $ISODIR
     if [ $iso_cnt -lt 1 ] ; then
       echo -n "No local ISO found would you like to fetch the latest FreeNAS ISO? (y/n): "
@@ -41,10 +42,10 @@ bhyve_select_iso()
         echo "Please put a FreeNas ISO in \"${ISODIR}\""
         exit_clean
       fi
-
-      #echo "You can change this path by setting \$IXBUILD_FREENAS_ISODIR in build.conf"
-
     fi
+
+    # Repopulate the list of ISOs in ${ISODIR} and allow the user to select the target
+    iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
     # Our to-be-determined file name of the ISO to test; must be inside $ISODIR
     local iso_name=""
