@@ -285,18 +285,26 @@ bhyve_boot()
 bhyve_stop()
 {
   # Shutdown VM, stop output, and cleanup
-  # export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  # bhyvectl --destroy --vm=$VM &>/dev/null &
-  # ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
-  # ifconfig ${IXBUILD_TAP} destroy &>/dev/null
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  local VM_OUTPUT="/tmp/${VM}console.log"
+  local VOLUME="${IXBUILD_ROOT_ZVOL}"
+  local DATADISKOS="${VM}-os"
+  local DATADISK1="${VM}-data1"
+  local DATADISK2="${VM}-data2"
+  bhyvectl --destroy --vm=$VM &>/dev/null &
 
-  # rm "${VM_OUTPUT}" &>/dev/null
-  # [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
-  # [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
+  # Wait for VM to shutdown
+  sleep 5
 
+  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  ifconfig ${IXBUILD_TAP} destroy &>/dev/null
+
+  rm "${VM_OUTPUT}" &>/dev/null
+  [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
+  [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
+  
   # Destroy zvols from previous runs
-  # local zfs_list=$(zfs list | awk 'NR>1 {print $1}')
-  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISKOS}" && zfs destroy ${VOLUME}/${DATADISKOS}
-  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK1}" && zfs destroy ${VOLUME}/${DATADISK1}
-  # echo ${zfs_list} | grep -q "${VOLUME}/${DATADISK2}" && zfs destroy ${VOLUME}/${DATADISK2}
+  zfs destroy ${VOLUME}/${DATADISKOS} &>/dev/null &
+  zfs destroy ${VOLUME}/${DATADISK1} &>/dev/null &
+  zfs destroy ${VOLUME}/${DATADISK2} &>/dev/null &
 }
