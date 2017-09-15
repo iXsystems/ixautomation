@@ -8,6 +8,8 @@ It includes support to test the following projects:
  * FreeNAS
  * iocage
  * TrueOS
+ * TrueView
+ * SysAdm
  
 Requirements
 ============
