@@ -68,9 +68,29 @@ jenkins_freenas_tests()
   cleanup_workdir
 }
 
+jenkins_freenas_webui_tests()
+{
+  echo "To be added later"
+}
+
 jenkins_iocage_tests()
 {
   GITREPO="https://www.github.com/iocage/iocage"
   create_workdir
   cleanup_workdir
+}
+
+jenkins_trueos_tests()
+{
+  echo "To be added later"
+}
+
+jenkins_trueview_webui_tests()
+{
+  echo "To be added later"
+}
+
+jenkins_sysadm_cli_tests()
+{
+  echo "To be added later"
 }
