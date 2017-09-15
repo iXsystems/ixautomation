@@ -31,7 +31,8 @@ bhyve_select_iso()
       read download_confirmed
       if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
         cd ${ISODIR}
-        isoname=$(curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"' | cut -d '>' -f 2 | cut -d '<' -f '1')
+        isoname=`curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"' | cut -d '"' -f 4`
+        echo "Fetching $isoname..."
         fetch http://download.freenas.org/11/MASTER/latest/x64/$isoname
         USER=$(sh -c 'echo ${SUDO_USER}')
         chown $USER *.iso
@@ -99,7 +100,7 @@ bhyve_install_iso()
     echo "Install the \"uefi-edk2-bhyve\" port. Exiting."
     exit 1
   fi
-  
+
   # Find the ISONAME
   ISONAME=`ls ${MASTERWORKDIR} *.iso`
   ISOFILE="${MASTERWRKDIR}/${ISONAME}"
@@ -166,10 +167,10 @@ bhyve_install_iso()
   sleep 5
 
   # Up the bridge interface
-  ifconfig ${IXBUILD_BRIDGE} up 
+  ifconfig ${IXBUILD_BRIDGE} up
 
   # Wait for bridge to come up
-  
+
   # Finally have our bridge pick up an IP address
   dhclient ${IXBUILD_BRIDGE}
 
@@ -291,7 +292,7 @@ bhyve_boot()
     -s 7:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISK2} \
     -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
     -l com1,${COM_BROADCAST} \
-    $VM ) & 
+    $VM ) &
 
   return 0
 }
@@ -310,7 +311,7 @@ bhyve_stop()
   bhyvectl --destroy --vm=$VM &>/dev/null &
 
   # Wait for VM to be destroyed
-  sleep 5 
+  sleep 5
 
   # Destroy the bridge
   ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
@@ -325,7 +326,7 @@ bhyve_stop()
   rm "${VM_OUTPUT}" &>/dev/null
   [ -f "${BOOT_PIDFILE}" ] && cat "${BOOT_PIDFILE}" | xargs -I {} kill {} &>/dev/null
   [ -f "${TAP_LOCKFILE}" ] && cat "${TAP_LOCKFILE}" | xargs -I {} ifconfig {} destroy && rm "${TAP_LOCKFILE}"
-  
+
   # Destroy zvols
   zfs destroy ${VOLUME}/${DATADISKOS} &>/dev/null &
   zfs destroy ${VOLUME}/${DATADISK1} &>/dev/null &
