@@ -85,6 +85,9 @@ bhyve_select_iso()
       done
     fi
   fi
+
+  # Copy selected ISO to temporary location for VM
+  cp ${ISODIR}/${iso_name} ${MASTERWRKDIR}
 }
 
 # $1 = The path to a FreeNAS/TrueNAS ISO for installation
@@ -96,6 +99,10 @@ bhyve_install_iso()
     echo "Install the \"uefi-edk2-bhyve\" port. Exiting."
     exit 1
   fi
+  
+  # Find the ISONAME
+  ISONAME=`ls ${MASTERWORKDIR} *.iso`
+  ISOFILE="${MASTERWRKDIR}/${ISONAME}"
 
   # Allow the $IXBUILD_BRIDGE, $IXBUILD_IFACE, $IXBUILD_TAP to be overridden
   [ -z "${IXBUILD_BRIDGE}" ] && export IXBUILD_BRIDGE="ixbuildbridge0"
@@ -103,7 +110,6 @@ bhyve_install_iso()
   [ -z "${IXBUILD_TAP}" ] && export IXBUILD_TAP="tap"
   [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
-  ISOFILE=/home/jmaloney/projects/ixsystems/ixautomation/freenas/iso/FreeNAS-11.0-U3.iso
   local VM_OUTPUT="/tmp/${VM}console.log"
   local VOLUME="${IXBUILD_ROOT_ZVOL}"
   local DATADISKOS="${VM}-os"
