@@ -156,8 +156,16 @@ bhyve_install_iso()
     ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_TAP}
   fi
 
-  # Finally, have our bridge pickup an IP Address
-  # ifconfig ${IXBUILD_BRIDGE} up && dhclient ${IXBUILD_BRIDGE}
+  # Wait for bridge to be created
+  sleep 5
+
+  # Up the bridge interface
+  ifconfig ${IXBUILD_BRIDGE} up 
+
+  # Wait for bridge to come up
+  
+  # Finally have our bridge pick up an IP address
+  dhclient ${IXBUILD_BRIDGE}
 
   ###############################################
   # Now lets spin-up bhyve and do an installation
