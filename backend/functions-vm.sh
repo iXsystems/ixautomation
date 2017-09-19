@@ -121,6 +121,9 @@ bhyve_install_iso()
   local BOOT_PIDFILE="/tmp/.cu-${VM}-boot.pid"
   local TAP_LOCKFILE="/tmp/.tap-${VM}.lck"
 
+  service vboxnet stop >/dev/null 2>/dev/null
+  sysctl net.link.bridge.ipfw=1
+
   # Verify kernel modules are loaded if this is a BSD system
   if which kldstat >/dev/null 2>/dev/null ; then
     kldstat | grep -q if_tap || kldload if_tap
@@ -129,6 +132,9 @@ bhyve_install_iso()
     kldstat | grep -q nmdm || kldload nmdm
     kldstat | grep -q ipfw_nat || kldload ipfw_nat
     kldstat | grep -q ipdivert || kldload ipdivert
+    kldstat | grep -q vboxnetflt || kldunload vboxnetflt
+    kldstat | grep -q vboxnetadp || kldunload vboxnetadp
+    kldstat | grep -q vboxdrv || kldunload vboxdrv
   fi
 
   echo "Setting up bhyve network interfaces..."
