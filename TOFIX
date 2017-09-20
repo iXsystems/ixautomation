@@ -1,0 +1,140 @@
+Running 1 - Create - FTP tests (3/4) - Checking to see if FTP service is enabled - OK
+Running 1 - Create - FTP tests (4/4) - Fetching file via FTP - FAILED
+Failed running: ftp -o /tmp/ftpfile ftp://testuser:test@/.cshrc
+ - FAILED
+Failed on test module: ftp
+
+
+Running 1 - Create - Storage tests (46/46) - Creating a ZVOL 2/2 - OK
+* Running module dependancy: ntp *
+Missing the ADUSERNAME / ADPASSWORD settings, test skipped.. - SKIPPED
+* Running module: ad_bsd *
+Missing the ADUSERNAME / ADPASSWORD settings, test skipped.. - SKIPPED
+* Running module: ad_osx *
+Missing the ADUSERNAME / ADPASSWORD settings, test skipped.. - SKIPPED
+* Running module: afp_osx *
+Running 1 - Create - AFP OS X tests (1/14) - Creating AFP dataset - OK
+
+
+Running 1 - Create - FTP tests (3/4) - Checking to see if FTP service is enabled - OK
+Running 1 - Create - FTP tests (4/4) - Fetching file via FTP - FAILED
+Failed running: ftp -o /tmp/ftpfile ftp://testuser:test@/.cshrc
+ - FAILED
+Failed on test module: ftp
+
+
+Running 1 - Create - iSCSI tests (10/23) - Connecting to iSCSI target..SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+.SSH server IP address required for bsd_test().
+ - FAILED
+Failed on test module: iscsi
+
+
+***** Running module: jail *****
+Missing the JAILIP / JAILNETMASK settings, test skipped.. - SKIPPED
+***** Running module: ldap_bsd *****
+Missing the LDAPBINDDN / LDAPBINDPASSWORD settings, test skipped.. - SKIPPED
+***** Running module: ldap_osx *****
+Missing required settings for LDAP, Active Directory, test skipped.. - SKIPPED
+
+
+Running 1 - Create - NFS tests (1/15) - Creating the NFS server*   Trying 192.168.2.16...
+* TCP_NODELAY set
+* Connected to 192.168.2.16 (192.168.2.16) port 80 (#0)
+* Server auth using Basic with user 'root'
+> PUT /api/v1.0/services/nfs/ HTTP/1.1
+> Host: 192.168.2.16
+> Authorization: Basic cm9vdDp0ZXN0aW5n
+> User-Agent: curl/7.55.1
+> Accept: application/json
+> Content-Type: application/json
+> Content-Length: 246
+>
+} [246 bytes data]
+* upload completely sent off: 246 out of 246 bytes
+< HTTP/1.1 409 Conflict
+< Server: nginx
+< Date: Wed, 20 Sep 2017 17:42:39 GMT
+< Content-Type: application/json
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< Vary: Accept-Language, Cookie
+< Content-Language: en
+<
+{ [95 bytes data]
+* Connection #0 to host 192.168.2.16 left intact
+{"nfs_srv_bindip": ["Select a valid choice.  is not one of the available choices."]}
+ - FAILED
+
+
+***** Running module: nis_bsd *****
+MISSING the NISSERVER / NISDOMAIN settings, test skipped.. - SKIPPED
+
+
+Running 1 - Create - RSYNC tests (5/5) - Testing rsync access - FAILED
+Failed running: rsync -avn ::testmod
+Failed on test module: rsync
+
+
+
+Running 1 - Create - Samba BSD tests (8/22) - Creating SMB mountpointSSH server IP address required for bsd_test().
+ - FAILED
+Failed on test module: smb_bsd
+
+
+
+Running API v1.0 test group update 2/3
+Using REST API Address: 192.168.2.16
+Running tests for /tmp/build/6ZLJ/freenas/9.10-tests/update
+***** Running module: ad_bsd *****
+Missing the ADUSERNAME / ADPASSWORD settings, test skipped.. - SKIPPED
+***** Running module: ad_osx *****
+Missing the ADUSERNAME / ADPASSWORD settings, test skipped.. - SKIPPED
+
+
+
+***** Running module dependancy: update_storage *****
+Running 2 - Update - Storage tests (1/2) - Updating ZVOL*   Trying 192.168.2.16...
+* TCP_NODELAY set
+* Connected to 192.168.2.16 (192.168.2.16) port 80 (#0)
+* Server auth using Basic with user 'root'
+> PUT /api/v1.0/storage/volume/tank/zvols/testzvol/ HTTP/1.1
+> Host: 192.168.2.16
+> Authorization: Basic cm9vdDp0ZXN0aW5n
+> User-Agent: curl/7.55.1
+> Accept: application/json
+> Content-Type: application/json
+> Content-Length: 21
+>
+} [21 bytes data]
+* upload completely sent off: 21 out of 21 bytes
+< HTTP/1.1 404 Not Found
+< Server: nginx
+< Date: Wed, 20 Sep 2017 17:44:39 GMT
+< Content-Type: text/html; charset=utf-8
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< Vary: Accept, Accept-Language, Cookie
+< Content-Language: en
+<
+{ [5 bytes data]
+* Connection #0 to host 192.168.2.16 left intact
+ - FAILED
+Failed on test module: update_storage
+***** Skipping test module: iscsi (Dep failed) *****
+***** Running module: ldap_bsd *****
+Missing the LDAPBINDDN2 / LDAPBINDPASSWORD2 settings, test skipped.. - SKIPPED
+***** Running module: ldap_osx *****
+Missing required settings for LDAP, Active Directory, test skipped.. - SKIPPED
+
+
+
+***** Running module: webdav_bsd *****
+./webdav_bsd: line 17: resolved.: command not found
+***** Running module: webdav_osx *****
+./webdav_osx: line 17: resolved.: command not found
+Saving jUnit results to: /tmp/test-results.xml
