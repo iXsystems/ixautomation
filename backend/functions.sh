@@ -8,6 +8,62 @@ export BUILDTAG
 cwd="`realpath $0 | xargs dirname`"
 . ${cwd}/backend/functions-vm.sh
 
+install_dependencies()
+{
+  which git >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing git.."
+    rc_halt "pkg-static install -y git"
+  fi
+
+  which curl >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing ftp/curl.."
+    rc_halt "pkg-static install -y curl"
+  fi
+
+  which bash >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing shells/bash.."
+    rc_halt "pkg-static install -y bash"
+  fi
+
+  which expect >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing shells/expect..."
+    rc_halt "pkg-static install -y expect"
+  fi
+
+  which js24 >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing lang/spidermonkey24.."
+    rc_halt "pkg-static install -y spidermonkey24"
+  fi
+
+  which wget >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing wget.."
+    rc_halt "pkg-static install -y wget"
+  fi
+
+  which sshpass >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing security/sshpass"
+    rc_halt "pkg-static install -y sshpass"
+  fi
+
+  if [ ! -f "/usr/local/share/uefi-firmware/BHYVE_UEFI.fd" ] ; then
+  echo "Installing sysutils/bhyve-firmware"
+    rc_halt "pkg-static install -y bhyve-firmware"
+  fi
+
+  if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
+    touch /usr/local/etc/sudoers.d/ixautomation
+    echo 'Defaults      env_keep += "SSH_AUTH_SOCK"' > /usr/local/etc/sudoers.d/ixautomation
+  fi
+
+}
+
 cleanup_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi

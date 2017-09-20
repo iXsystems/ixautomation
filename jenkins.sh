@@ -24,21 +24,24 @@ display_usage() {
    cat << EOF
 Available Commands:
 
+-- iXautomation Commands --
+install-dependencies     - Install all the packages need for iXautomation
+
 -- FreeNAS Commands --
 freenas-tests            - Runs FreeNAS VM API tests against built release
-freenas-webui-tests	 - Runs FreeNAS webui tests using webdriver
+freenas-webui-tests      - Runs FreeNAS webui tests using webdriver
 
 -- iocage Commands --
 iocage-tests             - Run CI from iocage git (Requires pool name)
 
 -- TrueOS Commands --
-trueos-tests		 - Runs TrueOS VM tests
+trueos-tests             - Runs TrueOS VM tests
 
 -- TrueView Commands --
 trueview-webui-tests     - Runs TrueView webui tests using webdriver
 
 -- SysAdm Commands --
-sysadm-cli-tests		 - Runs SysAdm API tests with sysadm-cli
+sysadm-cli-tests         - Runs SysAdm API tests with sysadm-cli
 
 EOF
 
@@ -56,10 +59,11 @@ cwd="`realpath $0 | xargs dirname`"
 ######################################################
 
 case $TYPE in
+    install-dependencies) install_dependencies ;;
            freenas-tests) jenkins_freenas_tests ;;
      freenas-webui-tests) jenkins_freenas_webui_tests ;;
-	    iocage-tests) jenkins_iocage_tests ;;
-	    trueos-tests) jenkins_trueos_tests ;;
+            iocage-tests) jenkins_iocage_tests ;;
+            trueos-tests) jenkins_trueos_tests ;;
     trueview-webui-tests) jenkins_trueview_webui_tests ;;
         sysadm-cli-tests) jenkins_sysadm_tests ;;
                        *) echo "Invalid command: $1"
