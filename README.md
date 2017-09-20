@@ -38,6 +38,7 @@ Required Packages:
 * bash
 * spidermonkey24
 * wget
+* rsync
 * sshpass
 
 Getting Started
