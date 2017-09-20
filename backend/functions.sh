@@ -147,6 +147,7 @@ jenkins_freenas_tests()
   start_ssh_agent
   bhyve_boot
   if [ -z $FNASTESTIP ] ; then exit_clean ; fi
+  export BRIDGEIP="${FNASTESTIP}"
   cd ${MASTERWRKDIR}/freenas/scripts
   if [ $? -ne 0 ] ; then exit_clean ; fi
   echo ""
