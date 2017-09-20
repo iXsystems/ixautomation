@@ -33,6 +33,12 @@ Required OS:
 Required Packages:
 * expect
 * bhyve-firmware
+* git
+* curl
+* bash
+* spidermonkey24
+* wget
+* sshpass
 
 Getting Started
 ============
