@@ -1,7 +1,7 @@
 Jenkins automation framework for iX projects
 ===========
 
-The scripts in this repo will allow you to test iX projects, either as an automated job from Jenkins or manually. 
+The scripts in this repo will allow you to test iX projects, either as an automated job from Jenkins or manually.
 
 It includes support to test the following projects:
 
@@ -10,7 +10,7 @@ It includes support to test the following projects:
  * TrueOS
  * TrueView
  * SysAdm
- 
+
 Requirements
 ============
 
@@ -47,10 +47,14 @@ To prep a new system for building, first download the repo and install with
 the following:
 
 ```
-% git clone --depth=1 https://github.com/iXsystems/ixautomation.git
-% cd ixautomation
+git clone --depth=1 https://github.com/iXsystems/ixautomation.git
+cd ixautomation
 ```
+To isntall all iXautomation dependencies run:
 
+```
+sudo ./jenkins install-dependencies
+```
 
 Using the testing framework
 ============
@@ -68,7 +72,7 @@ sudo ./jenkins.sh iocage-tests
 
 TrueOS
 ```
-sudo ./jenkins.sh trueos-tests 
+sudo ./jenkins.sh trueos-tests
 ```
 
 TrueView
