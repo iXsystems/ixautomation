@@ -1,13 +1,5 @@
-Running 1 - Create - iSCSI tests (10/23) - Connecting to iSCSI target..SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
-.SSH server IP address required for bsd_test().
- - FAILED
-Failed on test module: iscsi
-
+Running 1 - Create - System tests (4/9) - Checking system tunable 'dummynet'.. - OK
+No virtual machine backend specified, defaulting to 'vbox'.
 
 
 Running 1 - Create - NFS tests (1/15) - Creating the NFS server*   Trying 192.168.2.16...
@@ -43,13 +35,6 @@ Running 1 - Create - NFS tests (1/15) - Creating the NFS server*   Trying 192.16
 Running 1 - Create - RSYNC tests (5/5) - Testing rsync access - FAILED
 Failed running: rsync -avn ::testmod
 Failed on test module: rsync
-
-
-
-Running 1 - Create - Samba BSD tests (8/22) - Creating SMB mountpointSSH server IP address required for bsd_test().
- - FAILED
-Failed on test module: smb_bsd
-
 
 
 ***** Running module dependancy: update_storage *****
