@@ -147,6 +147,8 @@ jenkins_freenas_tests()
   start_ssh_agent
   bhyve_boot
   if [ -z $FNASTESTIP ] ; then exit_clean ; fi
+  # Since we are runnig in bhyve populat VMBACKEND for starage test
+  export VMBACKEND="bhyve"
   export BRIDGEIP="${FNASTESTIP}"
   cd ${MASTERWRKDIR}/freenas/scripts
   if [ $? -ne 0 ] ; then exit_clean ; fi
