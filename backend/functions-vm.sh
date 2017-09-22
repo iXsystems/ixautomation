@@ -32,7 +32,8 @@ bhyve_select_iso()
       read download_confirmed
       if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
         cd ${ISODIR}
-        isoname=`curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"' | cut -d '"' -f 2`
+        isohtml=`curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"'`
+        isoname=`echo $isohtml | sed -e 's/.*iso">\(.*\)<\/a>.*/\1/'`
         echo "Fetching $isoname..."
         fetch http://download.freenas.org/11/MASTER/latest/x64/$isoname
         USER=$(sh -c 'echo ${SUDO_USER}')
