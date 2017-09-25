@@ -52,6 +52,12 @@ install_dependencies()
     rc_halt "pkg-static install -y sshpass"
   fi
 
+  which rsync >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing net/rsync"
+    rc_halt "pkg-static install -y rsync"
+  fi
+
   if [ ! -f "/usr/local/share/uefi-firmware/BHYVE_UEFI.fd" ] ; then
   echo "Installing sysutils/bhyve-firmware"
     rc_halt "pkg-static install -y bhyve-firmware"
