@@ -140,6 +140,7 @@ start_ssh_agent()
 
 jenkins_freenas_tests()
 {
+  export TESTSYSTEM="FreeNAS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   bhyve_select_iso
