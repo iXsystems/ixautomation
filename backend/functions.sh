@@ -146,6 +146,7 @@ start_ssh_agent()
 
 jenkins_freenas_tests()
 {
+  trap 'exit_clean' INT
   export TESTSYSTEM="FreeNAS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir

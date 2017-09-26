@@ -8,7 +8,7 @@ bhyve_select_iso()
   # If we aren't running as part of the build process, list ISOs in the $ISODIR
   if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
 
-    if [ ${TESTSYSTE} == 'FreeNAS' ] ; then
+    if [ ${TESTSYSTEM} = "FreeNAS" ] ; then
       # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
       local ISODIR="${PROGDIR}/freenas/iso/"
 
@@ -44,7 +44,7 @@ bhyve_select_iso()
           exit_clean
         fi
       fi
-    elif [ ${TESTSYSTE} == 'Trueos' ] ; then
+    elif [ ${TESTSYSTEM} = "Trueos" ] ; then
       # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
       local ISODIR="${PROGDIR}/trueos/iso/"
 
