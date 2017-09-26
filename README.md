@@ -51,10 +51,17 @@ the following:
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 cd ixautomation
 ```
-To isntall all iXautomation dependencies run:
+To install all iXautomation dependencies run:
 
 ```
 sudo ./jenkins install-dependencies
+```
+
+To setup the environment for tests run:
+
+```
+sudo ./jenkins install_evironment
+
 ```
 
 Using the testing framework
