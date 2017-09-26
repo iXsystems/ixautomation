@@ -51,7 +51,7 @@ cd ixautomation
 To install all iXautomation dependencies run:
 
 ```
-sudo ./jenkins install-dependencies
+sudo ./jenkins.sh install-dependencies
 ```
 
 Using the testing framework
