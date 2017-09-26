@@ -61,7 +61,6 @@ To setup the environment for tests run:
 
 ```
 sudo ./jenkins install_evironment
-
 ```
 
 Using the testing framework
