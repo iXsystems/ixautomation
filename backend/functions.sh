@@ -8,6 +8,26 @@ export BUILDTAG
 cwd="`realpath $0 | xargs dirname`"
 . ${cwd}/backend/functions-vm.sh
 
+exit_err() {
+   echo "ERROR: $@"
+   exit 1
+}
+
+# Run-command, halt if command exits with non-0
+rc_halt()
+{
+  local CMD="$1"
+  if [ -z "${CMD}" ]; then
+    exit_err "Error: missing argument in rc_halt()"
+  fi
+
+  echo "Running command: $CMD"
+  ${CMD}
+  if [ $? -ne 0 ]; then
+    exit_err "Error ${STATUS}: ${CMD}"
+  fi
+};
+
 install_dependencies()
 {
   which git >/dev/null 2>/dev/null
