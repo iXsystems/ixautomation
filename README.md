@@ -14,13 +14,10 @@ It includes support to test the following projects:
 Requirements
 ============
 
-A system running TrueOS, with at minimum 16GB of memory.
-(Building TrueOS packages in a reasonable time works best with 48GB or more)
-
 Recommended hardware:
-* CPU: 8 Cores or more
-* Memory: 16GB (For FreeNAS) 48GB (For TrueOS)
-* Disk: 20GB (For FreeNAS) 200GB (For TrueOS)
+* CPU: 1 Cores or more
+* Memory: 4GB
+* Disk: 20GB (For FreeNAS)
 * Wired ethernet connection for bhyve bridge
 * At least 1 ZFS pool named tank
 
