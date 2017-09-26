@@ -225,7 +225,16 @@ jenkins_iocage_tests()
 
 jenkins_trueos_tests()
 {
-  echo "To be added later"
+  trap 'exit_clean' INT
+  export TESTSYSTEM="TrueOS"
+  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
+  create_workdir
+  bhyve_select_iso
+  bhyve_install_iso
+  start_ssh_agent
+  #bhyve_boot
+  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
+  exit_clean
 }
 
 jenkins_trueview_webui_tests()
@@ -237,5 +246,4 @@ jenkins_sysadm_cli_tests()
 {
   echo "To be added later"
 }
-
 

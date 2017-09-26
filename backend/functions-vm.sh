@@ -44,7 +44,7 @@ bhyve_select_iso()
           exit_clean
         fi
       fi
-    elif [ ${TESTSYSTEM} = "Trueos" ] ; then
+    elif [ ${TESTSYSTEM} = "TrueOS" ] ; then
       # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
       local ISODIR="${PROGDIR}/trueos/iso/"
 
@@ -255,10 +255,12 @@ bhyve_install_iso()
     -l com1,${COM_BROADCAST} \
     $VM ) &
 
-  # Run our expect/tcl script to automate the installation dialog
-  ${PROGDIR}/freenas/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
-  echo -e \\033c # Reset/clear to get native term dimensions
-  echo "Success: Shutting down the installation VM.."
+  if [ ${TESTSYSTEM} = "FreeNAS" ] ; then
+    # Run our expect/tcl script to automate the installation dialog
+    ${PROGDIR}/freenas/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+    echo -e \\033c # Reset/clear to get native term dimensions
+    echo "Success: Shutting down the installation VM.."
+
 
   # Shutdown VM, stop output
   sleep 5
@@ -285,7 +287,7 @@ bhyve_install_iso()
       echo "ERROR: No ip address assigned to VM. FNASTESTIP not set."
     fi
   fi
-
+  fi
   return $EXIT_STATUS
 }
 
