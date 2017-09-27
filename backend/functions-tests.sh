@@ -24,19 +24,11 @@ ssh_test()
     return 1
   fi
 
-  # Use password auth if password set and no local ssh key found
-  if [ -n "${fpass}" ] && ssh-add -l | grep -q 'The agent has no identities.'; then
-    sshpass -p ${fpass} \
-      ssh -o StrictHostKeyChecking=no \
-          -o UserKnownHostsFile=/dev/null \
-          -o VerifyHostKeyDNS=no \
-          ${fuser}@${sshserver} ${1} >$TESTSTDOUT 2>$TESTSTDERR
-  else
-    ssh -o StrictHostKeyChecking=no \
-        -o UserKnownHostsFile=/dev/null \
-        -o VerifyHostKeyDNS=no \
-        ${fuser}@${sshserver} ${1} >$TESTSTDOUT 2>$TESTSTDERR
-  fi
+  ssh -o StrictHostKeyChecking=no \
+      -o UserKnownHostsFile=/dev/null \
+      -o VerifyHostKeyDNS=no \
+      -i ~/.ssh/test_id_rsa \
+      root@${sshserver} ${1} >$TESTSTDOUT 2>$TESTSTDERR
 
   return $?
 }
