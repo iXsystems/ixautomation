@@ -12,9 +12,9 @@ bhyve_select_iso()
     local ISODIR="${PROGDIR}${iso_folder}"
     # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
     if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-      ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
-    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
       ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
+    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
+      ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
     fi
 
     # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
@@ -322,10 +322,10 @@ bhyve_stop()
   sleep 5
 
   # Destroy the bridge
-  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  # ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
 
   # Wait for bridge to be destroyed first
-  sleep 5
+  # sleep 5
 
   # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null
