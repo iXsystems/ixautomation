@@ -4,9 +4,15 @@
 BUILDTAG="$BUILD"
 export BUILDTAG
 
+# Command to fiter $2 output to determine which test folder and config to source
+SYSTYPE=``
+
 # Source our functions
 cwd="`realpath $0 | xargs dirname`"
 . ${cwd}/backend/functions-vm.sh
+if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE.cfg}" ] ; then
+. ${cwd}/${SYSTYPE}/${SYSTYPE}.cfg
+fi
 
 exit_err() {
    echo "ERROR: $@"
