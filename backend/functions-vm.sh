@@ -361,10 +361,10 @@ bhyve_stop()
   sleep 5
 
   # Destroy the bridge
-  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  # ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
 
   # Wait for bridge to be destroyed first
-  sleep 5
+  # sleep 5
 
   # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null
