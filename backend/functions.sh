@@ -10,9 +10,9 @@ export BUILDTAG
 # Source our functions
 cwd="`realpath $0 | xargs dirname`"
 . ${cwd}/backend/functions-vm.sh
-if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE.cfg}" ] ; then
-. ${cwd}/${SYSTYPE}/${SYSTYPE}.cfg
-fi
+# if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE.cfg}" ] ; then
+# . ${cwd}/${SYSTYPE}/${SYSTYPE}.cfg
+# fi
 
 exit_err() {
    echo "ERROR: $@"
