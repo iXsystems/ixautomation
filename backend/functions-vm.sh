@@ -9,7 +9,11 @@ bhyve_select_iso()
   if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
 
     # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
-    local ISODIR="${PROGDIR}${iso_folder}"
+    if [ -n "$USING_JENKINS" ] ; then
+      local ISODIR="${WORKSPACE/artifacts/iso}"
+    else
+      local ISODIR="${PROGDIR}${iso_folder}"
+    fi
     # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
     if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
       ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"

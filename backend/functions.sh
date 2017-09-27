@@ -81,10 +81,30 @@ install_dependencies()
 
   if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
     touch /usr/local/etc/sudoers.d/ixautomation
-    echo 'Defaults      env_keep += "SSH_AUTH_SOCK"' > /usr/local/etc/sudoers.d/ixautomation
+    echo '%jenkins ALL = NOPASSWD: /ixautomation/jenkins.sh' >> /usr/local/etc/sudoers.d/ixautomation
+    echo 'Defaults      env_keep += "SSH_AUTH_SOCK"' >> /usr/local/etc/sudoers.d/ixautomation
   fi
 
 }
+
+install_dependencies_webui()
+{
+cd ~/
+apt-get install python-pip
+pip install --upgrade pip
+pip install selenium
+apt-get install python-pytest
+#download firefox webdriver
+git clone https://github.com/rishabh27892/webui-test-files/
+cd webui-test-files/
+tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
+chmod +x geckodriver
+sudo cp geckodriver /usr/local/bin/
+cd ~/
+rm -rf webui-test-files
+}
+
+
 
 cleanup_workdir()
 {
