@@ -12,9 +12,9 @@ bhyve_select_iso()
     local ISODIR="${PROGDIR}${iso_folder}"
     # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
     if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-      ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
-    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
       ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
+    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
+      ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
     fi
 
     # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
@@ -216,11 +216,10 @@ bhyve_install_iso()
     -l com1,${COM_BROADCAST} \
     $VM ) &
 
-  if [ ${TESTSYSTEM} = "FreeNAS" ] ; then
-    # Run our expect/tcl script to automate the installation dialog
-    ${PROGDIR}/freenas/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
-    echo -e \\033c # Reset/clear to get native term dimensions
-    echo "Success: Shutting down the installation VM.."
+  # Run our expect/tcl script to automate the installation dialog
+  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  echo -e \\033c # Reset/clear to get native term dimensions
+  echo "Success: Shutting down the installation VM.."
 
 
   # Shutdown VM, stop output
@@ -233,7 +232,7 @@ bhyve_install_iso()
   bhyve_boot > ${BHYVE_BOOT_OUTPUT}
   local COM_LISTEN=$(cat ${BHYVE_BOOT_OUTPUT} | grep '^Listen: ' | sed 's|^Listen: ||')
   echo "COM: ${COM_LISTEN}"
-  ${PROGDIR}/freenas/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
 
   echo -e \\033c # Reset/clear to get native term dimensions
 
@@ -247,7 +246,6 @@ bhyve_install_iso()
       echo "FNASTESTIP=0.0.0.0"
       echo "ERROR: No ip address assigned to VM. FNASTESTIP not set."
     fi
-  fi
   fi
   return $EXIT_STATUS
 }
@@ -322,10 +320,10 @@ bhyve_stop()
   sleep 5
 
   # Destroy the bridge
-  # ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
+  ifconfig ${IXBUILD_BRIDGE} destroy &>/dev/null
 
   # Wait for bridge to be destroyed first
-  # sleep 5
+  sleep 5
 
   # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null
