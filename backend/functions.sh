@@ -209,7 +209,9 @@ jenkins_freenas_tests()
 
 jenkins_freenas_webui_tests()
 {
-  echo "To be added later"
+  export DISPLAY=:0
+  cd ~/ixbuild/freenas/webui-tests/
+  python runtest.py
 }
 
 jenkins_iocage_tests()
