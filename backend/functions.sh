@@ -5,7 +5,7 @@ BUILDTAG="$BUILD"
 export BUILDTAG
 
 # Command to fiter $2 output to determine which test folder and config to source
-SYSTYPE=``
+# SYSTYPE=``
 
 # Source our functions
 cwd="`realpath $0 | xargs dirname`"
