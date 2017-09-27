@@ -86,6 +86,25 @@ install_dependencies()
 
 }
 
+install_dependencies_webui()
+{
+cd ~/
+apt-get install python-pip
+pip install --upgrade pip
+pip install selenium
+apt-get install python-pytest
+#download firefox webdriver
+git clone https://github.com/rishabh27892/webui-test-files/
+cd webui-test-files/
+tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
+chmod +x geckodriver
+sudo cp geckodriver /usr/local/bin/
+cd ~/
+rm -rf webui-test-files
+}
+
+
+
 cleanup_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
@@ -209,7 +228,14 @@ jenkins_freenas_tests()
 
 jenkins_freenas_webui_tests()
 {
-  echo "To be added later"
+  export DISPLAY=:0
+  if [ -d "/home/webui/ixbuild" ] ; then
+    git pull
+  else
+    git clone -b master https://www.github.com/ixsystems/ixbuild.git /home/webui/ixbuild
+  fi
+  cd ~/ixbuild/freenas/webui-tests/
+  python runtest.py
 }
 
 jenkins_iocage_tests()
