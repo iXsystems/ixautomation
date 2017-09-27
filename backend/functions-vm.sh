@@ -8,77 +8,38 @@ bhyve_select_iso()
   # If we aren't running as part of the build process, list ISOs in the $ISODIR
   if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
 
-    if [ ${TESTSYSTEM} = "FreeNAS" ] ; then
-      # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
-      local ISODIR="${PROGDIR}/freenas/iso/"
+    # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
+    local ISODIR="${PROGDIR}${iso_folder}"
+    # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
+    if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
+      ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
+    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
+      ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
+    fi
 
-      # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
-      if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-        ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
-      fi
+    # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
+    if [ ! -d "${ISODIR}" ] ; then
+      echo "Please create ${ISODIR} directory first"
+      exit_clean
+    fi
 
-      # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
-      if [ ! -d "${ISODIR}" ] ; then
-        echo "Please create ${ISODIR} directory first"
+    # List ISOs in ${ISODIR} and allow the user to select the target
+    iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
+
+    # Download the latest FreeNas ISO if no ISO found in $ISODIR
+    if [ $iso_cnt -lt 1 ] ; then
+      echo -n "No local ISO found would you like to fetch the latest ${SYSNAME} ISO? (y/n): "
+      read download_confirmed
+      if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
+        cd ${ISODIR}
+        echo "Fetching $iso_name..."
+        fetch $iso_url
+        USER=$(sh -c 'echo ${SUDO_USER}')
+        chown $USER *.iso
+        cd -
+      else
+        echo "Please put a ${SYSNAME} ISO in \"${ISODIR}\""
         exit_clean
-      fi
-
-      # List ISOs in ${ISODIR} and allow the user to select the target
-      iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
-
-      # Download the latest FreeNas ISO if no ISO found in $ISODIR
-      if [ $iso_cnt -lt 1 ] ; then
-        echo -n "No local ISO found would you like to fetch the latest FreeNAS ISO? (y/n): "
-        read download_confirmed
-        if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
-          cd ${ISODIR}
-          isohtml=`curl -L http://download.freenas.org/11/MASTER/latest/x64/ | grep '.iso\"'`
-          isoname=`echo $isohtml | sed -e 's/.*iso">\(.*\)<\/a>.*/\1/'`
-          echo "Fetching $isoname..."
-          fetch http://download.freenas.org/11/MASTER/latest/x64/$isoname
-          USER=$(sh -c 'echo ${SUDO_USER}')
-          chown $USER *.iso
-          cd -
-        else
-          echo "Please put a FreeNas ISO in \"${ISODIR}\""
-          exit_clean
-        fi
-      fi
-    elif [ ${TESTSYSTEM} = "TrueOS" ] ; then
-      # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
-      local ISODIR="${PROGDIR}/trueos/iso/"
-
-      # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
-      if [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
-        ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
-      fi
-
-      # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
-      if [ ! -d "${ISODIR}" ] ; then
-        echo "Please create ${ISODIR} directory first"
-        exit_clean
-      fi
-
-      # List ISOs in ${ISODIR} and allow the user to select the target
-      iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
-
-      # Download the latest TrueOS ISO if no ISO found in $ISODIR
-      if [ $iso_cnt -lt 1 ] ; then
-        echo -n "No local ISO found would you like to fetch the latest TrueOS ISO? (y/n): "
-        read download_confirmed
-        if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
-          cd ${ISODIR}
-          isohtml=`curl -L http://download.trueos.org/unstable/amd64/ | grep 'DVD.iso\"'`
-          isoname=`echo $isohtml | sed -e 's/.*iso">\(.*\)<\/a>.*/\1/'`
-          echo "Fetching $isoname..."
-          fetch http://download.trueos.org/unstable/amd64/$isoname
-          USER=$(sh -c 'echo ${SUDO_USER}')
-          chown $USER *.iso
-          cd -
-        else
-          echo "Please put a TrueOS ISO in \"${ISODIR}\""
-          exit_clean
-        fi
       fi
     fi
 
