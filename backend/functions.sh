@@ -90,6 +90,7 @@ install_dependencies()
 install_dependencies_webui()
 {
 cd ~/
+apt-get install openssh-server
 apt-get install python-pip
 pip install --upgrade pip
 pip install selenium
