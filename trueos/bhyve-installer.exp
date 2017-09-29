@@ -29,14 +29,11 @@ expect {
   }
 }
 
-expect {
+expect_before {
   #"Autoboot in 1 seconds. [Space] to pause" {
-  "Loading /boot/defaults/loader.conf" {
-    send "\r"
-    sleep 1
-    send \032
-    send \054
-    send \054
+  "/boot/kernel/kernel" {
+    send "6"
+    send "6"
     send "\r"
   }
 }
