@@ -16,9 +16,9 @@ bhyve_select_iso()
     fi
     # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
     if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-      ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
-    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
       ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
+    elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
+      ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
     fi
 
     # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
@@ -180,9 +180,7 @@ bhyve_install_iso()
   ifconfig ${IXBUILD_BRIDGE} up
 
   # Wait for bridge to come up
-
-  # Finally have our bridge pick up an IP address
-  dhclient ${IXBUILD_BRIDGE}
+  sleep 5
 
   ###############################################
   # Now lets spin-up bhyve and do an installation

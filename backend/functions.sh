@@ -82,7 +82,7 @@ install_dependencies()
   if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
     touch /usr/local/etc/sudoers.d/ixautomation
     echo '%jenkins ALL = NOPASSWD: /ixautomation/jenkins.sh' >> /usr/local/etc/sudoers.d/ixautomation
-    echo 'Defaults      env_keep += "SSH_AUTH_SOCK"' >> /usr/local/etc/sudoers.d/ixautomation
+    echo 'Defaults      env_keep += "SSH_AUTH_SOCK HOME"' >> /usr/local/etc/sudoers.d/ixautomation
   fi
 
 }
@@ -187,9 +187,9 @@ jenkins_freenas_tests()
   export TESTSYSTEM="FreeNAS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
+  start_ssh_agent
   bhyve_select_iso
   bhyve_install_iso
-  start_ssh_agent
   bhyve_boot
   if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   # Since we are runnig in bhyve populat VMBACKEND for starage test
@@ -253,9 +253,9 @@ jenkins_trueos_tests()
   export TESTSYSTEM="TrueOS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
+  start_ssh_agent
   bhyve_select_iso
   bhyve_install_iso
-  start_ssh_agent
   #bhyve_boot
   #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   exit_clean
