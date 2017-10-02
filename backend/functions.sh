@@ -174,7 +174,7 @@ start_ssh_agent()
   if [ $? -eq 0 ]; then
     ssh-add .ssh/test_id_rsa
   fi
-  ssh-add -L 2>&1 | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
+  ssh-add -L 2>&1 | grep -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
   if [ $? -eq 0 ]; then
     echo "Starting ssh agent failed"
     exit_clean
