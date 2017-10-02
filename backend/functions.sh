@@ -165,16 +165,16 @@ start_ssh_agent()
     ssh-keygen -t rsa -f ~/.ssh/test_id_rsa -q -N ""
   fi
   # look if ssh_agent is runnig
-  ssh-add -L | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent."
+  ssh-add -L 2>&1 | grep -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." >/dev/null
   if [ $? -eq 0 ]; then
     ssh-agent csh
   fi
   # If the agent has no identities add rsa
-  ssh-add -L | grep -q -e "The agent has no identities."
+  ssh-add -L 2>&1 | grep -e "The agent has no identities." >/dev/null
   if [ $? -eq 0 ]; then
     ssh-add .ssh/test_id_rsa
   fi
-  ssh-add -L | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities."
+  ssh-add -L 2>&1 | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
   if [ $? -eq 0 ]; then
     echo "Starting ssh agent failed"
     exit_clean

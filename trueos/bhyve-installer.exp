@@ -31,7 +31,7 @@ expect {
 
 expect_before {
   #"Autoboot in 1 seconds. [Space] to pause" {
-  "/boot/kernel/kernel" {
+  "Autoboot in 1 seconds. [Space] to pause" {
     send "6"
     send "6"
     send "\r"
