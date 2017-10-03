@@ -219,7 +219,6 @@ start_ssh_agent()
 jenkins_freenas_tests()
 {
   trap 'exit_clean' INT
-  export TESTSYSTEM="FreeNAS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   start_ssh_agent
@@ -290,7 +289,6 @@ jenkins_iocage_tests()
 jenkins_trueos_tests()
 {
   trap 'exit_clean' INT
-  export TESTSYSTEM="TrueOS"
   GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   start_ssh_agent
@@ -309,5 +307,18 @@ jenkins_trueview_webui_tests()
 jenkins_sysadm_cli_tests()
 {
   echo "To be added later"
+}
+
+jenkins_freebsd_tests()
+{
+  trap 'exit_clean' INT
+  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
+  create_workdir
+  start_ssh_agent
+  bhyve_select_iso
+  bhyve_install_iso
+  #bhyve_boot
+  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
+  exit_clean
 }
 

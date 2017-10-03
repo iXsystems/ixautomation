@@ -58,6 +58,9 @@ trueview-webui-tests         - Runs TrueView webui tests using webdriver
 -- SysAdm Commands --
 sysadm-cli-tests             - Runs SysAdm API tests with sysadm-cli
 
+-- FreeBSD Commands --
+freebsd-tests                - Runs FreeBSD VM test
+
 EOF
 
 }
@@ -82,6 +85,7 @@ case $TYPE in
                 trueos-tests) jenkins_trueos_tests ;;
         trueview-webui-tests) jenkins_trueview_webui_tests ;;
             sysadm-cli-tests) jenkins_sysadm_tests ;;
+               freebsd-tests) jenkins_freebsd_tests ;;
                            *) echo "Invalid command: $1"
                               display_usage
                               exit 1
