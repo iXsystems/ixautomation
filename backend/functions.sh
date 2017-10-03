@@ -89,20 +89,55 @@ install_dependencies()
 
 install_dependencies_webui()
 {
-cd ~/
-apt-get install openssh-server
-apt-get install python-pip
-pip install --upgrade pip
-pip install selenium
-apt-get install python-pytest
-#download firefox webdriver
-git clone https://github.com/rishabh27892/webui-test-files/
-cd webui-test-files/
-tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
-chmod +x geckodriver
-sudo cp geckodriver /usr/local/bin/
-cd ~/
-rm -rf webui-test-files
+  uname -a | grep "Ubuntu" >/dev/null
+  if [ $? -eq 0 ] ; then
+    cd ~/
+    apt-get install openssh-server
+    apt-get install python-pip
+    pip install --upgrade pip
+    pip install selenium
+    apt-get install python-pytest
+    #download firefox webdriver
+    git clone https://github.com/rishabh27892/webui-test-files/
+    cd webui-test-files/
+    tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
+    chmod +x geckodriver
+    sudo cp geckodriver /usr/local/bin/
+    cd ~/
+    rm -rf webui-test-files
+  fi
+  uname -a | grep "FreeBSD" >/dev/null
+  if [ $? -eq 0 ] ; then
+    which python3.6 >/dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing lang/python36"
+      rc_halt "pkg-static install -y python36"
+      rc_halt "ln -f /usr/local/bin/python3.6 /usr/local/bin/python"
+    else
+      rc_halt "ln -f /usr/local/bin/python3.6 /usr/local/bin/python"
+    fi
+    which pip-3.6 >/dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing devel/py36-pip"
+      rc_halt "pkg-static install -y py36-pip"
+    fi
+    which py.test-3.6 >/dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing devel/py36-pytest"
+      rc_halt "pkg-static install -y py36-pytest"
+      rc_halt "ln -f /usr/local/bin/py.test-3.6 /usr/local/bin/py.test"
+    fi
+    which geckodriver >/dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing www/geckodriver"
+      rc_halt "pkg-static install -y geckodriver"
+    fi
+    find /usr/local/lib -name selenium | grep selenium >/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing selenium"
+      rc_halt "pip-3.6 install selenium"
+    fi
+  fi
 }
 
 
@@ -174,7 +209,7 @@ start_ssh_agent()
   if [ $? -eq 0 ]; then
     ssh-add .ssh/test_id_rsa
   fi
-  ssh-add -L 2>&1 | grep -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
+  ssh-add -L 2>&1 | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
   if [ $? -eq 0 ]; then
     echo "Starting ssh agent failed"
     exit_clean
