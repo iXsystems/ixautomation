@@ -89,7 +89,7 @@ install_dependencies()
 
 install_dependencies_webui()
 {
-  uname -a | grep "Ubuntu" >/dev/null
+  uname -a | grep "Linux" >/dev/null
   if [ $? -eq 0 ] ; then
     cd ~/
     apt-get install openssh-server
