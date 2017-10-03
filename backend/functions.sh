@@ -267,11 +267,16 @@ jenkins_freenas_webui_tests()
 {
   export DISPLAY=:0
   if [ -d "/home/webui/ixbuild" ] ; then
+    cd /home/webui/ixbuild
     git pull
+    cd -
   else
+    if [ ! -d "/home/webui" ] ; then
+      mkdir /home/webui
+    fi
     git clone -b master https://www.github.com/ixsystems/ixbuild.git /home/webui/ixbuild
   fi
-  cd ~/ixbuild/freenas/webui-tests/
+  cd /home/webui/ixbuild/freenas/webui-tests/
   python runtest.py
 }
 
