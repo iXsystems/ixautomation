@@ -96,7 +96,7 @@ install_dependencies_webui()
     apt-get -y install python-pip
     pip install --upgrade pip
     pip install selenium
-    apt-get -y :install python-pytest
+    apt-get -y install python-pytest
     apt-get -y install curl
     #download firefox webdriver
     git clone https://github.com/rishabh27892/webui-test-files/
