@@ -89,15 +89,14 @@ install_dependencies()
 
 install_dependencies_webui()
 {
-  uname -a | grep "Linux" >/dev/null
+  uname -a | grep "Latest" >/dev/null
   if [ $? -eq 0 ] ; then
     cd ~/
-    apt-get install openssh-server
-    apt-get install python-pip
+    apt-get -y install openssh-server
+    apt-get -y install python-pip
     pip install --upgrade pip
     pip install selenium
-    apt-get install python-pytest
-    apt-get install curl
+    apt-get -y :install python-pytest
     #download firefox webdriver
     git clone https://github.com/rishabh27892/webui-test-files/
     cd webui-test-files/
