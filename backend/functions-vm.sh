@@ -208,16 +208,28 @@ bhyve_install_iso()
   zfs create -s -V ${disk_size}G ${VOLUME}/${DATADISK2}
 
   # Install from our ISO
-  ( bhyve -w -A -H -P -c 1 -m 2G \
-    -s 0:0,hostbridge \
-    -s 1:0,lpc \
-    -s 2:0,virtio-net,${IXBUILD_TAP} \
-    -s 4:0,ahci-cd,${ISOFILE} \
-    -s 5:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISKOS} \
-    -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
-    -l com1,${COM_BROADCAST} \
-    $VM ) &
-
+#  if [ ${SYSTYPE} = "FreeNAS" ] ; then
+    ( bhyve -w -A -H -P -c 1 -m 2G \
+      -s 0:0,hostbridge \
+      -s 1:0,lpc \
+      -s 2:0,virtio-net,${IXBUILD_TAP} \
+      -s 4:0,ahci-cd,${ISOFILE} \
+      -s 5:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISKOS} \
+      -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
+      -l com1,${COM_BROADCAST} \
+      $VM ) &
+#  else
+#    ( bhyveload -c ${COM_BROADCAST} -m 2G -d ${ISOFILE} $VM )
+#    ( bhyve -A -H -P -c 1 -m 2G \
+#      -s 0:0,hostbridge \
+#      -s 1:0,lpc \
+#      -s 2:0,virtio-net,${IXBUILD_TAP} \
+#      -s 4:0,ahci-cd,${ISOFILE} \
+#      -s 5:0,ahci-hd,/dev/zvol/${VOLUME}/${DATADISKOS} \
+#      -l com1,${COM_BROADCAST} \
+#      $VM ) &
+#  fi
+  # -s 16,fbuf,tcp=127.0.0.1:5909,w=1280,h=720,wait \
   # Run our expect/tcl script to automate the installation dialog
   ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
