@@ -8,22 +8,23 @@ fi
 
 # Command to fiter $2 output to determine which test folder and config to source
 
-SYSTYPE=`echo $1 | cut -d '-' -f 1`
+SYSTYPE=$(echo "$1" | cut -d '-' -f 1)
 
 # Source our functions
-cwd="`realpath $0 | xargs dirname`"
-. ${cwd}/backend/functions-vm.sh
+cwd="$(realpath "$0" | xargs dirname)"
+. "${cwd}/backend/functions-vm.sh"
 # TOFIX Currently functions-tests.sh requires jenkins.sh to use bash
-. ${cwd}/backend/functions-tests.sh
+. "${cwd}/backend/functions-tests.sh"
 if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
-. ${cwd}/${SYSTYPE}/${SYSTYPE}.cfg
+. "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
-export PROGDIR="`realpath $0 | xargs dirname`"
+PROGDIR="$(realpath "$0" | xargs dirname)"
+export PROGDIR
 
 # Change directory
-cd "${PROGDIR}"
+cd "${PROGDIR}" || exit
 
 # Set the variables
 TYPE="${1}"
@@ -71,8 +72,8 @@ if [ -z "$1" ] ; then
 fi
 
 # Source our functions
-cwd="`realpath $0 | xargs dirname`"
-. ${cwd}/backend/functions.sh
+cwd="$(realpath "$0" | xargs dirname)"
+. "${cwd}/backend/functions.sh"
 
 ######################################################
 

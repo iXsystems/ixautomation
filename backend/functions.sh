@@ -5,7 +5,7 @@ BUILDTAG="$BUILD"
 export BUILDTAG
 
 exit_err() {
-   echo "ERROR: $@"
+   echo "ERROR: $*"
    exit 1
 }
 
@@ -26,8 +26,8 @@ rc_halt()
 
 install_dependencies()
 {
-  which git >/dev/null 2>/dev/null
-  if [ "$?" != "0" ]; then
+  if ! which git >/dev/null 2>/dev/null
+  then
     echo "Installing git.."
     rc_halt "pkg-static install -y git"
   fi
@@ -91,7 +91,7 @@ install_dependencies_webui()
 {
   uname -a | grep "Linux" >/dev/null
   if [ $? -eq 0 ] ; then
-    cd ~/
+    cd ~/ || exit 1
     apt-get -y install openssh-server
     apt-get -y install python-pip
     pip install --upgrade pip
@@ -100,17 +100,17 @@ install_dependencies_webui()
     apt-get -y install curl
     #download firefox webdriver
     git clone https://github.com/rishabh27892/webui-test-files/
-    cd webui-test-files/
+    cd webui-test-files/ || exit 1
     tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
     chmod +x geckodriver
     sudo cp geckodriver /usr/local/bin/
-    cd ~/
+    cd ~/ || exit 1
     rm -rf webui-test-files
   fi
-  uname -a | grep "FreeBSD" >/dev/null
-  if [ $? -eq 0 ] ; then
-    which python3.6 >/dev/null 2>/dev/null
-    if [ "$?" != "0" ]; then
+  if uname -a | grep "FreeBSD" >/dev/null
+  then
+    if ! which python3.6 >/dev/null 2>/dev/null
+    then
       echo "Installing lang/python36"
       rc_halt "pkg-static install -y python36"
       rc_halt "ln -f /usr/local/bin/python3.6 /usr/local/bin/python"
@@ -152,17 +152,17 @@ cleanup_workdir()
 
   # If running on host, lets cleanup
     # Cleanup any leftover mounts
-    for i in `mount | grep -q "on ${MASTERWRKDIR}/" | awk '{print $1}' | tail -r`
+    for i in $(mount | grep -q "on ${MASTERWRKDIR}/" | awk '{print $1}' | tail -r)
     do
-      umount -f $i
+      umount -f "$i"
     done
 
   # Should be done with unmounts
-  mount | grep -q "on ${MASTERWRKDIR}/"
-  if [ $? -ne 0 ] ; then
-    rm -rf ${MASTERWRKDIR} 2>/dev/null
-    chflags -R noschg ${MASTERWRKDIR} 2>/dev/null
-    rm -rf ${MASTERWRKDIR}
+  if ! mount | grep -q "on ${MASTERWRKDIR}/"
+  then
+    rm -rf "${MASTERWRKDIR}" 2>/dev/null
+    chflags -R noschg "${MASTERWRKDIR}" 2>/dev/null
+    rm -rf "${MASTERWRKDIR}"
   fi
 }
 
@@ -172,7 +172,7 @@ create_workdir()
   if [ ! -d "/tmp/build" ] ; then
      mkdir /tmp/build
   fi
-  cd /tmp/build
+  cd /tmp/build || exit_clean
 
   MASTERWRKDIR=`mktemp -d /tmp/build/XXXX`
 
@@ -182,7 +182,7 @@ create_workdir()
   $cocmd
   if [ $? -ne 0 ] ; then exit_clean; fi
 
-  cd ${MASTERWRKDIR}
+  cd "${MASTERWRKDIR}" || exit_clean
   if [ $? -ne 0 ] ; then exit_clean; fi
 }
 
@@ -230,7 +230,7 @@ jenkins_freenas_tests()
   # Since we are runnig in bhyve populat VMBACKEND for starage test
   export VMBACKEND="bhyve"
   export BRIDGEIP="${FNASTESTIP}"
-  cd ${MASTERWRKDIR}/freenas/scripts
+  cd "${MASTERWRKDIR}/freenas/scripts" || exit_clean
   if [ $? -ne 0 ] ; then exit_clean ; fi
   echo ""
   sleep 10
@@ -267,16 +267,16 @@ jenkins_freenas_webui_tests()
 {
   export DISPLAY=:0
   if [ -d "/home/webui/ixbuild" ] ; then
-    cd /home/webui/ixbuild
+    cd /home/webui/ixbuild || exit 1
     git pull
-    cd -
+    cd - || exit 1
   else
     if [ ! -d "/home/webui" ] ; then
       mkdir /home/webui
     fi
     git clone -b master https://www.github.com/ixsystems/ixbuild.git /home/webui/ixbuild
   fi
-  cd /home/webui/ixbuild/freenas/webui-tests/
+  cd /home/webui/ixbuild/freenas/webui-tests || exit 1
   python runtest.py
 }
 
