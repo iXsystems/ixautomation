@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # $1 = Command to run
 ssh_test()
@@ -32,6 +32,3 @@ ssh_test()
 
   return $?
 }
-
-# Export test functions for other tests outside of ixautomation (requires bash)
-export -f ssh_test
