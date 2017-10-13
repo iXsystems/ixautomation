@@ -50,12 +50,6 @@ iocage-tests                 - Run CI from iocage git (Requires pool name)
 -- TrueOS Commands --
 trueos-tests                 - Runs TrueOS VM tests
 
--- TrueView Commands --
-trueview-webui-tests         - Runs TrueView webui tests using webdriver
-
--- SysAdm Commands --
-sysadm-cli-tests             - Runs SysAdm API tests with sysadm-cli
-
 -- FreeBSD Commands --
 freebsd-tests                - Runs FreeBSD VM test
 
@@ -81,8 +75,6 @@ case $TYPE in
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
                 trueos-tests) jenkins_trueos_tests ;;
-        trueview-webui-tests) jenkins_trueview_webui_tests ;;
-            sysadm-cli-tests) jenkins_sysadm_tests ;;
                freebsd-tests) jenkins_freebsd_tests ;;
                            *) echo "Invalid command: $1"
                               display_usage

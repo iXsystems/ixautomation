@@ -232,16 +232,6 @@ jenkins_trueos_tests()
   exit_clean
 }
 
-jenkins_trueview_webui_tests()
-{
-  echo "To be added later"
-}
-
-jenkins_sysadm_cli_tests()
-{
-  echo "To be added later"
-}
-
 jenkins_freebsd_tests()
 {
   trap 'exit_clean' INT
@@ -251,4 +241,3 @@ jenkins_freebsd_tests()
   #bhyve_boot
   exit_clean
 }
-
