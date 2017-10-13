@@ -13,8 +13,6 @@ SYSTYPE=`echo $1 | cut -d '-' -f 1`
 # Source our functions
 cwd="`realpath $0 | xargs dirname`"
 . ${cwd}/backend/functions-vm.sh
-# TOFIX Currently functions-tests.sh requires jenkins.sh to use bash
-. ${cwd}/backend/functions-tests.sh
 if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
 . ${cwd}/${SYSTYPE}/${SYSTYPE}.cfg

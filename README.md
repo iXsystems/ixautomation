@@ -36,7 +36,6 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
-* sshpass
 
 Getting Started
 ============
