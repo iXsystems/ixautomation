@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+:#!/usr/bin/env sh
 
 # Only run as superuser
 if [ "$(id -u)" != "0" ]; then
@@ -11,10 +11,10 @@ fi
 SYSTYPE=$(echo "$1" | cut -d '-' -f 1)
 
 # Source our functions
+
 cwd="$(realpath "$0" | xargs dirname)"
 . "${cwd}/backend/functions-vm.sh"
-# TOFIX Currently functions-tests.sh requires jenkins.sh to use bash
-. "${cwd}/backend/functions-tests.sh"
+
 if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
@@ -53,12 +53,6 @@ iocage-tests                 - Run CI from iocage git (Requires pool name)
 -- TrueOS Commands --
 trueos-tests                 - Runs TrueOS VM tests
 
--- TrueView Commands --
-trueview-webui-tests         - Runs TrueView webui tests using webdriver
-
--- SysAdm Commands --
-sysadm-cli-tests             - Runs SysAdm API tests with sysadm-cli
-
 -- FreeBSD Commands --
 freebsd-tests                - Runs FreeBSD VM test
 
@@ -84,8 +78,6 @@ case $TYPE in
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
                 trueos-tests) jenkins_trueos_tests ;;
-        trueview-webui-tests) jenkins_trueview_webui_tests ;;
-            sysadm-cli-tests) jenkins_sysadm_tests ;;
                freebsd-tests) jenkins_freebsd_tests ;;
                            *) echo "Invalid command: $1"
                               display_usage

@@ -8,8 +8,6 @@ It includes support to test the following projects:
  * FreeNAS
  * iocage
  * TrueOS
- * TrueView
- * SysAdm
 
 Requirements
 ============
@@ -36,7 +34,6 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
-* sshpass
 
 Getting Started
 ============
@@ -71,14 +68,4 @@ sudo ./jenkins.sh iocage-tests
 TrueOS
 ```
 sudo ./jenkins.sh trueos-tests
-```
-
-TrueView
-```
-sudo ./jenkins.sh trueview-webui-tests
-```
-
-SysAdm
-```
-sudo ./jenkins.sh sysadm-cli-tests
 ```

@@ -62,12 +62,6 @@ install_dependencies()
     rc_halt "pkg-static install -y wget"
   fi
 
-  which sshpass >/dev/null 2>/dev/null
-  if [ "$?" != "0" ]; then
-    echo "Installing security/sshpass"
-    rc_halt "pkg-static install -y sshpass"
-  fi
-
   which rsync >/dev/null 2>/dev/null
   if [ "$?" != "0" ]; then
     echo "Installing net/rsync"
@@ -193,73 +187,14 @@ exit_clean()
   exit 1
 }
 
-start_ssh_agent()
-{
-  # look is rsa key exist
-  ls -al ~/.ssh | grep -q -e 'test_id_rsa.pub'
-  if [ $? -eq 1 ]; then
-    ssh-keygen -t rsa -f ~/.ssh/test_id_rsa -q -N ""
-  fi
-  # look if ssh_agent is runnig
-  ssh-add -L 2>&1 | grep -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." >/dev/null
-  if [ $? -eq 0 ]; then
-    eval `ssh-agent`
-  fi
-  # If the agent has no identities add rsa
-  ssh-add -L 2>&1 | grep -e "The agent has no identities." >/dev/null
-  if [ $? -eq 0 ]; then
-    ssh-add .ssh/test_id_rsa
-  fi
-  ssh-add -L 2>&1 | grep -q -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." -e "The agent has no identities." >/dev/null
-  if [ $? -eq 0 ]; then
-    echo "Starting ssh agent failed"
-    exit_clean
-  fi
-}
-
 jenkins_freenas_tests()
 {
   trap 'exit_clean' INT
-  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
+  GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
-  start_ssh_agent
   bhyve_select_iso
   bhyve_install_iso
   bhyve_boot
-  if [ -z $FNASTESTIP ] ; then exit_clean ; fi
-  # Since we are runnig in bhyve populat VMBACKEND for starage test
-  export VMBACKEND="bhyve"
-  export BRIDGEIP="${FNASTESTIP}"
-  cd "${MASTERWRKDIR}/freenas/scripts" || exit_clean
-  if [ $? -ne 0 ] ; then exit_clean ; fi
-  echo ""
-  sleep 10
-  pkill -F /tmp/vmcu.pid >/dev/null 2>/dev/null
-  echo ""
-  echo "Output from REST API calls:"
-  echo "-----------------------------------------"
-  echo "Running API v1.0 test group create 1/3"
-  touch /tmp/$VM-tests-create.log 2>/dev/null
-  tail -f /tmp/$VM-tests-create.log 2>/dev/null &
-  tpid=$!
-  ./9.10-create-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-create.log
-  kill -9 $tpid
-  echo ""
-  echo "Running API v1.0 test group update 2/3"
-  touch /tmp/$VM-tests-update.log 2>/dev/null
-  tail -f /tmp/$VM-tests-update.log 2>/dev/null &
-  tpid=$!
-  ./9.10-update-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-update.log
-  kill -9 $tpid
-  echo ""
-  echo "Running API v1.0 test group delete 3/3"
-  touch /tmp/$VM-tests-delete.log 2>/dev/null
-  tail -f /tmp/$VM-tests-delete.log 2>/dev/null &
-  tpid=$!
-  ./9.10-delete-tests.sh ip=$FNASTESTIP 2>&1 | tee >/tmp/$VM-tests-delete.log
-  kill -9 $tpid
-  echo ""
-  sleep 10
   exit_clean
 }
 
@@ -290,36 +225,19 @@ jenkins_iocage_tests()
 jenkins_trueos_tests()
 {
   trap 'exit_clean' INT
-  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
-  start_ssh_agent
   bhyve_select_iso
   bhyve_install_iso
   #bhyve_boot
-  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   exit_clean
-}
-
-jenkins_trueview_webui_tests()
-{
-  echo "To be added later"
-}
-
-jenkins_sysadm_cli_tests()
-{
-  echo "To be added later"
 }
 
 jenkins_freebsd_tests()
 {
   trap 'exit_clean' INT
-  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
-  start_ssh_agent
   bhyve_select_iso
   bhyve_install_iso
   #bhyve_boot
-  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   exit_clean
 }
-
