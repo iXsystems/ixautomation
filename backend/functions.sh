@@ -225,12 +225,10 @@ jenkins_iocage_tests()
 jenkins_trueos_tests()
 {
   trap 'exit_clean' INT
-  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   bhyve_select_iso
   bhyve_install_iso
   #bhyve_boot
-  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   exit_clean
 }
 
@@ -247,12 +245,10 @@ jenkins_sysadm_cli_tests()
 jenkins_freebsd_tests()
 {
   trap 'exit_clean' INT
-  GITREPO="-b feature-bhyve https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   bhyve_select_iso
   bhyve_install_iso
   #bhyve_boot
-  #if [ -z $FNASTESTIP ] ; then exit_clean ; fi
   exit_clean
 }
 
