@@ -333,6 +333,12 @@ bhyve_stop()
   # Wait for VM to be destroyed
   sleep 5
 
+  # Remove the tap interface
+  ifconfig ${IXBUILD_BRIDGE} deletem ${IXBUILD_TAP}
+ 
+  # Wait for tap to be removed
+  sleep 5 
+
   # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null
 
