@@ -203,7 +203,7 @@ start_ssh_agent()
   # look if ssh_agent is runnig
   ssh-add -L 2>&1 | grep -e "Error connecting to agent" -e "Could not open a connection to your authentication agent." >/dev/null
   if [ $? -eq 0 ]; then
-    ssh-agent csh
+    eval `ssh-agent`
   fi
   # If the agent has no identities add rsa
   ssh-add -L 2>&1 | grep -e "The agent has no identities." >/dev/null
