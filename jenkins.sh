@@ -45,6 +45,7 @@ install-dependencies-webui   - Install all the packages need for iXautomation we
 
 -- FreeNAS Commands --
 freenas-tests                - Runs FreeNAS VM API tests against built release
+freenas-api-tests         - Runs FreeNAS VM Python API tests against built release
 freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
 
 -- iocage Commands --
@@ -75,6 +76,7 @@ case $TYPE in
         install-dependencies) install_dependencies ;;
   install-dependencies-webui) install_dependencies_webui ;;
                freenas-tests) jenkins_freenas_tests ;;
+        freenas-api-tests) jenkins_freenas_api_tests;;
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
                 trueos-tests) jenkins_trueos_tests ;;

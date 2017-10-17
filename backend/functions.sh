@@ -177,7 +177,6 @@ create_workdir()
   if [ $? -ne 0 ] ; then exit_clean; fi
 
   cd "${MASTERWRKDIR}" || exit_clean
-  if [ $? -ne 0 ] ; then exit_clean; fi
 }
 
 exit_clean()
@@ -197,6 +196,20 @@ jenkins_freenas_tests()
   bhyve_boot
   exit_clean
 }
+
+jenkins_freenas_api_tests()
+{
+  trap 'exit_clean' INT
+  GITREPO="https://www.github.com/ixsystems/ixbuild.git"
+  create_workdir
+  bhyve_select_iso
+  bhyve_install_iso
+  bhyve_boot
+  cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
+  python runtest.py
+  cd -
+}
+
 
 jenkins_freenas_webui_tests()
 {
