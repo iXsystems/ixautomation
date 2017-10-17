@@ -183,7 +183,7 @@ exit_clean()
 {
   bhyve_stop
   cleanup_workdir
-  exit 0 
+  exit 0
 }
 
 exit_fail()
@@ -213,7 +213,7 @@ jenkins_freenas_api_tests()
   bhyve_install_iso
   bhyve_boot
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
-  python runtest.py -ip ${FNASTESTIP} -password abcd1234 -interface vtnet0
+  python runtest.py --ip ${FNASTESTIP} --password abcd1234 --interface vtnet0
   cd -
 }
 
