@@ -146,21 +146,34 @@ bhyve_install_iso()
   sysctl net.link.tap.up_on_open=1 &>/dev/null
   sysctl net.inet.ip.forwarding=1 &>/dev/null
 
-  # Lets check status of ${IXBUILD_TAP} device
-  if ! ifconfig ${IXBUILD_TAP} >/dev/null 2>/dev/null ; then
-    IXBUILD_TAP=$(ifconfig ${IXBUILD_TAP} create)
-    # Save the tap interface name, generated or specified. Used for clean-up.
-    echo ${IXBUILD_TAP} > ${TAP_LOCKFILE}
-  fi
-
   #
   # @TODO: If $IXBUILD_IFACE is wlan0, setup NAT with DHCP (using dnsmasq)
   #
 
   # Check the status of our network bridge
   if ! ifconfig ${IXBUILD_BRIDGE} >/dev/null 2>/dev/null ; then
+    # Create the bridge if it does not exist
     bridge=$(ifconfig bridge create)
     ifconfig ${bridge} name ${IXBUILD_BRIDGE} >/dev/null
+    # Create the initial tap device for the bridge
+    local INITIAL_TAP_LOCKFILE="/tmp/.initial-tap-${VM}"
+    ifconfig tap create > ${INITIAL_TAP_LOCKFILE} 
+    # Ensure $IXBUILD_IFACE is a member of our bridge.
+    if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
+      ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
+    fi
+    # Add the initial tap device to the bridge
+    local INITIAL_TAP=$(cat /tmp/.initial-tap-${VM})
+    ifconfig ${IXBUILD_BRIDGE} addm ${INITIAL_TAP}
+    # Bring up the bridge
+    ifconfig ${IXBUILD_BRIDGE} up
+  fi
+
+  # Lets check status of ${IXBUILD_TAP} device
+  if ! ifconfig ${IXBUILD_TAP} >/dev/null 2>/dev/null ; then
+    IXBUILD_TAP=$(ifconfig ${IXBUILD_TAP} create)
+    # Save the tap interface name, generated or specified. Used for clean-up.
+    echo ${IXBUILD_TAP} > ${TAP_LOCKFILE}
   fi
 
   # Ensure $IXBUILD_IFACE is a member of our bridge.
