@@ -271,6 +271,7 @@ bhyve_install_iso()
     else
       echo "FNASTESTIP=0.0.0.0"
       echo "ERROR: No ip address assigned to VM. FNASTESTIP not set."
+      exit_fail
     fi
   fi
   return $EXIT_STATUS
