@@ -248,7 +248,6 @@ bhyve_install_iso()
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
 
-
   # Shutdown VM, stop output
   sleep 5
   bhyvectl --destroy --vm=$VM &>/dev/null &

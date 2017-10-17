@@ -183,6 +183,13 @@ exit_clean()
 {
   bhyve_stop
   cleanup_workdir
+  exit 0 
+}
+
+exit_fail()
+{
+  bhyve_stop
+  cleanup_workdir
   exit 1
 }
 
