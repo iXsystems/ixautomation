@@ -109,7 +109,7 @@ expect {
 expect {
   "Installation finished. No error reported." {
     send_user "Bhyve installation finished."
-    sleep .5
+    sleep 5
     exit
   }
 }
