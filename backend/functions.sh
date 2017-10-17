@@ -206,7 +206,7 @@ jenkins_freenas_api_tests()
   bhyve_install_iso
   bhyve_boot
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
-  python runtest.py
+  python runtest.py -ip ${FNASTESTIP} -password abcd1234 -interface vtnet0
   cd -
 }
 
