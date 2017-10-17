@@ -195,13 +195,14 @@ exit_fail()
 
 jenkins_freenas_tests()
 {
-  trap 'exit_clean' INT
+  trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   bhyve_select_iso
   bhyve_install_iso
   bhyve_boot
-  exit_clean
+  bhyve_stop
+  cleanup_workdir
 }
 
 jenkins_freenas_api_tests()
