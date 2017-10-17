@@ -186,15 +186,6 @@ bhyve_install_iso()
     ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_TAP}
   fi
 
-  # Wait for bridge to be created
-  sleep 5
-
-  # Up the bridge interface
-  ifconfig ${IXBUILD_BRIDGE} up
-
-  # Wait for bridge to come up
-  sleep 5
-
   ###############################################
   # Now lets spin-up bhyve and do an installation
   ###############################################
