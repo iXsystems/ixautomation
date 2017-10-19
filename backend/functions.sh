@@ -73,6 +73,24 @@ install_dependencies()
     rc_halt "pkg-static install -y bhyve-firmware"
   fi
 
+  which python3.6 >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing lang/python36"
+    rc_halt "pkg-static install -y python36"
+  fi
+
+  which py.test-3.6 >/dev/null 2>/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing devel/py3-pytest"
+    rc_halt "pkg-static install -y py36-pytest"
+  fi
+
+  find /usr/local/lib -name requests | grep requests >/dev/null
+  if [ "$?" != "0" ]; then
+    echo "Installing www/py3-requests"
+    rc_halt "pkg-static install -y py36-requests"
+  fi
+
   if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
     touch /usr/local/etc/sudoers.d/ixautomation
     echo '%jenkins ALL = NOPASSWD: /ixautomation/jenkins.sh' >> /usr/local/etc/sudoers.d/ixautomation
@@ -214,7 +232,7 @@ jenkins_freenas_api_tests()
   bhyve_install_iso
   bhyve_boot
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
-  python runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
+  python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
 }
 
