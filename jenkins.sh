@@ -81,6 +81,7 @@ case $TYPE in
                 iocage-tests) jenkins_iocage_tests ;;
                 trueos-tests) jenkins_trueos_tests ;;
                freebsd-tests) jenkins_freebsd_tests ;;
+                    vm-tests) jenkins_vm_tests ;;
                            *) echo "Invalid command: $1"
                               display_usage
                               exit 1

@@ -1,5 +1,45 @@
 #!/usr/bin/env sh
 
+bridge_setup()
+{
+  local VM_BRIDGE="bridge0"
+  local VM_TAP="tap0"
+  local VM_SWITCH="public"
+  local VM_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  if ! ifconfig ${VM_BRIDGE} >/dev/null 2>/dev/null ; then
+    ifconfig bridge create
+  fi
+  if ! ifconfig ${VM_TAP} >/dev/null 2>/dev/null ; then
+  ifconfig tap create
+  fi
+  if ! ifconfig ${VM_BRIDGE} | grep -q ${VM_TAP} >/dev/null 2>/dev/null ; then
+    ifconfig ${VM_BRIDGE} addm ${VM_TAP} 
+  fi
+  if ! ifconfig ${VM_BRIDGE} | grep -q "member: ${VM_IFACE}" ; then
+     ifconfig ${VM_BRIDGE} addm ${VM_IFACE}
+  fi
+  if ! ifconfig ${VM_BRIDGE} | grep -q UP ; then
+     ifconfig ${VM_BRIDGE} up
+  fi
+  if ! vm switch list | grep -q ${VM_SWITCH} ; then
+     vm switch import ${VM_SWITCH} ${VM_BRIDGE}
+  fi
+  sysrc -f /etc/rc.conf cloned_interfaces="${VM_BRIDGE} ${VM_TAP}"
+  sysrc -f /etc/rc.conf ifconfig_${VM_BRIDGE}="addm ${VM_IFACE} addm ${VM_TAP} up"
+}
+
+vm_setup()
+{
+  sysrc -f /etc/rc.conf vm_enable="YES"
+  sysrc -f /etc/rc.conf vm_dir="/ixautomation/vms"
+  if [ ! -L "/libexec/rc/init.d/started/vm" ] ; then
+    service vm start
+  fi
+  if [ ! -L "/etc/runlevels/default/vm" ] ; then
+    rc-update add vm
+  fi
+}
+
 bhyve_select_iso()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
