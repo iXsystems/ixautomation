@@ -145,8 +145,8 @@ vm_select_iso()
 vm_stop()
 {
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | vm ${VM} poweroff
-  yes | vm ${VM} destroy
+  yes | vm poweroff ${VM}
+  yes | vm destroy ${VM}
 }
 
 bhyve_select_iso()
