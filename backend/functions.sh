@@ -221,7 +221,7 @@ exit_fail()
 }
 
 jenkins_vm_tests()
-{   
+{
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
