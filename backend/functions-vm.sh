@@ -135,8 +135,10 @@ vm_select_iso()
     fi
   fi
 
-# Copy selected ISO to temporary location for VM
-vm iso ${ISODIR}/${iso_name}
+  # Copy selected ISO to temporary location for VM
+  vm iso ${ISODIR}/${iso_name}
+  vm create -t ${SYSTYPE} ${VM}
+  vm install ${VM} ${iso_name}
 }
 
 bhyve_select_iso()
