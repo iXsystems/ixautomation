@@ -42,6 +42,7 @@ vm_setup()
 
 vm_select_iso()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   if [ -z "$SYSTYPE" ]; then
     echo "Please specify SYSTYPE as freenas, trueos, etc"
     exit 1
