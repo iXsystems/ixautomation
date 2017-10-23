@@ -156,11 +156,32 @@ vm_install()
   echo "Success: Shutting down the installation VM.."
 }
 
+vm_boot()
+{
+  # Get console device for newly created VM
+  sleep 1
+  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
+  local VM_OUTPUT="/tmp/${VM}console.log"
+  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+
+  echo -e \\033c # Reset/clear to get native term dimensions
+
+  if grep -q "Starting nginx." ${VM_OUTPUT} || grep -q "Plugin loaded: SSHPlugin" ${VM_OUTPUT} ; then
+    export FNASTESTIP="$(awk '$0 ~ /^vtnet0:\ flags=/ {++n;next}; n == 1 && $1 == "inet" {print $2;exit}' ${VM_OUTPUT})"
+  if [ -n "${FNASTESTIP}" ] ; then
+    echo "FNASTESTIP=${FNASTESTIP}"
+  else
+    echo "FNASTESTIP=0.0.0.0"
+    echo "ERROR: No ip address assigned to VM. FNASTESTIP not set."
+    fi
+  fi
+}
+
 vm_stop()
 {
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   yes | vm stop ${VM}
-  sleep 1
+  sleep 5
   yes | vm destroy ${VM}
 }
 
