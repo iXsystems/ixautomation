@@ -196,13 +196,12 @@ vm_boot()
 
 vm_destroy()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   yes | vm poweroff ${VM}
   sleep 5
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   yes | vm destroy ${VM}
 }
 
-}
 bhyve_select_iso()
 {
   if [ -z "$SYSTYPE" ]; then
