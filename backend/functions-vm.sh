@@ -154,7 +154,7 @@ vm_stop()
 {
 export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
 yes | vm stop ${VM}
-sleep 5
+sleep 10
 }
 
 vm_install()
