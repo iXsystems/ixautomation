@@ -44,7 +44,6 @@ install-dependencies         - Install all the packages need for iXautomation
 install-dependencies-webui   - Install all the packages need for iXautomation webui
 
 -- FreeNAS Commands --
-freenas-tests                - Runs FreeNAS VM API tests against built release
 freenas-api-tests         - Runs FreeNAS VM Python API tests against built release
 freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
 
@@ -56,6 +55,10 @@ trueos-tests                 - Runs TrueOS VM tests
 
 -- FreeBSD Commands --
 freebsd-tests                - Runs FreeBSD VM test
+
+-- VM Commands --
+bhyve-tests                  - Runs a SYSTYPE in a VM using bhyve
+vm-test                      - Runs a SYSTYPE in a VM using vm-bhyve
 
 EOF
 
@@ -75,7 +78,7 @@ cwd="$(realpath "$0" | xargs dirname)"
 case $TYPE in
         install-dependencies) install_dependencies ;;
   install-dependencies-webui) install_dependencies_webui ;;
-               freenas-tests) jenkins_freenas_tests ;;
+                 bhyve-tests) jenkins_bhyve_tests ;;
         freenas-api-tests) jenkins_freenas_api_tests;;
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;

@@ -54,9 +54,22 @@ sudo ./jenkins.sh install-dependencies
 Using the testing framework
 ============
 
+Create a VM, and test install using bhyve
+
+```
+sudo ./jenkins.sh bhyve-tests freenas
+```
+
+Create a VM, and test install using vm-bhyve
+
+```
+sudo ./jenkins.sh vm-tests freenas
+sudo ./jenkins.sh vm-tests trueos
+```
+
 FreeNAS
 ```
-sudo ./jenkins.sh freenas-tests
+sudo ./jenkins.sh freenas-api-tests
 sudo ./jenkins.sh freenas-webui-tests
 ```
 

@@ -229,7 +229,7 @@ jenkins_vm_tests()
   vm_select_iso
 }
 
-jenkins_freenas_tests()
+jenkins_bhyve_tests()
 {
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
