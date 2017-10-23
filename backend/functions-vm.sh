@@ -139,7 +139,19 @@ vm_select_iso()
   # Copy selected ISO to temporary location for VM
   vm iso ${ISODIR}/${iso_name}
   vm create -t ${SYSTYPE} ${VM}
+  sysrc -f /ixautomation/vms/${VM}/${VM}.conf console="nmdm"
   vm install ${VM} ${iso_name}
+}
+
+vm_install()
+{
+  local COM_LISTEN="cat /ixautomation/vms/${VM}/console"
+  local VM_OUTPUT="/tmp/${VM}console.log"
+
+  # Run our expect/tcl script to automate the installation dialog
+  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  echo -e \\033c # Reset/clear to get native term dimensions
+  echo "Success: Shutting down the installation VM.."
 }
 
 vm_stop()
