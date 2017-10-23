@@ -226,6 +226,7 @@ jenkins_vm_tests()
   ixautomation_setup
   vm_setup
   bridge_setup
+  vm_select_iso
 }
 
 jenkins_freenas_tests()
