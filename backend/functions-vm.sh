@@ -158,6 +158,8 @@ vm_install()
 
 vm_boot()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  vm reset ${VM}
   # Get console device for newly created VM
   sleep 1
   local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
