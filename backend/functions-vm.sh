@@ -145,7 +145,7 @@ vm_select_iso()
 
 vm_install()
 {
-  local COM_LISTEN="cat /ixautomation/vms/${VM}/console"
+  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console`
   local VM_OUTPUT="/tmp/${VM}console.log"
 
   # Run our expect/tcl script to automate the installation dialog
