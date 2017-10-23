@@ -8,7 +8,7 @@ fi
 
 # Command to fiter $2 output to determine which test folder and config to source
 
-SYSTYPE=$(echo "$1" | cut -d '-' -f 1)
+SYSTYPE="${2}"
 
 # Source our functions
 

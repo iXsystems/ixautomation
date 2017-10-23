@@ -42,94 +42,98 @@ vm_setup()
 
 vm_select_iso()
 {
-if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
-[ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
+  if [ -z "$SYSTYPE" ]; then
+    echo "Please specify SYSTYPE as freenas, trueos, etc"
+    exit 1
+  fi
+  if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
+  [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
-# If we aren't running as part of the build process, list ISOs in the $ISODIR
-if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
+  # If we aren't running as part of the build process, list ISOs in the $ISODIR
+  if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
 
-# Default to prompting for ISOs from ./ixbuild/freenas/iso/*
-if [ -n "$USING_JENKINS" ] ; then
-local ISODIR="${WORKSPACE/artifacts/iso}"
-else
-local ISODIR="${PROGDIR}${iso_folder}"
-fi
-# Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
-if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
-elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
-ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
-fi
+  # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
+  if [ -n "$USING_JENKINS" ] ; then
+    local ISODIR="${WORKSPACE/artifacts/iso}"
+  else
+    local ISODIR="${PROGDIR}${iso_folder}"
+  fi
+  # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
+  if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
+    ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
+  elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
+    ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
+  fi
 
-# [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
-if [ ! -d "${ISODIR}" ] ; then
-echo "Please create ${ISODIR} directory first"
-exit_clean
-fi
+  # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
+  if [ ! -d "${ISODIR}" ] ; then
+    echo "Please create ${ISODIR} directory first"
+    exit_clean
+  fi
 
-# List ISOs in ${ISODIR} and allow the user to select the target
-iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
+  # List ISOs in ${ISODIR} and allow the user to select the target
+  iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
-# Download the latest FreeNas ISO if no ISO found in $ISODIR
-if [ $iso_cnt -lt 1 ] ; then
-echo -n "No local ISO found would you like to fetch the latest ${SYSNAME} ISO? (y/n): "
-read download_confirmed
-if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
-cd ${ISODIR}
-echo "Fetching $iso_name..."
-fetch $iso_url
-USER=$(sh -c 'echo ${SUDO_USER}')
-chown $USER *.iso
-cd -
-else
-echo "Please put a ${SYSNAME} ISO in \"${ISODIR}\""
-exit_clean
-fi
-fi
+  # Download the latest FreeNas ISO if no ISO found in $ISODIR
+  if [ $iso_cnt -lt 1 ] ; then
+    echo -n "No local ISO found would you like to fetch the latest ${SYSNAME} ISO? (y/n): "
+    read download_confirmed
+    if test -n "${download_confirmed}" && test "${download_confirmed}" = "y" ; then
+      cd ${ISODIR}
+      echo "Fetching $iso_name..."
+      fetch $iso_url
+      USER=$(sh -c 'echo ${SUDO_USER}')
+      chown $USER *.iso
+      cd -
+    else
+      echo "Please put a ${SYSNAME} ISO in \"${ISODIR}\""
+      exit_clean
+    fi
+  fi
 
-# Repopulate the list of ISOs in ${ISODIR} and allow the user to select the target
-iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
+  # Repopulate the list of ISOs in ${ISODIR} and allow the user to select the target
+  iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
-# Our to-be-determined file name of the ISO to test; must be inside $ISODIR
-local iso_name=""
+  # Our to-be-determined file name of the ISO to test; must be inside $ISODIR
+  local iso_name=""
 
-# If there's only one ISO in the $ISODIR, assume it's for testing.
-if [ $iso_cnt -eq 1 ] ; then
-# Snatch the first (only) ISO listed in the directory
-iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'NR == 1 {print $9}')"
-else
-# Otherwise, loop until we get a valid user selection
-while :
-do
-echo "Please select which ISO to test (1-$iso_cnt):"
+  # If there's only one ISO in the $ISODIR, assume it's for testing.
+  if [ $iso_cnt -eq 1 ] ; then
+    # Snatch the first (only) ISO listed in the directory
+    iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'NR == 1 {print $9}')"
+  else
+    # Otherwise, loop until we get a valid user selection
+    while :
+    do
+    echo "Please select which ISO to test (1-$iso_cnt):"
 
-# Listing ISOs in the ./freenas/iso/ directory, numbering the results for selection
-ls -l "${ISODIR}"*.iso | awk 'BEGIN{cnt=1} {print "    ("cnt") "$9; cnt+=1}'
-echo -n "Enter your selection and press [ENTER]: "
+    # Listing ISOs in the ./freenas/iso/ directory, numbering the results for selection
+    ls -l "${ISODIR}"*.iso | awk 'BEGIN{cnt=1} {print "    ("cnt") "$9; cnt+=1}'
+    echo -n "Enter your selection and press [ENTER]: "
 
-# Prompt user to determine which ISO to use
-read iso_selection
+    # Prompt user to determine which ISO to use
+    read iso_selection
 
-# Only accept integer chars for our ISO selection
-iso_selection=${iso_selection##*[!0-9]*}
+    # Only accept integer chars for our ISO selection
+    iso_selection=${iso_selection##*[!0-9]*}
 
-# If an invalid selection, notify the user, pause briefly and then re-prompt for a selection
-if [ -z $iso_selection ] || [ $iso_selection -lt 1 ] || [ $iso_selection -gt $iso_cnt ] 2>/dev/null; then
-echo -n "Invalid selection.." && sleep 1 && echo -n "." && sleep 1 && echo "."
-elif [ -n "`echo $iso_selection | sed 's| ||g'`" ] ; then
+    # If an invalid selection, notify the user, pause briefly and then re-prompt for a selection
+      if [ -z $iso_selection ] || [ $iso_selection -lt 1 ] || [ $iso_selection -gt $iso_cnt ] 2>/dev/null; then
+        echo -n "Invalid selection.." && sleep 1 && echo -n "." && sleep 1 && echo "."
+        elif [ -n "`echo $iso_selection | sed 's| ||g'`" ] ; then
 
-# Confirm our user's ISO selection with another prompt
-iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'FNR == '$iso_selection' {print $9}')"
-printf "You have selected \"${iso_name}\", is this correct? (y/n): "
-read iso_confirmed
+        # Confirm our user's ISO selection with another prompt
+        iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'FNR == '$iso_selection' {print $9}')"
+        printf "You have selected \"${iso_name}\", is this correct? (y/n): "
+        read iso_confirmed
 
-if test -n "${iso_confirmed}" && test "${iso_confirmed}" = "y" ; then
-break
-fi
-fi
-done
-fi
-fi
+          if test -n "${iso_confirmed}" && test "${iso_confirmed}" = "y" ; then
+          break
+          fi
+        fi
+      done
+    fi
+  fi
 
 # Copy selected ISO to temporary location for VM
 vm ${ISODIR}/${iso_name}
@@ -137,6 +141,10 @@ vm ${ISODIR}/${iso_name}
 
 bhyve_select_iso()
 {
+  if [ -z "$SYSTYPE" ]; then
+    echo "Please specify SYSTYPE, freenas, trueos, etc"
+    exit 1
+  fi
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
   [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
 
