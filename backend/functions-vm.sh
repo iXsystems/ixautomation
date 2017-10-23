@@ -145,6 +145,8 @@ vm_select_iso()
 
 vm_install()
 {
+  # Get console device for newly created VM
+  sleep 1
   local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
 
