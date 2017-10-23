@@ -221,7 +221,7 @@ exit_fail()
 }
 
 jenkins_vm_tests()
-{   
+{
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
@@ -258,6 +258,8 @@ jenkins_freenas_api_tests()
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
   python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
+  bhyve_stop
+  cleanup_workdir
 }
 
 
