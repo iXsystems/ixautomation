@@ -229,6 +229,8 @@ jenkins_vm_tests()
   vm_setup
   bridge_setup
   vm_select_iso
+  vm_install
+  vm_boot
   vm_stop
   cleanup_workdir
 }

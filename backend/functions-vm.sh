@@ -139,13 +139,49 @@ vm_select_iso()
   # Copy selected ISO to temporary location for VM
   vm iso ${ISODIR}/${iso_name}
   vm create -t ${SYSTYPE} ${VM}
+  sysrc -f /ixautomation/vms/${VM}/${VM}.conf console="nmdm"
   vm install ${VM} ${iso_name}
+}
+
+vm_install()
+{
+  # Get console device for newly created VM
+  sleep 1
+  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
+  local VM_OUTPUT="/tmp/${VM}console.log"
+
+  # Run our expect/tcl script to automate the installation dialog
+  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  echo -e \\033c # Reset/clear to get native term dimensions
+  echo "Success: Shutting down the installation VM.."
+}
+
+vm_boot()
+{
+  # Get console device for newly created VM
+  sleep 1
+  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
+  local VM_OUTPUT="/tmp/${VM}console.log"
+  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+
+  echo -e \\033c # Reset/clear to get native term dimensions
+
+  if grep -q "Starting nginx." ${VM_OUTPUT} || grep -q "Plugin loaded: SSHPlugin" ${VM_OUTPUT} ; then
+    export FNASTESTIP="$(awk '$0 ~ /^vtnet0:\ flags=/ {++n;next}; n == 1 && $1 == "inet" {print $2;exit}' ${VM_OUTPUT})"
+  if [ -n "${FNASTESTIP}" ] ; then
+    echo "FNASTESTIP=${FNASTESTIP}"
+  else
+    echo "FNASTESTIP=0.0.0.0"
+    echo "ERROR: No ip address assigned to VM. FNASTESTIP not set."
+    fi
+  fi
 }
 
 vm_stop()
 {
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | vm poweroff ${VM}
+  yes | vm stop ${VM}
+  sleep 5
   yes | vm destroy ${VM}
 }
 
