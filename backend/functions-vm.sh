@@ -143,6 +143,20 @@ vm_select_iso()
   vm install ${VM} ${iso_name}
 }
 
+vm_start()
+{
+export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+vm start ${VM}
+sleep 5
+}
+
+vm_stop()
+{
+export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+yes | vm stop ${VM}
+sleep 5
+}
+
 vm_install()
 {
   # Get console device for newly created VM
@@ -154,12 +168,13 @@ vm_install()
   ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
+  vm_stop
 }
 
 vm_boot()
 {
+  vm_start
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | vm reset ${VM}
   # Get console device for newly created VM
   sleep 1
   local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
@@ -179,22 +194,10 @@ vm_boot()
   fi
 }
 
-vm_start()
-{
-export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-vm start ${VM}
-sleep 5
-}
-
-vm_stop()
-{
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | vm stop ${VM}
-  sleep 5
-}
-
 vm_destroy()
 {
+  yes | vm poweroff ${VM}
+  sleep 5
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   yes | vm destroy ${VM}
 }
