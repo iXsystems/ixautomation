@@ -179,6 +179,13 @@ vm_boot()
   fi
 }
 
+vm_start()
+{
+export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+vm start ${VM}
+sleep 5
+}
+
 vm_stop()
 {
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
