@@ -142,6 +142,13 @@ vm_select_iso()
   vm install ${VM} ${iso_name}
 }
 
+vm_stop()
+{
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  yes | vm poweroff
+  yes | vm destroy
+}
+
 bhyve_select_iso()
 {
   if [ -z "$SYSTYPE" ]; then

@@ -229,6 +229,8 @@ jenkins_vm_tests()
   vm_setup
   bridge_setup
   vm_select_iso
+  vm_stop
+  cleanup_workdir
 }
 
 jenkins_bhyve_tests()
