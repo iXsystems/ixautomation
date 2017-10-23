@@ -136,7 +136,7 @@ vm_select_iso()
   fi
 
 # Copy selected ISO to temporary location for VM
-vm ${ISODIR}/${iso_name}
+vm iso ${ISODIR}/${iso_name}
 }
 
 bhyve_select_iso()
