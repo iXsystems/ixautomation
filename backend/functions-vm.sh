@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+
 bridge_setup()
 {
   local VM_BRIDGE="bridge0"
