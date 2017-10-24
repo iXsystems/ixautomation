@@ -231,7 +231,7 @@ jenkins_vm_tests()
   vm_select_iso
   vm_install
   vm_boot
-  vm_stop
+  vm_destroy
   cleanup_workdir
 }
 
