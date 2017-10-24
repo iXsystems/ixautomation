@@ -141,6 +141,10 @@ vm_select_iso()
   vm create -t ${SYSTYPE} ${VM}
   sysrc -f /ixautomation/vms/${VM}/${VM}.conf console="nmdm"
   vm install ${VM} ${iso_name}
+  while ! [ -f /ixautomation/vms/${VM}/console ]
+  do
+    sleep 1
+  done
 }
 
 vm_start()
