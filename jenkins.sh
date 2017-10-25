@@ -50,15 +50,8 @@ freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
 -- iocage Commands --
 iocage-tests                 - Run CI from iocage git (Requires pool name)
 
--- TrueOS Commands --
-trueos-tests                 - Runs TrueOS VM tests
-
--- FreeBSD Commands --
-freebsd-tests                - Runs FreeBSD VM test
-
 -- VM Commands --
-bhyve-tests                  - Runs a SYSTYPE in a VM using bhyve
-vm-test                      - Runs a SYSTYPE in a VM using vm-bhyve
+vm-test                      - Runs a SYSTYPE in a VM using vm-bhyve (freebsd, freenas, or trueos)
 
 EOF
 
@@ -78,7 +71,6 @@ cwd="$(realpath "$0" | xargs dirname)"
 case $TYPE in
         install-dependencies) install_dependencies ;;
   install-dependencies-webui) install_dependencies_webui ;;
-                 bhyve-tests) jenkins_bhyve_tests ;;
         freenas-api-tests) jenkins_freenas_api_tests;;
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;

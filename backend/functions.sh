@@ -82,6 +82,11 @@ install_dependencies()
     rc_halt "pkg-static install -y bhyve-firmware"
   fi
 
+  if [ ! -f "/usr/local/bin/vm" ] ; then
+    echo "Installing sysutils/vm-bhyve"
+    rc_halt "pkg-static install -y vm-bhyve"
+  fi
+
   which python3.6 >/dev/null 2>/dev/null
   if [ "$?" != "0" ]; then
     echo "Installing lang/python36"
@@ -208,14 +213,12 @@ create_workdir()
 
 exit_clean()
 {
-  bhyve_stop
   cleanup_workdir
   exit 0
 }
 
 exit_fail()
 {
-  bhyve_stop
   cleanup_workdir
   exit 1
 }
@@ -232,18 +235,6 @@ jenkins_vm_tests()
   vm_install
   vm_boot
   vm_destroy
-  cleanup_workdir
-}
-
-jenkins_bhyve_tests()
-{
-  trap 'exit_fail' INT
-  GITREPO="https://www.github.com/ixsystems/ixbuild.git"
-  create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  bhyve_boot
-  bhyve_stop
   cleanup_workdir
 }
 
@@ -288,24 +279,4 @@ jenkins_iocage_tests()
   GITREPO="https://www.github.com/iocage/iocage"
   create_workdir
   cleanup_workdir
-}
-
-jenkins_trueos_tests()
-{
-  trap 'exit_clean' INT
-  create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  #bhyve_boot
-  exit_clean
-}
-
-jenkins_freebsd_tests()
-{
-  trap 'exit_clean' INT
-  create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  #bhyve_boot
-  exit_clean
 }
