@@ -165,13 +165,13 @@ sleep 10
 
 vm_install()
 {
+  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   # Get console device for newly created VM
   sleep 1
-  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
 
   # Run our expect/tcl script to automate the installation dialog
-  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${VM}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
   vm_stop
@@ -185,7 +185,7 @@ vm_boot()
   sleep 1
   local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
-  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${COM_LISTEN}" "${VM_OUTPUT}"
+  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${VM}" "${VM_OUTPUT}"
 
   echo -e \\033c # Reset/clear to get native term dimensions
 

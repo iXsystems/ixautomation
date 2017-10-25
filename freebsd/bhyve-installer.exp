@@ -14,7 +14,7 @@ set logfilepath [lindex $argv 1];
 log_file -noappend "$logfilepath"
 set timeout 1800
 # Connect to our bhyve instance over the specified nullmodem serial connection
-set PID [spawn cu -l "$nullmodem"]
+set PID [spawn vm console "$nullmodem"]
 send_user "Spawned PID: $PID \n"
 
 # Grub2 menu item selection - second entry enables Serial Output for the installer
