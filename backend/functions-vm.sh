@@ -57,7 +57,7 @@ vm_select_iso()
   if [ -n "$USING_JENKINS" ] ; then
     local ISODIR="${WORKSPACE/artifacts/iso}"
   else
-    local ISODIR="${PROGDIR}/vms/.iso"
+    local ISODIR="${PROGDIR}/vms/.iso/"
   fi
   # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
   if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
