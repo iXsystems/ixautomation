@@ -27,7 +27,7 @@ rc_halt()
 ixautomation_setup()
 {
   if [ ! -d "/ixautomation" ] ; then
-    git clone https://www.github.com/ixautomation
+    git clone https://www.github.com/ixsystems/ixautomation
   else
     git pull
   fi
@@ -252,13 +252,16 @@ jenkins_freenas_api_tests()
   trap 'exit_clean' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  bhyve_boot
+  ixautomation_setup
+  vm_setup
+  bridge_setup
+  vm_select_iso
+  vm_install
+  vm_boot
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
   python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
-  bhyve_stop
+  vm_destroy
   cleanup_workdir
 }
 
