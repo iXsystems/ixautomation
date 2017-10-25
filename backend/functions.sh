@@ -27,7 +27,7 @@ rc_halt()
 ixautomation_setup()
 {
   if [ ! -d "/ixautomation" ] ; then
-    git clone https://www.github.com/ixsystems/ixautomation
+    git clone https://www.github.com/ixsystems/ixautomation.git /ixautomation
   else
     git pull
   fi
