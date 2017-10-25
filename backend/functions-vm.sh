@@ -13,7 +13,7 @@ bridge_setup()
   ifconfig tap create
   fi
   if ! ifconfig ${VM_BRIDGE} | grep -q ${VM_TAP} >/dev/null 2>/dev/null ; then
-    ifconfig ${VM_BRIDGE} addm ${VM_TAP} 
+    ifconfig ${VM_BRIDGE} addm ${VM_TAP}
   fi
   if ! ifconfig ${VM_BRIDGE} | grep -q "member: ${VM_IFACE}" ; then
      ifconfig ${VM_BRIDGE} addm ${VM_IFACE}
@@ -57,7 +57,7 @@ vm_select_iso()
   if [ -n "$USING_JENKINS" ] ; then
     local ISODIR="${WORKSPACE/artifacts/iso}"
   else
-    local ISODIR="${PROGDIR}${iso_folder}"
+    local ISODIR="${PROGDIR}/vms/.iso"
   fi
   # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
   if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
@@ -137,7 +137,9 @@ vm_select_iso()
   fi
 
   # Copy selected ISO to temporary location for VM
-  vm iso ${ISODIR}/${iso_name}
+  if [ -n "$USING_JENKINS" ] ; then
+    vm iso ${ISODIR}/${iso_name}
+  fi
   vm create -t ${SYSTYPE} ${VM}
   sysrc -f /ixautomation/vms/${VM}/${VM}.conf console="nmdm"
   vm install ${VM} ${iso_name}
@@ -367,7 +369,7 @@ bhyve_install_iso()
     ifconfig ${bridge} name ${IXBUILD_BRIDGE} >/dev/null
     # Create the initial tap device for the bridge
     local INITIAL_TAP_LOCKFILE="/tmp/.initial-tap-${VM}"
-    ifconfig tap create > ${INITIAL_TAP_LOCKFILE} 
+    ifconfig tap create > ${INITIAL_TAP_LOCKFILE}
     # Ensure $IXBUILD_IFACE is a member of our bridge.
     if ! ifconfig ${IXBUILD_BRIDGE} | grep -q "member: ${IXBUILD_IFACE}" ; then
       ifconfig ${IXBUILD_BRIDGE} addm ${IXBUILD_IFACE}
@@ -549,9 +551,9 @@ bhyve_stop()
 
   # Remove the tap interface
   ifconfig ${IXBUILD_BRIDGE} deletem ${IXBUILD_TAP}
- 
+
   # Wait for tap to be removed
-  sleep 5 
+  sleep 5
 
   # Destroy the tap interface
   ifconfig ${IXBUILD_TAP} destroy &>/dev/null

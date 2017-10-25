@@ -224,8 +224,8 @@ jenkins_vm_tests()
 {
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
-  create_workdir
   ixautomation_setup
+  create_workdir
   vm_setup
   bridge_setup
   vm_select_iso
@@ -251,8 +251,8 @@ jenkins_freenas_api_tests()
 {
   trap 'exit_clean' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
-  create_workdir
   ixautomation_setup
+  create_workdir
   vm_setup
   bridge_setup
   vm_select_iso
