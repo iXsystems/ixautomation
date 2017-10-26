@@ -59,12 +59,6 @@ vm_select_iso()
   else
     local ISODIR="${PROGDIR}/vms/.iso/"
   fi
-  # Allow $ISODIR to be overridden by $IXBUILD_FREENAS_ISODIR if it exists
-  if [ -n "${IXBUILD_FREENAS_ISODIR}" ] ; then
-    ISODIR="$(echo "${IXBUILD_FREENAS_ISODIR}" | sed 's|/$||g')/"
-  elif [ -n "${IXBUILD_TRUEOS_ISODIR}" ] ; then
-    ISODIR="$(echo "${IXBUILD_TRUEOS_ISODIR}" | sed 's|/$||g')/"
-  fi
 
   # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
   if [ ! -d "${ISODIR}" ] ; then
@@ -73,7 +67,7 @@ vm_select_iso()
   fi
 
   # List ISOs in ${ISODIR} and allow the user to select the target
-  iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
+  iso_cnt=`cd ${ISODIR} && ls -l ${SYSNAME}*.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
   # Download the latest FreeNas ISO if no ISO found in $ISODIR
   if [ $iso_cnt -lt 1 ] ; then
@@ -84,7 +78,7 @@ vm_select_iso()
       echo "Fetching $iso_name..."
       fetch $iso_url
       USER=$(sh -c 'echo ${SUDO_USER}')
-      chown $USER *.iso
+      chown $USER ${SYSNAME}*.iso
       cd -
     else
       echo "Please put a ${SYSNAME} ISO in \"${ISODIR}\""
@@ -93,7 +87,7 @@ vm_select_iso()
   fi
 
   # Repopulate the list of ISOs in ${ISODIR} and allow the user to select the target
-  iso_cnt=`cd ${ISODIR} && ls -l *.iso 2>/dev/null | wc -l | sed 's| ||g'`
+  iso_cnt=`cd ${ISODIR} && ls -l ${SYSNAME}*.iso 2>/dev/null | wc -l | sed 's| ||g'`
 
   # Our to-be-determined file name of the ISO to test; must be inside $ISODIR
   local iso_name=""
@@ -101,7 +95,7 @@ vm_select_iso()
   # If there's only one ISO in the $ISODIR, assume it's for testing.
   if [ $iso_cnt -eq 1 ] ; then
     # Snatch the first (only) ISO listed in the directory
-    iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'NR == 1 {print $9}')"
+    iso_name="$(cd "${ISODIR}" && ls -l ${SYSNAME}*.iso | awk 'NR == 1 {print $9}')"
   else
     # Otherwise, loop until we get a valid user selection
     while :
@@ -109,7 +103,7 @@ vm_select_iso()
     echo "Please select which ISO to test (1-$iso_cnt):"
 
     # Listing ISOs in the ./freenas/iso/ directory, numbering the results for selection
-    ls -l "${ISODIR}"*.iso | awk 'BEGIN{cnt=1} {print "    ("cnt") "$9; cnt+=1}'
+    ls -l "${ISODIR}"${SYSNAME}*.iso | awk 'BEGIN{cnt=1} {print "    ("cnt") "$9; cnt+=1}'
     echo -n "Enter your selection and press [ENTER]: "
 
     # Prompt user to determine which ISO to use
@@ -124,7 +118,7 @@ vm_select_iso()
         elif [ -n "`echo $iso_selection | sed 's| ||g'`" ] ; then
 
         # Confirm our user's ISO selection with another prompt
-        iso_name="$(cd "${ISODIR}" && ls -l *.iso | awk 'FNR == '$iso_selection' {print $9}')"
+        iso_name="$(cd "${ISODIR}" && ls -l ${SYSNAME}*.iso | awk 'FNR == '$iso_selection' {print $9}')"
         printf "You have selected \"${iso_name}\", is this correct? (y/n): "
         read iso_confirmed
 
