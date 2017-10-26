@@ -122,6 +122,7 @@ install_dependencies_webui()
     apt-get -y install python-pip
     pip install --upgrade pip
     pip install selenium
+    pip install unittest-xml-reporting
     apt-get -y install python-pytest
     apt-get -y install curl
     #download firefox webdriver
@@ -164,6 +165,12 @@ install_dependencies_webui()
       echo "Installing selenium"
       rc_halt "pip-3.6 install selenium"
     fi
+    find /usr/local/lib -name xmlrunner | grep selenium >/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing selenium"
+      rc_halt "pip-3.6 install unittest-xml-reporting"
+    fi
+
   fi
 }
 
