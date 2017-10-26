@@ -220,12 +220,14 @@ create_workdir()
 
 exit_clean()
 {
+  vm_destroy
   cleanup_workdir
   exit 0
 }
 
 exit_fail()
 {
+  vm_destroy
   cleanup_workdir
   exit 1
 }
