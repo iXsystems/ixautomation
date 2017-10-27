@@ -27,7 +27,7 @@ rc_halt()
 ixautomation_setup()
 {
   if [ ! -d "/ixautomation" ] ; then
-    git clone https://www.github.com/ixautomation
+    git clone https://www.github.com/ixsystems/ixautomation.git /ixautomation
   else
     git pull
   fi
@@ -82,6 +82,11 @@ install_dependencies()
     rc_halt "pkg-static install -y bhyve-firmware"
   fi
 
+  if [ ! -f "/usr/local/bin/vm" ] ; then
+    echo "Installing sysutils/vm-bhyve"
+    rc_halt "pkg-static install -y vm-bhyve"
+  fi
+
   which python3.6 >/dev/null 2>/dev/null
   if [ "$?" != "0" ]; then
     echo "Installing lang/python36"
@@ -117,6 +122,7 @@ install_dependencies_webui()
     apt-get -y install python-pip
     pip install --upgrade pip
     pip install selenium
+    pip install unittest-xml-reporting
     apt-get -y install python-pytest
     apt-get -y install curl
     #download firefox webdriver
@@ -159,6 +165,12 @@ install_dependencies_webui()
       echo "Installing selenium"
       rc_halt "pip-3.6 install selenium"
     fi
+    find /usr/local/lib -name xmlrunner | grep selenium >/dev/null
+    if [ "$?" != "0" ]; then
+      echo "Installing selenium"
+      rc_halt "pip-3.6 install unittest-xml-reporting"
+    fi
+
   fi
 }
 
@@ -208,35 +220,30 @@ create_workdir()
 
 exit_clean()
 {
-  bhyve_stop
+  vm_destroy
   cleanup_workdir
   exit 0
 }
 
 exit_fail()
 {
-  bhyve_stop
+  vm_destroy
   cleanup_workdir
   exit 1
 }
 
 jenkins_vm_tests()
-{   
-  trap 'exit_fail' INT
-  ixautomation_setup
-  vm_setup
-  bridge_setup
-}
-
-jenkins_freenas_tests()
 {
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
+  ixautomation_setup
   create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  bhyve_boot
-  bhyve_stop
+  vm_setup
+  bridge_setup
+  vm_select_iso
+  vm_install
+  vm_boot
+  vm_destroy
   cleanup_workdir
 }
 
@@ -244,13 +251,18 @@ jenkins_freenas_api_tests()
 {
   trap 'exit_clean' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
+  ixautomation_setup
   create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  bhyve_boot
+  vm_setup
+  bridge_setup
+  vm_select_iso
+  vm_install
+  vm_boot
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
   python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
+  vm_destroy
+  cleanup_workdir
 }
 
 
@@ -276,24 +288,4 @@ jenkins_iocage_tests()
   GITREPO="https://www.github.com/iocage/iocage"
   create_workdir
   cleanup_workdir
-}
-
-jenkins_trueos_tests()
-{
-  trap 'exit_clean' INT
-  create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  #bhyve_boot
-  exit_clean
-}
-
-jenkins_freebsd_tests()
-{
-  trap 'exit_clean' INT
-  create_workdir
-  bhyve_select_iso
-  bhyve_install_iso
-  #bhyve_boot
-  exit_clean
 }

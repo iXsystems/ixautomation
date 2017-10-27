@@ -1,10 +1,11 @@
-Jenkins automation framework for iX projects
+Jenkins automation framework for iX and related projects
 ===========
 
 The scripts in this repo will allow you to test iX projects, either as an automated job from Jenkins or manually.
 
 It includes support to test the following projects:
 
+ * FreeBSD
  * FreeNAS
  * iocage
  * TrueOS
@@ -34,6 +35,7 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
+* vm-bhyve
 
 Getting Started
 ============
@@ -54,18 +56,21 @@ sudo ./jenkins.sh install-dependencies
 Using the testing framework
 ============
 
+Create a VM, and test install using vm-bhyve
+
+```
+sudo ./jenkins.sh vm-tests freebsd
+sudo ./jenkins.sh vm-tests freenas
+sudo ./jenkins.sh vm-tests trueos
+```
+
 FreeNAS
 ```
-sudo ./jenkins.sh freenas-tests
+sudo ./jenkins.sh freenas-api-tests
 sudo ./jenkins.sh freenas-webui-tests
 ```
 
 iocage
 ```
 sudo ./jenkins.sh iocage-tests
-```
-
-TrueOS
-```
-sudo ./jenkins.sh trueos-tests
 ```
