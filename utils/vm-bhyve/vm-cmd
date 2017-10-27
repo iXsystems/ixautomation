@@ -1,0 +1,166 @@
+#!/bin/sh
+#-------------------------------------------------------------------------+
+# Copyright (C) 2015 Matt Churchyard (churchers@gmail.com)
+# All rights reserved
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted providing that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+# cmd: vm ...
+#
+# handle simple information commands that don't need any 
+# priviledged access or bhyve support
+#
+# @param string _cmd the command right after 'vm '
+#
+cmd::parse_info(){
+    local _cmd="$1"
+
+    case "${_cmd}" in
+        version) util::version && exit ;;
+        usage)   util::usage ;;
+    esac
+}
+
+# cmd: vm ...
+#
+# process the vm command line to see which function is requested
+#
+# @param string _cmd the command right after 'vm '
+#
+cmd::parse(){
+    local _cmd="$1"
+    shift
+
+    case "${_cmd}" in
+        init)      util::setup
+                   switch::init ;;
+        switch)    cmd::parse_switch "$@" ;;
+        datastore) cmd::parse_datastore "$@" ;;
+        image)     cmd::parse_image "$@" ;;
+        list)      core::list ;;
+        create)    core::create "$@" ;;
+        destroy)   core::destroy "$@" ;;
+        rename)    core::rename "$@" ;;
+        install)   core::install "$@" ;;
+        start)     core::start "$1" ;;
+        stop)      core::stop "$@" ;;
+        add)       core::add "$@" ;;
+        reset)     core::reset "$@" ;;
+        poweroff)  core::poweroff "$@" ;;
+        startall)  core::startall ;;
+        stopall)   core::stopall ;;
+        console)   core::console "$@" ;;
+        iso)       core::iso "$@" ;;
+        configure) core::configure "$@" ;;
+        passthru)  core::passthru ;;
+        _run)      vm::run "$@" ;;
+        info)      info::guest "$@" ;;
+        clone)     zfs::clone "$@" ;;
+        snapshot)  zfs::snapshot "$@" ;;
+        rollback)  zfs::rollback "$@" ;;
+        *)         util::usage ;;
+    esac
+}
+
+# cmd: vm switch ...
+#
+# parse switch command
+# we've already shifted once, so $1 is the switch function
+#
+# @param string _cmd the command right after 'vm switch '
+#
+cmd::parse_switch(){
+    local _cmd="$1"
+    shift
+
+    case "${_cmd}" in
+        create)  switch::create "$@" ;;
+        list)    switch::list ;;
+        destroy) switch::remove "$@" ;;
+        import)  switch::import "$@" ;;
+        add)     switch::add_member "$@" ;;
+        remove)  switch::remove_member "$@" ;;
+        vlan)    switch::vlan "$@" ;;
+        nat)     switch::nat "$@" ;;
+        info)    info::switch "$@" ;;
+        *)       util::usage ;;
+    esac
+}
+
+# cmd: vm datastore ...
+#
+# parse a datastore command
+#
+# @param string _cmd the command after 'vm datastore ...'
+#
+cmd::parse_datastore(){
+    local _cmd="$1"
+    shift
+
+    case "${_cmd}" in
+        list)   datastore::list ;;
+        add)    datastore::add "$@" ;;
+        remove) datastore::remove "$@" ;;
+        *)      util::usage ;;
+    esac
+}
+
+# cmd 'vm image ...'
+# parse the image command set
+#
+# @param string _cmd the command after 'vm image '
+#
+cmd::parse_image(){
+    local _cmd="$1"
+    shift
+
+    [ -z "${VM_ZFS}" ] && util::err "\$vm_dir must be a ZFS datastore to use these functions"
+
+    case "${_cmd}" in
+        list)      zfs::image_list ;;
+        create)    zfs::image_create "$@" ;;
+        provision) zfs::image_provision "$@" ;;
+        destroy)   zfs::image_destroy "$@" ;;
+        *)         util::usage ;;
+    esac
+}
+
+# look for any arguments to the vm command
+# -f - run vm-bhyve/loader/bhyve in the foreground
+#
+# the argument string without any options is put into 
+# VM_COMMAND for the main command parser to handle
+#
+# @modifies VM_COMMAND VM_FOREGROUND vm_dir
+#
+cmd::parse_args(){
+    local _opt
+
+    while getopts f _opt; do
+        case ${_opt} in
+            f) VM_FOREGROUND="1" ;;
+        esac
+    done
+
+    shift $((OPTIND - 1))
+    VM_COMMAND="$@"
+}

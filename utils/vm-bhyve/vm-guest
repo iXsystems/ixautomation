@@ -1,0 +1,163 @@
+#!/bin/sh
+#-------------------------------------------------------------------------+
+# Copyright (C) 2015 Matt Churchyard (churchers@gmail.com)
+# All rights reserved
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted providing that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+# guest::load
+# this function is responsible for doing any pre-load tasks for a guest.
+# for non uefi guests this normally means running bhyveload or grub-bhyve.
+# this function should return a non-zero value if there's a problem
+# or 0 on success.
+# As this is called from within the scope of vm::run,
+# the following variables are already set (among others)
+#
+# _name: guest name
+# _loader: boot loader to use (grub|bhyveload)
+# _com: com port - /dev/nmdmXA
+# _conf: full path to guest config file
+# _cpu: cpu count
+# _memory: RAM
+# _guest: guest type
+# _bootdisk: full path to primary disk
+#
+# I've written append wrong as it just needs to be something other than 'write',
+# and is much more readable when all the util::log* calls line up
+#
+# @param optional string _iso set to the boot iso on install, or not given for normal run
+# @return int 0=success, 15=vm-bhyve error (see log), other=bhyveload|grub-bhyve error code
+#
+guest::load(){
+    local _iso="$1"
+    local _args _command _timeout _grub_opt
+
+    # all loaders have same console and wired memory options
+    [ -z "${VM_FOREGROUND}" ] && _args="-c ${_com}"
+    [ "${_wiredmem}" = "1" ] && _args="${_args}${_args:+ }-S"
+
+    # get timeout
+    config::get "_timeout" "loader_timeout" "3"
+
+    case "${_loader}" in
+        bhyveload)
+            _command="bhyveload"
+            _args="${_args}${_args:+ }-m ${_memory} -e autoboot_delay=${_timeout}"
+
+            if [ -n "${_iso}" ]; then
+                _args="${_args} -d ${vm_dir}/.iso/${_iso}"
+            else
+                _args="${_args} -d ${_bootdisk}"
+            fi
+            ;;
+        grub)
+            _command=$(which grub-bhyve)
+
+            # check we have grub-bhyve
+            if [ $? -ne 0 ]; then
+                util::log "guest" "${_name}" "grub requested but sysutils/grub2-bhyve not installed?"
+                return 15
+            fi
+
+            # add device map path and memory
+            _args="${_args}${_args:+ }-m ${VM_DS_PATH}/${_name}/device.map -M ${_memory}"
+
+            if [ -n "${_iso}" ]; then
+                _root="cd0"
+                util::log_and_write "write" "${_name}" "device.map" "(hd0) ${_bootdisk}"
+                util::log_and_write "appnd" "${_name}" "device.map" "(cd0) ${vm_dir}/.iso/${_iso}"
+
+                # if we have local grub config, we need to point grub-bhyve at the host.
+                # if not, just use defaults
+                if guest::__write_config "install"; then
+                    _args="${_args} -r host -d ${VM_DS_PATH}/${_name}"
+                else
+                    _args="${_args} -r ${_root}"
+                fi
+            else
+                _root="hd0,1"
+                util::log_and_write "write" "${_name}" "device.map" "(hd0) ${_bootdisk}"
+
+                config::get "_grub_opt" "grub_run_partition"
+                [ -n "${_grub_opt}" ] && _root="hd0,${_grub_opt}"
+
+                # if we have local config, point grub-bhyve at it
+                # otherwise we use defaults, or directory and file specified by user
+                if guest::__write_config "run"; then
+                    _args="${_args} -r host -d ${VM_DS_PATH}/${_name}"
+                else
+                    _args="${_args} -r ${_root}"
+
+                    config::get "_grub_opt" "grub_run_dir"
+                    [ -n "${_grub_opt}" ] && _args="${_args} -d ${_grub_opt}"
+                    config::get "_grub_opt" "grub_run_file"
+                    [ -n "${_grub_opt}" ] && _args="${_args} -g ${_grub_opt}"
+                fi
+            fi
+            ;;
+        *)
+            util::log "guest" "${_name}" "unsupported loader - '${_loader}'"
+            return 15
+            ;;
+    esac
+
+    # run the command
+    util::log "guest" "${_name}" "${_command} ${_args} ${_name}"
+    ${_command} ${_args} ${_name}
+    return $?
+}
+
+# See if the user has configured grub commands.
+# If so we write them to a grub.cfg file and
+# tell grub-bhyve to use it via (host) device
+#
+# @param string _type=install|run which commands to load
+# @return int true (0) if commands were loaded
+#
+guest::__write_config(){
+    local _type="$1"
+    local _command _num=0
+
+    # make sure original boot command file grub.cmd is gone
+    # we've switched to grub.cfg now as this is the 
+    # default for grub-bhyve and makes one less option needed
+    rm "${VM_DS_PATH}/${_name}/grub.*" >/dev/null 2>&1
+
+    config::get "_command" "grub_${_type}${_num}"
+    [ -z "${_command}" ] && return 1
+
+    util::log_and_write "write" "${_name}" "grub.cfg" "timeout=${_timeout}"
+    util::log_and_write "appnd" "${_name}" "grub.cfg" "menuentry '${_name} (bhyve ${_type})' {"
+    util::log_and_write "appnd" "${_name}" "grub.cfg" "    root=${_root}"
+
+    while [ -n "${_command}" ]; do
+        # we don't need boot command anymore
+        [ "${_command}" != "boot" ] && util::log_and_write "appnd" "${_name}" "grub.cfg" "    ${_command}"
+
+        _num=$((_num + 1))
+        config::get "_command" "grub_${_type}${_num}"
+    done
+
+    util::log_and_write "appnd" "${_name}" "grub.cfg" "}"
+
+    return 0
+}
