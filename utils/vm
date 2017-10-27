@@ -1,0 +1,84 @@
+#!/bin/sh
+#-------------------------------------------------------------------------+
+# Copyright (C) 2015 Matt Churchyard (churchers@gmail.com)
+# All rights reserved
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted providing that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# Modified for ixautomation project by Joe Maloney ( jmaloney@ixsystems.com )
+
+export vm_dir="../vms"
+
+VERSION=1.1-p8
+VERSION_INT=101073
+VERSION_BSD=$(uname -K)
+PATH=${PATH}:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
+
+. /etc/rc.subr
+load_rc_config "vm"
+
+# get libs
+if [ -e "./lib/vm-core" ]; then
+    LIB="./lib"
+elif [ -e "/usr/local/lib/vm-bhyve" ]; then
+    LIB="/usr/local/lib/vm-bhyve"
+else
+    echo "unable to locate vm-bhyve libriaries"
+    exit 1
+fi
+
+# load libs
+. "${LIB}/vm-cmd"
+. "${LIB}/vm-config"
+. "${LIB}/vm-core"
+. "${LIB}/vm-datastore"
+. "${LIB}/vm-guest"
+. "${LIB}/vm-info"
+. "${LIB}/vm-rctl"
+. "${LIB}/vm-run"
+. "${LIB}/vm-switch"
+. "${LIB}/vm-util"
+. "${LIB}/vm-zfs"
+
+# check informational commands
+cmd::parse_info $@
+
+# check we can run bhyve
+util::check_bhyve_support
+
+# init for zfs
+zfs::init
+
+# create directories as needed
+[ ! -d "${vm_dir}" ] && util::err "\$vm_dir has not been configured or is not a valid directory"
+[ ! -d "${vm_dir}/.config" ] && mkdir "${vm_dir}/.config"
+[ ! -e "${vm_dir}/.config/null.iso" ] && touch "${vm_dir}/.config/null.iso"
+[ ! -d "${vm_dir}/.templates" ] && mkdir "${vm_dir}/.templates"
+[ ! -d "${vm_dir}/.iso" ] && mkdir "${vm_dir}/.iso"
+
+# load core configuration
+config::core_load
+datastore::load
+
+# run the requested command
+cmd::parse_args $@
+cmd::parse ${VM_COMMAND}
