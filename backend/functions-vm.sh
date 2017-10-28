@@ -1,6 +1,15 @@
 #!/usr/bin/env sh
 
+# Only run as superuser
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 export VM_BHYVE="../utils/vm-bhyve/vm-bhyve"
+export LIB="../utils/vm-bhyve/lib"
+export vm_dir="../vms"
+$VM_BHYVE list
 
 bridge_setup()
 {

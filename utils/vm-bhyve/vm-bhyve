@@ -26,6 +26,12 @@
 #
 # Modified for ixautomation project by Joe Maloney ( jmaloney@ixsystems.com )
 
+if [ -z "${VM_BHYVE}" ]; then
+    echo "This script cannot run standalone."
+    echo "Please use jenkins.sh to execute it."
+    exit 1
+fi
+
 VERSION=1.1-p8
 VERSION_INT=101073
 VERSION_BSD=$(uname -K)
@@ -33,26 +39,6 @@ PATH=${PATH}:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
 
 . /etc/rc.subr
 load_rc_config "vm"
-
-# get vmdir
-if [ -d "../../vms" ]; then
-    export vm_dir="../../vms"
-elif [ -d "../vms" ]; then
-    export vm_dir="../vms"
-else
-    echo "unable to locate vm-dir"
-    exit 1
-fi
-
-# get libs
-if [ -e "./lib/vm-core" ]; then
-    LIB="./lib"
-elif [ -e "../utils/vm-bhyve/lib" ]; then
-    LIB="../utils/vm-bhyve/lib"
-else
-    echo "unable to locate vm-bhyve libriaries"
-    exit 1
-fi
 
 # load libs
 . "${LIB}/vm-cmd"
