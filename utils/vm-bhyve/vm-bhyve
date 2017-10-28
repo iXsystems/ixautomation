@@ -37,9 +37,6 @@ VERSION_INT=101073
 VERSION_BSD=$(uname -K)
 PATH=${PATH}:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
 
-. /etc/rc.subr
-load_rc_config "vm"
-
 # load libs
 . "${LIB}/vm-cmd"
 . "${LIB}/vm-config"

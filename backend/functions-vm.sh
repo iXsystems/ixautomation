@@ -1,15 +1,5 @@
 #!/usr/bin/env sh
 
-# Only run as superuser
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
-
-export VM_BHYVE="utils/vm-bhyve/vm-bhyve"
-export LIB="utils/vm-bhyve/lib"
-export vm_dir="vms"
-
 bridge_setup()
 {
   local VM_BRIDGE="bridge0"
@@ -31,8 +21,8 @@ bridge_setup()
   if ! ifconfig ${VM_BRIDGE} | grep -q UP ; then
      ifconfig ${VM_BRIDGE} up
   fi
-  if ! vm switch list | grep -q ${VM_SWITCH} ; then
-     vm switch import ${VM_SWITCH} ${VM_BRIDGE}
+  if ! $VM_BHYVE switch list | grep -q ${VM_SWITCH} ; then
+     $VM_BHYVE switch import ${VM_SWITCH} ${VM_BRIDGE}
   fi
   sysrc -f /etc/rc.conf cloned_interfaces="${VM_BRIDGE} ${VM_TAP}"
   sysrc -f /etc/rc.conf ifconfig_${VM_BRIDGE}="addm ${VM_IFACE} addm ${VM_TAP} up"
@@ -40,14 +30,7 @@ bridge_setup()
 
 vm_setup()
 {
-  sysrc -f /etc/rc.conf vm_enable="YES"
-  sysrc -f /etc/rc.conf vm_dir="/ixautomation/vms"
-  if [ ! -L "/libexec/rc/init.d/started/vm" ] ; then
-    service vm start
-  fi
-  if [ ! -L "/etc/runlevels/default/vm" ] ; then
-    rc-update add vm
-  fi
+  $VM_BHYVE init
 }
 
 vm_select_iso()
@@ -142,12 +125,12 @@ vm_select_iso()
 
   # Copy selected ISO to temporary location for VM
   if [ -n "$USING_JENKINS" ] ; then
-    vm iso ${ISODIR}/${iso_name}
+    $VM_BHYVE iso ${ISODIR}/${iso_name}
   fi
-  vm create -t ${SYSTYPE} ${VM}
-  sysrc -f /ixautomation/vms/${VM}/${VM}.conf console="nmdm"
-  vm install ${VM} ${iso_name}
-  while ! [ -f /ixautomation/vms/${VM}/console ]
+  $VM_BHYVE create -t ${SYSTYPE} ${VM}
+  sysrc -f ${vm_dir}/${VM}/${VM}.conf console="nmdm"
+  $VM_BHYVE install ${VM} ${iso_name}
+  while ! [ -f ${vm_dir}/${VM}/console ]
   do
     sleep 1
   done
@@ -156,14 +139,14 @@ vm_select_iso()
 vm_start()
 {
 export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-vm start ${VM}
+${VM_BHYVE} start ${VM}
 sleep 5
 }
 
 vm_stop()
 {
 export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-yes | vm stop ${VM}
+yes | ${VM_BHYVE} stop ${VM}
 sleep 10
 }
 
@@ -175,7 +158,7 @@ vm_install()
   local VM_OUTPUT="/tmp/${VM}console.log"
 
   # Run our expect/tcl script to automate the installation dialog
-  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "${VM}" "${VM_OUTPUT}"
+  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "$VM_BHYVE" "${VM}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
   vm_stop
@@ -187,10 +170,10 @@ vm_boot()
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
   # Get console device for newly created VM
   sleep 1
-  local COM_LISTEN=`cat /ixautomation/vms/${VM}/console | cut -d/ -f3`
+  local COM_LISTEN=`cat ${vm_dir}/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
-  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${VM}" "${VM_OUTPUT}"
-
+  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${VM_BHYVE}" "${VM}" "${VM_OUTPUT}"
+ 
   echo -e \\033c # Reset/clear to get native term dimensions
 
   if grep -q "Starting nginx." ${VM_OUTPUT} || grep -q "Plugin loaded: SSHPlugin" ${VM_OUTPUT} ; then
@@ -207,9 +190,9 @@ vm_boot()
 vm_destroy()
 {
   export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | vm poweroff ${VM}
+  yes | $VM_BHYVE poweroff ${VM}
   sleep 5
-  yes | vm destroy ${VM}
+  yes | $VM_BHYVE destroy ${VM}
 }
 
 vm_stop_all()

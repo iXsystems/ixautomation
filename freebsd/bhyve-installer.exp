@@ -1,20 +1,20 @@
 #!/usr/bin/env expect
 
-# Automates the installation of bhyve VM's for FreeNAS.
-#   1) Enables serial output in the Grub2 menu by selecting the second option
-#   2) Sets the root password to 'testing'
-#   3) Boot via UFEI
-# Usage: ./bhyve-installer.exp /dev/nmdm0B /tmp/bhyve-installer.out
+# Automates the installation of bhyve VM's for FreeBSD.
+# Note since the internal utility cannot be called outside of jenkins.sh vm-bhyve must be used for manual testing
+# Usage: ./bhyve-installer.exp /usr/local/sbin/vm /dev/nmdm0B /tmp/bhyve-installer.out
 
+# Set the path used for vm-bhyve
+set cmd [lindex $argv 0];
 # Listening end of a nullmodem connection to the bhyve serial output
-set nullmodem [lindex $argv 0];
+set nullmodem [lindex $argv 1];
 # File path of where the serial output should be logged.
-set logfilepath [lindex $argv 1];
+set logfilepath [lindex $argv 2];
 
 log_file -noappend "$logfilepath"
 set timeout 1800
 # Connect to our bhyve instance over the specified nullmodem serial connection
-set PID [spawn vm console "$nullmodem"]
+set PID [spawn "$cmd" console "$nullmodem"]
 send_user "Spawned PID: $PID \n"
 
 # Grub2 menu item selection - second entry enables Serial Output for the installer

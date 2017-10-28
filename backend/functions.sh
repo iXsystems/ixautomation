@@ -24,15 +24,6 @@ rc_halt()
   fi
 };
 
-ixautomation_setup()
-{
-  if [ ! -d "/ixautomation" ] ; then
-    git clone https://www.github.com/ixsystems/ixautomation.git /ixautomation
-  else
-    git pull
-  fi
-}
-
 install_dependencies()
 {
   if ! which git >/dev/null 2>/dev/null
@@ -236,7 +227,6 @@ jenkins_vm_tests()
 {
   trap 'exit_fail' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
-  ixautomation_setup
   create_workdir
   vm_setup
   bridge_setup
@@ -257,7 +247,6 @@ jenkins_freenas_api_tests()
 {
   trap 'exit_clean' INT
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
-  ixautomation_setup
   create_workdir
   vm_setup
   bridge_setup

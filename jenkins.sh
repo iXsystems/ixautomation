@@ -26,8 +26,13 @@ export PROGDIR
 # Change directory
 cd "${PROGDIR}" || exit
 
-# Set the variables
+# Set the variables for jenkins.sh
 TYPE="${1}"
+
+# Set the variables for vm-bhyve
+export VM_BHYVE="${PROGDIR}/utils/vm-bhyve/vm-bhyve"
+export LIB="${PROGDIR}/utils/vm-bhyve/lib"
+export vm_dir="${PROGDIR}/vms"
 
 # Are we using jenkins?
 if [ -n "$WORKSPACE" ] ; then
