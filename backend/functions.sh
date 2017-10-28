@@ -73,11 +73,6 @@ install_dependencies()
     rc_halt "pkg-static install -y bhyve-firmware"
   fi
 
-  if [ ! -f "/usr/local/bin/vm" ] ; then
-    echo "Installing sysutils/vm-bhyve"
-    rc_halt "pkg-static install -y vm-bhyve"
-  fi
-
   which python3.6 >/dev/null 2>/dev/null
   if [ "$?" != "0" ]; then
     echo "Installing lang/python36"
