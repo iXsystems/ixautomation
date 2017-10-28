@@ -35,7 +35,6 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
-* vm-bhyve
 
 Getting Started
 ============
