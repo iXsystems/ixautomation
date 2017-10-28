@@ -64,6 +64,12 @@ sudo ./jenkins.sh vm-tests freenas
 sudo ./jenkins.sh vm-tests trueos
 ```
 
+Stop, and destroy all VMs
+
+```
+sudo ./jenkins.sh vm-destroy-all
+```
+
 FreeNAS
 ```
 sudo ./jenkins.sh freenas-api-tests

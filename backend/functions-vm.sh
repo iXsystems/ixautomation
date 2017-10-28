@@ -6,10 +6,9 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-export VM_BHYVE="../utils/vm-bhyve/vm-bhyve"
-export LIB="../utils/vm-bhyve/lib"
-export vm_dir="../vms"
-$VM_BHYVE list
+export VM_BHYVE="utils/vm-bhyve/vm-bhyve"
+export LIB="utils/vm-bhyve/lib"
+export vm_dir="vms"
 
 bridge_setup()
 {
@@ -212,3 +211,14 @@ vm_destroy()
   sleep 5
   yes | vm destroy ${VM}
 }
+
+vm_stop_all()
+{
+  $VM_BHYVE stopall
+}
+
+vm_destroy_all()
+{
+  rm -rf $vm_dir/*
+}
+

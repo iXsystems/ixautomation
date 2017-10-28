@@ -77,6 +77,7 @@ case $TYPE in
                 trueos-tests) jenkins_trueos_tests ;;
                freebsd-tests) jenkins_freebsd_tests ;;
                     vm-tests) jenkins_vm_tests ;;
+              vm-destroy-all) jenkins_vm_destroy_all ;;
                            *) echo "Invalid command: $1"
                               display_usage
                               exit 1

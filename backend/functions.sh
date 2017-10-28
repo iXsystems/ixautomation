@@ -247,6 +247,12 @@ jenkins_vm_tests()
   cleanup_workdir
 }
 
+jenkins_vm_destroy_all()
+{
+  vm_stop_all
+  vm_destroy_all
+}
+
 jenkins_freenas_api_tests()
 {
   trap 'exit_clean' INT
