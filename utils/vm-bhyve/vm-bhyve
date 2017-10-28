@@ -26,7 +26,7 @@
 #
 # Modified for ixautomation project by Joe Maloney ( jmaloney@ixsystems.com )
 
-export vm_dir="../vms"
+export vm_dir="../../vms"
 
 VERSION=1.1-p8
 VERSION_INT=101073
@@ -39,8 +39,6 @@ load_rc_config "vm"
 # get libs
 if [ -e "./lib/vm-core" ]; then
     LIB="./lib"
-elif [ -e "/usr/local/lib/vm-bhyve" ]; then
-    LIB="/usr/local/lib/vm-bhyve"
 else
     echo "unable to locate vm-bhyve libriaries"
     exit 1
