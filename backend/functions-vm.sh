@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+export VM_BHYVE="../utils/vm-bhyve/vm-bhyve"
+
 bridge_setup()
 {
   local VM_BRIDGE="bridge0"
