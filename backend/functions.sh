@@ -229,7 +229,9 @@ jenkins_vm_tests()
   vm_install
   vm_boot
   if [ "${TEST}" = "api-tests" ]; then
-    jenkins_api_tests
+    cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
+    python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
+    cd -
   fi
   vm_destroy
   cleanup_workdir
@@ -243,11 +245,19 @@ jenkins_vm_destroy_all()
 
 jenkins_api_tests()
 {
-  trap 'exit_clean' INT
+  trap 'exit_fail' INT
+  create_workdir
+  vm_setup
+  bridge_setup
+  vm_select_iso
+  vm_install
+  vm_boot
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
   python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
+  vm_destroy
+  cleanup_workdir
 }
 
 

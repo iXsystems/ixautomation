@@ -36,11 +36,13 @@ install-dependencies         - Install all the packages need for iXautomation
 install-dependencies-webui   - Install all the packages need for iXautomation webui
 
 -- FreeNAS Commands --
-api-tests                    - Runs FreeNAS VM Python API tests against built release
 freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
 
 -- iocage Commands --
 iocage-tests                 - Run CI from iocage git (Requires pool name)
+
+-- API test Commands --
+api-tests                    - Runs FreeNAS VM Python API tests against built release (freenas or trueos)
 
 -- VM Commands --
 vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freebsd, freenas, or trueos)
