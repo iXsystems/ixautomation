@@ -10,11 +10,6 @@ fi
 
 SYSTYPE="${2}"
 
-# Source our functions
-
-cwd="$(realpath "$0" | xargs dirname)"
-. "${cwd}/backend/functions-vm.sh"
-
 if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
@@ -22,9 +17,6 @@ fi
 
 PROGDIR="$(realpath "$0" | xargs dirname)"
 export PROGDIR
-
-# Change directory
-cd "${PROGDIR}" || exit
 
 # Set the variables for jenkins.sh
 TYPE="${1}"
@@ -69,7 +61,13 @@ fi
 
 # Source our functions
 cwd="$(realpath "$0" | xargs dirname)"
-. "${cwd}/backend/functions.sh"
+. backend/functions.sh
+. backend/functions-vm.sh
+
+# Set the variables for vm-bhyve
+export VM_BHYVE="${PROGDIR}/utils/vm-bhyve/vm-bhyve"
+export LIB="${PROGDIR}/utils/vm-bhyve/lib"
+export vm_dir="${PROGDIR}/vms"
 
 ######################################################
 
