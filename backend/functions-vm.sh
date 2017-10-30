@@ -132,11 +132,7 @@ vm_select_iso()
     $VM_BHYVE iso ${ISODIR}/${iso_name}
   fi
   $VM_BHYVE create -t ${SYSTYPE} ${VM}
-  sysrc -f ${vm_dir}/${VM}/${VM}.conf console="nmdm"
   $VM_BHYVE install ${VM} ${iso_name}
-  while ! [ -f ${vm_dir}/${VM}/console ]
-  do
-    sleep 1
   done
 }
 
