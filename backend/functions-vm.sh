@@ -133,7 +133,6 @@ vm_select_iso()
   fi
   $VM_BHYVE create -t ${SYSTYPE} ${VM}
   $VM_BHYVE install ${VM} ${iso_name}
-  done
 }
 
 vm_start()
