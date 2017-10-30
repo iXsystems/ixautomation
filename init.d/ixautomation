@@ -1,0 +1,33 @@
+#!/sbin/openrc-run
+
+name="ixautomation"
+description="iXSystems automation framework"
+
+start_pre()
+{
+  local IXAUTOMATION_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  if ! ifconfig ${IXAUTOMATION_BRIDGE} >/dev/null 2>/dev/null ; then
+    if ! ifconfig | grep -q member | grep -q "${IXAUTOMATION_IFACE}" >/dev/null 2>/dev/null ; then
+      eerror "Warning ${IXAUTOMATION_IFACE} is already a member of another bridge.  Please define an unused interface with IXAUTOMATION_IFACE in /etc/rc.conf."
+    fi
+  fi
+}
+
+start()
+{
+  local IXAUTOMATION_BRIDGE="ixautomation"
+  local IXAUTOMATION_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  if ! ifconfig ${IXAUTOMATION_BRIDGE} >/dev/null 2>/dev/null ; then
+    bridge=$(ifconfig bridge create)
+    ifconfig ${bridge} name ${IXAUTOMATION_BRIDGE} >/dev/null
+  fi
+  if ! ifconfig ${IXAUTOMATION_BRIDGE} | grep -q "tap" >/dev/null 2>/dev/null ; then
+    tap=$(ifconfig tap create)
+    ifconfig ${IXAUTOMATION_BRIDGE} addm ${tap}
+  fi
+  if ! ifconfig ${IXAUTOMATION_BRIDGE} | grep -q "member: ${IXAUTOMATION_IFACE}" ; then
+     ifconfig ${IXAUTOMATION_BRIDGE} addm ${IXAUTOMATION_IFACE}
+  fi
+}
+
+
