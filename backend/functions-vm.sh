@@ -71,6 +71,10 @@ vm_select_iso()
       echo "Fetching $iso_name..."
       fetch $iso_url
       USER=$(sh -c 'echo ${SUDO_USER}')
+      #.if.$USER.is.empty.we.are.not.running.with.sudo.get.the.real.username
+      if [ -z "$USER" ] ; then
+        USER=$(id -nu)
+      fi
       chown $USER ${SYSNAME}*.iso
       cd -
     else
@@ -173,7 +177,7 @@ vm_boot()
   local COM_LISTEN=`cat ${vm_dir}/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
   ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${VM_BHYVE}" "${VM}" "${VM_OUTPUT}"
- 
+
   echo -e \\033c # Reset/clear to get native term dimensions
 
   if grep -q "Starting nginx." ${VM_OUTPUT} || grep -q "Plugin loaded: SSHPlugin" ${VM_OUTPUT} ; then
