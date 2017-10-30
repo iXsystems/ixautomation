@@ -5,28 +5,29 @@ description="iXSystems automation framework"
 
 start_pre()
 {
-  local IXAUTOMATION_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
-  if ! ifconfig ${IXAUTOMATION_BRIDGE} >/dev/null 2>/dev/null ; then
-    if ! ifconfig | grep -q member | grep -q "${IXAUTOMATION_IFACE}" >/dev/null 2>/dev/null ; then
-      eerror "Warning ${IXAUTOMATION_IFACE} is already a member of another bridge.  Please define an unused interface with IXAUTOMATION_IFACE in /etc/rc.conf."
+  if [ -z "$ixautomation_iface" ] ; then
+    ixautomation_iface="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
+  fi
+  if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
+    if ! ifconfig | grep -q member | grep -q "${ixautomation_iface}" >/dev/null 2>/dev/null ; then
+      eerror "Warning ${ixautomation_iface} is already a member of another bridge.  Please define an unused interface with ixautomation_iface in /etc/rc.conf."
     fi
   fi
 }
 
 start()
 {
-  local IXAUTOMATION_BRIDGE="ixautomation"
-  local IXAUTOMATION_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
-  if ! ifconfig ${IXAUTOMATION_BRIDGE} >/dev/null 2>/dev/null ; then
+  ixautomation_bridge="ixautomation"
+  if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
     bridge=$(ifconfig bridge create)
-    ifconfig ${bridge} name ${IXAUTOMATION_BRIDGE} >/dev/null
+    ifconfig ${bridge} name ${ixautomation_bridge} >/dev/null
   fi
-  if ! ifconfig ${IXAUTOMATION_BRIDGE} | grep -q "tap" >/dev/null 2>/dev/null ; then
+  if ! ifconfig ${ixautomation_bridge} | grep -q "tap" >/dev/null 2>/dev/null ; then
     tap=$(ifconfig tap create)
-    ifconfig ${IXAUTOMATION_BRIDGE} addm ${tap}
+    ifconfig ${ixautomation_bridge} addm ${tap}
   fi
-  if ! ifconfig ${IXAUTOMATION_BRIDGE} | grep -q "member: ${IXAUTOMATION_IFACE}" ; then
-     ifconfig ${IXAUTOMATION_BRIDGE} addm ${IXAUTOMATION_IFACE}
+  if ! ifconfig ${ixautomation_bridge} | grep -q "member: ${ixautomation_iface}" ; then
+     ifconfig ${ixautomation_bridge} addm ${ixautomation_iface}
   fi
 }
 
