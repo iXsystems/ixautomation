@@ -6,25 +6,20 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-# Command to fiter $2 output to determine which test folder and config to source
+# Set the current working directory and program directory
+cwd="$(realpath "$0" | xargs dirname)"
+export cwd
+PROGDIR="$(realpath "$0" | xargs dirname)"
+export PROGDIR
 
+# Define our arguments
+TYPE="${1}"
 SYSTYPE="${2}"
 
 if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
-
-PROGDIR="$(realpath "$0" | xargs dirname)"
-export PROGDIR
-
-# Set the variables for jenkins.sh
-TYPE="${1}"
-
-# Set the variables for vm-bhyve
-export VM_BHYVE="${PROGDIR}/utils/vm-bhyve/vm-bhyve"
-export LIB="${PROGDIR}/utils/vm-bhyve/lib"
-export vm_dir="${PROGDIR}/vms"
 
 # Are we using jenkins?
 if [ -n "$WORKSPACE" ] ; then
@@ -60,7 +55,6 @@ if [ -z "$1" ] ; then
 fi
 
 # Source our functions
-cwd="$(realpath "$0" | xargs dirname)"
 . backend/functions.sh
 . backend/functions-vm.sh
 
