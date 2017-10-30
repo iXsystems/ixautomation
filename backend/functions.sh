@@ -237,6 +237,19 @@ jenkins_vm_tests()
   cleanup_workdir
 }
 
+jenkins_start_vm()
+{
+  trap 'exit_fail' INT
+  GITREPO="https://www.github.com/ixsystems/ixbuild.git"
+  create_workdir
+  vm_setup
+  bridge_setup
+  vm_select_iso
+  vm_install
+  vm_boot
+}
+
+
 jenkins_vm_destroy_all()
 {
   vm_stop_all

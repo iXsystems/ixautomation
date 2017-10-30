@@ -46,6 +46,7 @@ api-tests                    - Runs FreeNAS VM Python API tests against built re
 
 -- VM Commands --
 vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freebsd, freenas, or trueos)
+start-vm                     - Start a VM with SYSTYPE (freebsd, freenas, or trueos)
 
 EOF
 
@@ -74,9 +75,11 @@ case $TYPE in
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
                     vm-tests) jenkins_vm_tests ;;
+                    start-vm) jenkins_start_vm ;;
               vm-destroy-all) jenkins_vm_destroy_all ;;
                            *) echo "Invalid command: $1"
                               display_usage
                               exit 1
                               ;;
 esac
+
