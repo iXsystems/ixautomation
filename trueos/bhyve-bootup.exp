@@ -42,7 +42,7 @@ send_user "Spawned PID: $PID \n"
 #}
 
 expect {
-  "Enter an option from 1-12:" {
+  "login:" {
     sleep .5
     exit
   }

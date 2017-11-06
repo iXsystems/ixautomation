@@ -68,14 +68,17 @@ expect {
 expect {
   "Partitioning" {
     sleep .5
+    send "A"
     send "\r"
   }
 }
 
 # Options: <Entire Disk>   < Partition >
 expect {
-  "Partition" {
+  "ZFS Configuration" {
     sleep .5
+    send "-"
+    send "-"
     send "\r"
   }
 }
@@ -83,7 +86,7 @@ expect {
 # Select Boot via UEFI
 # Options: [B]oot via UEFI, Boot via B[I]OS
 expect {
-  "Partition Scheme" {
+  "ParScheme" {
     sleep .5
     send "G"
     send "\r"
