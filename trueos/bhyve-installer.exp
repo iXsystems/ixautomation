@@ -17,101 +17,164 @@ set timeout 1800
 set PID [spawn "$cmd" console "$nullmodem"]
 send_user "Spawned PID: $PID \n"
 
-# Grub2 menu item selection - second entry enables Serial Output for the installer
-expect {
-  "The highlighted entry will be executed automatically" {
-    # Sending down-arrow key with "send {^[[B}" does not work, so instead fall back to the
-    # emacs-like key bindings that grub allows: Ctrl+P = Up, Ctrl+N = Down (mnemonic: up/down)
-    sleep .5
-    # Ctrl+N
-    send \003N
-    send "\r"
-  }
-}
-
-expect_before {
-  #"Autoboot in 1 seconds. [Space] to pause" {
-  "Autoboot in 1 seconds. [Space] to pause" {
-    send "6"
-    send "6"
-    send "\r"
-  }
-}
-
 # Install menu, options being:
-# 1) Install, 2) Shell, 3) Reboot, 4) Shutdown
+# 1) Install, 2) utility, 3) Reboot
 # Options: [O]K, [C]ancel
-#expect {
-#  "Console Setup" {
-#    sleep .5
-#    send "1"
-#    send "O"
-#    send "\r"
-#  }
-#}
+expect {
+  "TrueOS Server Installation Menu" {
+    sleep .5
+    send "1"
+    send "\r"
+  }
+}
 
-# This computer has less than the recommended 4GB of RAM.
-# Performance might be very slow. Continue installation?
+# Selecte the disk.
+# Disk is already selected?
 # Options: [Y]es, [N]o
-#expect {
-#  "Continue installation?" {
-#    sleep .5
-#    send "Y"
-#  }
-#}
+expect {
+  "Select target disk" {
+    sleep .5
+    send "\r"
+  }
+}
 
-# Choose destination media
-# Select a target drive with the spacebar (\040)
+
+# Select to isntall ALL or on the freespace
 # Options: [O]K, [C]ancel
-#expect {
-#  "Choose destination media" {
-#    sleep .5
-#    send \040
-#    send "\r"
-#  }
-#}
+expect {
+  "Select target partition" {
+    sleep .5
+    send "\r"
+  }
+}
 
 # WARNING: This will erase ALL paritions and data, proceed?
 # Options: [Y]es, [N]o
-#expect {
-#  "Proceed with the installation?" {
-#    sleep .5
-#    send "Y"
-#    send "\r"
-#  }
-#}
+expect {
+  "Select the disk" {
+    sleep 1
+    send "\r"
+  }
+}
 
 # Set the default root account password:
 # Options: [O]K, [C]ancel
-#expect {
-#  "Password" {
-#    sleep .5
-#    send "testing"
-#    # Tab to next field
-#    send \011
-#    send "testing"
-#    # Tab to submit/OK button
-#    send \011
-#    # Submit/confirm password dialog
-#    send "O"
-#    send "\r"
-#  }
-#}
+expect {
+  "Enter the root password" {
+    sleep .5
+    send "testing"
+    send "\r"
+  }
+}
+
 
 # Select Boot via UEFI
 # Options: [B]oot via UEFI, Boot via B[I]OS
-#expect {
-#  "BIOS mode is recommended for legacy and enterprise hardware," {
-#    sleep .5
-#    send "B"
-#  }
-#}
+expect {
+  "Confirm root password" {
+    sleep .5
+    send "testing"
+    send "\r"
+  }
+}
 
-# Installation complete!
-#expect {
-#  "Installation finished. No error reported." {
-#    send_user "Bhyve installation finished."
-#    sleep .5
-#    exit
-#  }
-#}
+expect {
+  "Enter a username" {
+    sleep .5
+    send "testing"
+    send "\r"
+  }
+}
+
+expect {
+  "Enter the password for testing" {
+    sleep .5
+    send "testing"
+    send "\r"
+  }
+}
+
+expect {
+  "Confirm password" {
+    sleep .5
+    send "testing"
+    send "\r"
+  }
+}
+
+expect {
+  "Enter the real name for testing" {
+    sleep .5
+    send "Test User"
+    send "\r"
+  }
+}
+
+expect {
+  "Select the users shell" {
+    sleep .5
+    #send \025
+    #send \025
+    #send \025
+    send "\r"
+  }
+}
+
+expect {
+  "Enter a system Hostname" {
+    sleep .5
+    send "wmtest.tn.ixsystems.com"
+    send "\r"
+  }
+}
+
+expect {
+  "Enable networking?" {
+    sleep .5
+    send "\r"
+  }
+}
+
+
+expect {
+  "Select network card to configure" {
+    sleep .5
+    send "\r"
+  }
+}
+
+
+expect {
+  "Enable SSH?" {
+    sleep .5
+    send "Y"
+    send "\r"
+  }
+}
+
+
+expect {
+  "Please select from the" {
+    sleep .5
+    send "i"
+    send "\r"
+  }
+}
+
+
+expect {
+  "This will begin the" {
+    sleep .5
+    send "\r"
+  }
+}
+
+
+# Installation finished!
+expect {
+  "Installation finished!" {
+    send_user "is installation finished."
+    sleep .5
+    exit
+  }
+}

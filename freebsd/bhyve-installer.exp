@@ -17,23 +17,10 @@ set timeout 1800
 set PID [spawn "$cmd" console "$nullmodem"]
 send_user "Spawned PID: $PID \n"
 
-# Grub2 menu item selection - second entry enables Serial Output for the installer
 expect {
-  "The highlighted entry will be executed automatically" {
-    # Sending down-arrow key with "send {^[[B}" does not work, so instead fall back to the
+  "Console type" {
     # emacs-like key bindings that grub allows: Ctrl+P = Up, Ctrl+N = Down (mnemonic: up/down)
-    sleep .5
-    # Ctrl+N
-    send \003N
-    send "\r"
-  }
-}
-
-expect_before {
-  #"Autoboot in 1 seconds. [Space] to pause" {
-  "Autoboot in 1 seconds. [Space] to pause" {
-    send "6"
-    send "6"
+    sleep 1
     send "\r"
   }
 }
@@ -41,71 +28,84 @@ expect_before {
 # Install menu, options being:
 # 1) Install, 2) Shell, 3) Reboot, 4) Shutdown
 # Options: [O]K, [C]ancel
-#expect {
-#  "Console Setup" {
-#    sleep .5
-#    send "1"
-#    send "O"
-#    send "\r"
-#  }
-#}
+expect {
+  "Welcome to FreeBSD!" {
+    sleep 1
+    send "\r"
+  }
+}
 
-# This computer has less than the recommended 4GB of RAM.
-# Performance might be very slow. Continue installation?
+# Select >>> Continue with default keymap
 # Options: [Y]es, [N]o
-#expect {
-#  "Continue installation?" {
-#    sleep .5
-#    send "Y"
-#  }
-#}
+expect {
+  "Keymap Selection" {
+    sleep .5
+    send "\r"
+  }
+}
 
-# Choose destination media
-# Select a target drive with the spacebar (\040)
+# set hostname
 # Options: [O]K, [C]ancel
-#expect {
-#  "Choose destination media" {
-#    sleep .5
-#    send \040
-#    send "\r"
-#  }
-#}
+expect {
+  "Set Hostname" {
+    sleep .5
+    send "vmtest.tn.ixsystems.com"
+    send "\r"
+  }
+}
 
-# WARNING: This will erase ALL paritions and data, proceed?
+# Use default system component
 # Options: [Y]es, [N]o
-#expect {
-#  "Proceed with the installation?" {
-#    sleep .5
-#    send "Y"
-#    send "\r"
-#  }
-#}
+expect {
+  "Distribution Select" {
+    sleep .5
+    send "\r"
+  }
+}
 
-# Set the default root account password:
+# partitioning
 # Options: [O]K, [C]ancel
-#expect {
-#  "Password" {
-#    sleep .5
-#    send "testing"
-#    # Tab to next field
-#    send \011
-#    send "testing"
-#    # Tab to submit/OK button
-#    send \011
-#    # Submit/confirm password dialog
-#    send "O"
-#    send "\r"
-#  }
-#}
+expect {
+  "Partitioning" {
+    sleep .5
+    send "\r"
+  }
+}
+
+# Options: <Entire Disk>   < Partition >
+expect {
+  "Partition" {
+    sleep .5
+    send "\r"
+  }
+}
 
 # Select Boot via UEFI
 # Options: [B]oot via UEFI, Boot via B[I]OS
-#expect {
-#  "BIOS mode is recommended for legacy and enterprise hardware," {
-#    sleep .5
-#    send "B"
-#  }
-#}
+expect {
+  "Partition Scheme" {
+    sleep .5
+    send "G"
+    send "\r"
+  }
+}
+
+expect {
+  "Partition Editor" {
+    sleep 1
+    send "F"
+    send "\r"
+....send "\r"
+  }
+}
+
+expect {
+  "Partition" {
+    sleep .5
+    send "F"
+    send "\r"
+  }
+}
 
 # Installation complete!
 #expect {
