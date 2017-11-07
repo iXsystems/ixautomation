@@ -22,9 +22,7 @@ Recommended hardware:
 
 Required OS:
 
-* TrueOS STABLE, or UNSTABLE
-
-[TrueOS Download Site](http://download.trueos.org/master/amd64/)
+* [TrueOS](http://download.trueos.org/master/amd64/)
 
 Required Packages:
 * expect
