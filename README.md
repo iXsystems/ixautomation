@@ -1,4 +1,4 @@
-Jenkins automation framework for iX and related projects
+Jenkins automation testing framework for iX projects
 ===========
 
 The scripts in this repo will allow you to test iX projects, either as an automated job from Jenkins or manually.
@@ -6,8 +6,8 @@ The scripts in this repo will allow you to test iX projects, either as an automa
 It includes support to test the following projects:
 
  * FreeNAS
- * iocage
  * TrueOS
+ * iocage
 
 Requirements
 ============
