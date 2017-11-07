@@ -26,6 +26,10 @@ rc_halt()
 
 install_dependencies()
 {
+  if [ ! -d "/usr/local/share/trueos" ] ; then
+    echo "Host is not running TrueOS!"
+    exit 1
+  fi
   if ! which git >/dev/null 2>/dev/null
   then
     echo "Installing git.."
@@ -122,6 +126,10 @@ install_dependencies_webui()
   fi
   if uname -a | grep "FreeBSD" >/dev/null
   then
+    if [ ! -d "/usr/local/share/trueos" ] ; then
+      echo "Host is not running TrueOS!"
+      exit 1
+    fi
     if ! which python3.6 >/dev/null 2>/dev/null
     then
       echo "Installing lang/python36"
