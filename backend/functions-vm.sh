@@ -2,6 +2,10 @@
 
 vm_setup()
 {
+  if [ ! -d "/usr/local/share/trueos" ] ; then
+    echo "Host is not running TrueOS!"
+    exit 1
+  fi
   if [ ! -f "/usr/local/etc/init.d/ixautomation" ] ; then
     cp ${cwd}/init.d/ixautomation /usr/local/etc/init.d/ixautomation
   fi
