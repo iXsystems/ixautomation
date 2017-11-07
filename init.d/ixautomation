@@ -9,6 +9,9 @@ start_pre()
   if [ -z "$ixautomation_iface" ] ; then
     ixautomation_iface="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
   fi
+  if [ -z "$ixautomation_iface" ] ; then
+    eerror "Failed to find an interface with internet access for bridge.  Please define an interface with ixautomation_iface= in /etc/rc.conf."
+  fi
   if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
     if ! ifconfig | grep member | grep ${ixautomation_iface} >/dev/null 2>/dev/null ; then
       einfo "Adding "${ixautomation_iface}" to ixautomation bridge"
