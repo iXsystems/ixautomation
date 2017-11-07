@@ -96,9 +96,7 @@ install_dependencies()
   fi
 
   if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
-    touch /usr/local/etc/sudoers.d/ixautomation
-    echo '%jenkins ALL = NOPASSWD: /ixautomation/jenkins.sh' >> /usr/local/etc/sudoers.d/ixautomation
-    echo 'Defaults      env_keep += "SSH_AUTH_SOCK HOME"' >> /usr/local/etc/sudoers.d/ixautomation
+    cp sudoers.d/ixautomation /usr/local/etc/sudoers.d/ixautomation
   fi
 
 }
