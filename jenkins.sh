@@ -45,8 +45,8 @@ iocage-tests                 - Run CI from iocage git (Requires pool name)
 api-tests                    - Runs FreeNAS VM Python API tests against built release (freenas or trueos)
 
 -- VM Commands --
-vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freebsd, freenas, or trueos)
-start-vm                     - Start a VM with SYSTYPE (freebsd, freenas, or trueos)
+vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freenas, or trueos)
+start-vm                     - Start a VM with SYSTYPE (freenas, or trueos)
 
 EOF
 
