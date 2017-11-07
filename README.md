@@ -52,6 +52,12 @@ To install all iXautomation dependencies run:
 sudo ./jenkins.sh install-dependencies
 ```
 
+Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
+
+```
+sysrc -f /etc/rc.conf ixautomation_iface="re0"
+```
+
 Using the testing framework
 ============
 
