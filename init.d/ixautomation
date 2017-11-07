@@ -33,6 +33,10 @@ start()
   if ! ifconfig ${ixautomation_bridge} | grep -q "member: ${ixautomation_iface}" ; then
      ifconfig ${ixautomation_bridge} addm ${ixautomation_iface}
   fi
+  if ! ifconfig ${ixautomation_bridge} | grep -q "member: ${ixautomation_iface}" ; then
+     eerror "Warning ${ixautomation_iface} is already in a bridge.  Please remove ${ixautomation_iface} from the bridge, or define an unused interface with ixautomation_iface in /etc/rc.conf."
+    exit 1
+  fi
 }
 
 
