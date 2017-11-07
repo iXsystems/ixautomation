@@ -69,9 +69,13 @@ Stop, and destroy all VMs
 sudo ./jenkins.sh vm-destroy-all
 ```
 
-FreeNAS
+Create a VM, test install using vm-bhyve, and run API tests
 ```
-sudo ./jenkins.sh freenas-api-tests
+sudo ./jenkins.sh vm-tests api-tests freenas
+```
+
+Test webui with selenium
+```
 sudo ./jenkins.sh freenas-webui-tests
 ```
 
