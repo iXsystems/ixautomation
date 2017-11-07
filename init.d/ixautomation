@@ -5,12 +5,16 @@ description="iXSystems automation framework"
 
 start_pre()
 {
+  ixautomation_bridge="ixautomation"
   if [ -z "$ixautomation_iface" ] ; then
     ixautomation_iface="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
   fi
   if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
-    if ! ifconfig | grep -q member | grep -q "${ixautomation_iface}" >/dev/null 2>/dev/null ; then
-      eerror "Warning ${ixautomation_iface} is already a member of another bridge.  Please define an unused interface with ixautomation_iface in /etc/rc.conf."
+    if ! ifconfig | grep member | grep ${ixautomation_iface} >/dev/null 2>/dev/null ; then
+      einfo "Adding "${ixautomation_iface}" to ixautomation bridge"
+    else
+      eerror "Warning ${ixautomation_iface} is already in a bridge.  Please remove ${ixautomation_iface} from the bridge, or define an unused interface with ixautomation_iface in /etc/rc.conf."
+      exit 1
     fi
   fi
 }
