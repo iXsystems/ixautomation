@@ -41,6 +41,7 @@ Required Jenkins Plugins:
 
 * [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
 * [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
+* [Copy Artifact](https://wiki.jenkins.io/display/JENKINS/Copy+Artifact+Plugin)
 
 
 Getting Started
