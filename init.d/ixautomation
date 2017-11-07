@@ -3,8 +3,6 @@
 name="ixautomation"
 description="iXSystems automation framework"
 
-depend
-
 start_pre()
 {
   ixautomation_bridge="ixautomation"
