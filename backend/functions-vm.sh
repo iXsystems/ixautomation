@@ -1,35 +1,19 @@
 #!/usr/bin/env sh
 
-bridge_setup()
-{
-  local VM_BRIDGE="bridge0"
-  local VM_TAP="tap0"
-  local VM_SWITCH="public"
-  local VM_IFACE="`netstat -f inet -nrW | grep '^default' | awk '{ print $6 }'`"
-  if ! ifconfig ${VM_BRIDGE} >/dev/null 2>/dev/null ; then
-    ifconfig bridge create
-  fi
-  if ! ifconfig ${VM_TAP} >/dev/null 2>/dev/null ; then
-  ifconfig tap create
-  fi
-  if ! ifconfig ${VM_BRIDGE} | grep -q ${VM_TAP} >/dev/null 2>/dev/null ; then
-    ifconfig ${VM_BRIDGE} addm ${VM_TAP}
-  fi
-  if ! ifconfig ${VM_BRIDGE} | grep -q "member: ${VM_IFACE}" ; then
-     ifconfig ${VM_BRIDGE} addm ${VM_IFACE}
-  fi
-  if ! ifconfig ${VM_BRIDGE} | grep -q UP ; then
-     ifconfig ${VM_BRIDGE} up
-  fi
-  if ! $VM_BHYVE switch list | grep -q ${VM_SWITCH} ; then
-     $VM_BHYVE switch import ${VM_SWITCH} ${VM_BRIDGE}
-  fi
-  sysrc -f /etc/rc.conf cloned_interfaces="${VM_BRIDGE} ${VM_TAP}"
-  sysrc -f /etc/rc.conf ifconfig_${VM_BRIDGE}="addm ${VM_IFACE} addm ${VM_TAP} up"
-}
-
 vm_setup()
 {
+  if [ ! -f "/usr/local/etc/init.d/ixautomation" ] ; then
+    cp ${cwd}/init.d/ixautomation /usr/local/etc/init.d/ixautomation
+  fi
+  if [ ! -f "/etc/runlevels/default/ixautomation" ] ; then
+    rc-update add ixautomation
+  fi
+  if [ ! -f "/libexec/rc/init.d/started/ixautomation" ] ; then
+    service ixautomation start
+  fi
+  if [ ! -f "/libexec/rc/init.d/started/ixautomation" ] ; then
+    exit 1
+  fi
   $VM_BHYVE init
 }
 

@@ -224,7 +224,6 @@ jenkins_vm_tests()
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   vm_setup
-  bridge_setup
   vm_select_iso
   vm_install
   vm_boot
@@ -243,7 +242,6 @@ jenkins_start_vm()
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   vm_setup
-  bridge_setup
   vm_select_iso
   vm_install
   vm_boot
@@ -262,7 +260,6 @@ jenkins_api_tests()
   GITREPO="https://www.github.com/ixsystems/ixbuild.git"
   create_workdir
   vm_setup
-  bridge_setup
   vm_select_iso
   vm_install
   vm_boot
