@@ -55,7 +55,8 @@ git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 cd ixautomation
 ```
 
-Using the testing framework
+
+VM Tests
 ============
 
 To install iXautomation dependencies run:
@@ -83,11 +84,18 @@ Stop, and destroy all VMs
 sudo ./jenkins.sh vm-destroy-all
 ```
 
+
+ReST API Tests
+============
+
 Create a VM, test install using vm-bhyve, and run API tests
 ```
 /jenkins.sh vm-tests freenas api-tests
 ```
 
+
+Selenium Tests
+============
 To install iXautomation dependencies run:
 
 ```
