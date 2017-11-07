@@ -22,9 +22,7 @@ Recommended hardware:
 
 Required OS:
 
-* TrueOS STABLE, or UNSTABLE
-
-[TrueOS Download Site](http://download.trueos.org/master/amd64/)
+* [TrueOS](http://download.trueos.org/master/amd64/)
 
 Required Packages:
 * expect
@@ -35,6 +33,16 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
+
+Jenkins Requirements:
+* One master node
+* Slave nodes for running ixautomation
+
+Required Jenkins Plugins:
+
+* [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
+* [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
+
 
 Getting Started
 ============
@@ -50,6 +58,12 @@ To install all iXautomation dependencies run:
 
 ```
 sudo ./jenkins.sh install-dependencies
+```
+
+Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
+
+```
+sysrc -f /etc/rc.conf ixautomation_iface="re0"
 ```
 
 Using the testing framework
