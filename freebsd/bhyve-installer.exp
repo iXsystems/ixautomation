@@ -68,17 +68,16 @@ expect {
 expect {
   "Partitioning" {
     sleep .5
-    send "A"
     send "\r"
   }
 }
 
 # Options: <Entire Disk>   < Partition >
 expect {
-  "ZFS Configuration" {
+  "Partition" {
     sleep .5
-    send "-"
-    send "-"
+    send "E"
+    sleep .5
     send "\r"
   }
 }
@@ -86,7 +85,7 @@ expect {
 # Select Boot via UEFI
 # Options: [B]oot via UEFI, Boot via B[I]OS
 expect {
-  "ParScheme" {
+  "Partition Scheme" {
     sleep .5
     send "G"
     send "\r"
@@ -96,25 +95,22 @@ expect {
 expect {
   "Partition Editor" {
     sleep 1
-    send "F"
-    send "\r"
 ....send "\r"
   }
 }
 
 expect {
-  "Partition" {
-    sleep .5
-    send "F"
+  "Confirmation" {
+    sleep 1
     send "\r"
   }
 }
 
 # Installation complete!
-#expect {
-#  "Installation finished. No error reported." {
-#    send_user "Bhyve installation finished."
-#    sleep .5
-#    exit
-#  }
-#}
+expect {
+  "Installation finished. No error reported." {
+    send_user "Bhyve installation finished."
+    sleep .5
+    exit
+  }
+}
