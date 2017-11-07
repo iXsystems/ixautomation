@@ -88,7 +88,7 @@ sudo ./jenkins.sh vm-destroy-all
 ReST API Tests
 ============
 
-*This Requires following the steps above in VM tests.*
+*This requires following the steps above in VM tests.*
 
 Create a VM, test install using vm-bhyve, and run API tests:
 ```
