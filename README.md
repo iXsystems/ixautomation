@@ -41,6 +41,7 @@ Jenkins Requirements:
 * Slave nodes for running ixautomation
 
 Required Jenkins Plugins:
+
 [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
 [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
 
