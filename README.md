@@ -5,7 +5,6 @@ The scripts in this repo will allow you to test iX projects, either as an automa
 
 It includes support to test the following projects:
 
- * FreeBSD
  * FreeNAS
  * iocage
  * TrueOS
@@ -22,9 +21,7 @@ Recommended hardware:
 
 Required OS:
 
-* TrueOS STABLE, or UNSTABLE
-
-[TrueOS Download Site](http://download.trueos.org/master/amd64/)
+* [TrueOS](http://download.trueos.org/master/amd64/)
 
 Required Packages:
 * expect
@@ -35,6 +32,16 @@ Required Packages:
 * spidermonkey24
 * wget
 * rsync
+
+Jenkins Requirements:
+* One master node
+* Slave nodes for running ixautomation
+
+Required Jenkins Plugins:
+
+* [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
+* [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
+
 
 Getting Started
 ============
@@ -64,7 +71,6 @@ Using the testing framework
 Create a VM, and test install using vm-bhyve
 
 ```
-sudo ./jenkins.sh vm-tests freebsd
 sudo ./jenkins.sh vm-tests freenas
 sudo ./jenkins.sh vm-tests trueos
 ```
