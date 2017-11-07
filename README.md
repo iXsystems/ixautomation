@@ -47,14 +47,18 @@ Required Jenkins Plugins:
 Getting Started
 ============
 
-To prep a new system for building, first download the repo and install with
+To prep a new system for testing, first download the repo and install with
 the following:
 
 ```
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 cd ixautomation
 ```
-To install all iXautomation dependencies run:
+
+Using the testing framework
+============
+
+To install iXautomation dependencies run:
 
 ```
 sudo ./jenkins.sh install-dependencies
@@ -65,9 +69,6 @@ Specify a connected ethernet interface with access to DHCP for VMs ( Substitue r
 ```
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
 ```
-
-Using the testing framework
-============
 
 Create a VM, and test install using vm-bhyve
 
