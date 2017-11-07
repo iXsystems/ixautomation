@@ -84,7 +84,7 @@ sudo ./jenkins.sh vm-destroy-all
 
 Create a VM, test install using vm-bhyve, and run API tests
 ```
-sudo ./jenkins.sh vm-tests api-tests freenas
+/jenkins.sh vm-tests freenas api-tests
 ```
 
 Test webui with selenium
