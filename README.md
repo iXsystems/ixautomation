@@ -61,7 +61,7 @@ Using the testing framework
 To install iXautomation dependencies run:
 
 ```
-sudo ./jenkins.sh install-dependencies
+sudo ./jenkins.sh bootstrap
 ```
 
 Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
@@ -86,6 +86,12 @@ sudo ./jenkins.sh vm-destroy-all
 Create a VM, test install using vm-bhyve, and run API tests
 ```
 /jenkins.sh vm-tests freenas api-tests
+```
+
+To install iXautomation dependencies run:
+
+```
+sudo ./jenkins.sh bootstrap-webui
 ```
 
 Test webui with selenium

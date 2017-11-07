@@ -24,7 +24,7 @@ rc_halt()
   fi
 };
 
-install_dependencies()
+bootstrap()
 {
   if [ ! -d "/usr/local/share/trueos" ] ; then
     echo "Host is not running TrueOS!"
@@ -101,7 +101,7 @@ install_dependencies()
 
 }
 
-install_dependencies_webui()
+bootstrap_webui()
 {
   uname -a | grep "Linux" >/dev/null
   if [ $? -eq 0 ] ; then
