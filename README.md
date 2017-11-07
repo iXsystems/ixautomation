@@ -42,9 +42,8 @@ Jenkins Requirements:
 
 Required Jenkins Plugins:
 
-[Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
-
-[Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
+* [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
+* [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
 
 
 Getting Started
