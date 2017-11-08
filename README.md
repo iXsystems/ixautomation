@@ -23,16 +23,6 @@ Required OS:
 
 * [TrueOS](http://download.trueos.org/master/amd64/)
 
-Required Packages:
-* expect
-* bhyve-firmware
-* git
-* curl
-* bash
-* spidermonkey24
-* wget
-* rsync
-
 Jenkins Requirements:
 * One master node
 * Slave nodes for running ixautomation

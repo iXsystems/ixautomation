@@ -359,7 +359,6 @@ core::stopall(){
     killall bhyve
     sleep 1
     killall bhyve
-    wait_for_pids ${_pids}
 }
 
 # 'vm start'
