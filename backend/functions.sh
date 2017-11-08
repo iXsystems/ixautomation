@@ -194,18 +194,9 @@ cleanup_workdir()
 create_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
-  if [ ! -d "/tmp/build" ] ; then
-     mkdir /tmp/build
-  fi
-  cd /tmp/build || exit_clean
 
-  MASTERWRKDIR=`mktemp -d /tmp/build/XXXX`
-
-  # Vanilla Checkout
-  cocmd="git clone --depth=1 ${GITREPO} ${MASTERWRKDIR}"
-  echo "Cloning with: $cocmd"
-  $cocmd
-  if [ $? -ne 0 ] ; then exit_clean; fi
+  MASTERWRKDIR=$(mktemp -d ${cwd}/build/XXXX)
+  #if [ $? -ne 0 ] ; then exit_clean; fi
 
   cd "${MASTERWRKDIR}" || exit_clean
 }
