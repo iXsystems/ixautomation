@@ -24,7 +24,7 @@ rc_halt()
   fi
 };
 
-install_dependencies()
+bootstrap()
 {
   if [ ! -d "/usr/local/share/trueos" ] ; then
     echo "Host is not running TrueOS!"
@@ -96,14 +96,12 @@ install_dependencies()
   fi
 
   if [ ! -f "/usr/local/etc/sudoers.d/ixautomation" ] ; then
-    touch /usr/local/etc/sudoers.d/ixautomation
-    echo '%jenkins ALL = NOPASSWD: /ixautomation/jenkins.sh' >> /usr/local/etc/sudoers.d/ixautomation
-    echo 'Defaults      env_keep += "SSH_AUTH_SOCK HOME"' >> /usr/local/etc/sudoers.d/ixautomation
+    cp sudoers.d/ixautomation /usr/local/etc/sudoers.d/ixautomation
   fi
 
 }
 
-install_dependencies_webui()
+bootstrap_webui()
 {
   uname -a | grep "Linux" >/dev/null
   if [ $? -eq 0 ] ; then

@@ -32,8 +32,8 @@ display_usage() {
 Available Commands:
 
 -- iXautomation Commands --
-install-dependencies         - Install all the packages need for iXautomation
-install-dependencies-webui   - Install all the packages need for iXautomation webui
+bootstrap         	     - Install all the packages need for iXautomation
+bootstrap-webui              - Install all the packages need for iXautomation webui
 
 -- FreeNAS Commands --
 freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
@@ -69,8 +69,8 @@ export vm_dir="${PROGDIR}/vms"
 ######################################################
 
 case $TYPE in
-        install-dependencies) install_dependencies ;;
-  install-dependencies-webui) install_dependencies_webui ;;
+                   bootstrap) bootstrap ;;
+  	     bootstrap-webui) bootstrap_webui ;;
                    api-tests) jenkins_api_tests;;
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
