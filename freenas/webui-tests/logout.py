@@ -37,7 +37,8 @@ class logout_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/topbar/md-toolbar/div/md-toolbar-row/button[6]").click()
         #Click on logout
         time.sleep(2)
-        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/button[3]").click()
+#        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/button[3]").click()
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/button[4]/div").click()
         #driver.find_element_by_xpath("//*[@id='cdk-overlay-12']/div/div/button[3]").click()
         time.sleep(2)
         #Click on OK when re-confirm logout
