@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="1" time="1.706"><testcase classname="bootenv.bootenv_test" file="bootenv.py" line="11" name="test_01_Creating_a_new_boot_environment_newbe1" time="1.4786903858184814"></testcase></testsuite>

@@ -1,3 +1,9 @@
 *.iso
 *.swp
 vms/*
+__pycache__
+*.xml
+*.pyc
+.cache
+config.py
+auto_config.py
