@@ -234,7 +234,7 @@ jenkins_vm_tests()
   vm_install
   vm_boot
   if [ "${TEST}" = "api-tests" ]; then
-    cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
+    cd "${cwd}/freenas/api-test" || exit_clean
     python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
     cd -
   fi
@@ -269,7 +269,7 @@ jenkins_api_tests()
   vm_select_iso
   vm_install
   vm_boot
-  cd "${MASTERWRKDIR}/freenas/api-test" || exit_clean
+  cd "${cwd}/freenas/api-test" || exit_clean
   python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
   cd -
   vm_destroy
@@ -280,18 +280,9 @@ jenkins_api_tests()
 jenkins_freenas_webui_tests()
 {
   export DISPLAY=:0
-  if [ -d "/home/webui/ixbuild" ] ; then
-    cd /home/webui/ixbuild || exit 1
-    git pull
-    cd - || exit 1
-  else
-    if [ ! -d "/home/webui" ] ; then
-      mkdir /home/webui
-    fi
-    git clone -b master https://www.github.com/ixsystems/ixbuild.git /home/webui/ixbuild
-  fi
-  cd /home/webui/ixbuild/freenas/webui-tests || exit 1
+  cd "${cwd}/freenas/webui-tests" || exit_clean
   python runtest.py
+  cd -
 }
 
 jenkins_iocage_tests()

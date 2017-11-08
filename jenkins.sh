@@ -70,7 +70,7 @@ export vm_dir="${PROGDIR}/vms"
 
 case $TYPE in
                    bootstrap) bootstrap ;;
-  	     bootstrap-webui) bootstrap_webui ;;
+             bootstrap-webui) bootstrap_webui ;;
                    api-tests) jenkins_api_tests;;
          freenas-webui-tests) jenkins_freenas_webui_tests ;;
                 iocage-tests) jenkins_iocage_tests ;;
