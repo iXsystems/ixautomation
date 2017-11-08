@@ -195,6 +195,10 @@ create_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
 
+  if [ ! -d "${cwd}/build" ] ; then
+     mkdir -p ${cwd}/build
+  fi
+
   MASTERWRKDIR=$(mktemp -d ${cwd}/build/XXXX)
   #if [ $? -ne 0 ] ; then exit_clean; fi
 
