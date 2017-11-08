@@ -47,12 +47,10 @@ Required Jenkins Plugins:
 Getting Started
 ============
 
-To prep a new system for testing, first download the repo and install with
-the following:
+To prep a new system for testing, first download the repo:
 
 ```
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
-cd ixautomation
 ```
 
 
