@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="0" name="pytest" skips="0" tests="1" time="0.494"><testcase classname="network.network" file="network.py" line="14" name="test_1_configure_interface_dhcp" time="0.25791215896606445"></testcase></testsuite>
