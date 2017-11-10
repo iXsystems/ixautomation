@@ -56,12 +56,12 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new user option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
         #Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusername)
         #Enter User Full name
@@ -78,16 +78,18 @@ class create_user_test(unittest.TestCase):
         time.sleep(5)
 
     def test_02_create_superuser(self):
+        #Click User submenu
+        driver.find_element_by_xpath("//*[@id='scroll-area']/navigation/md-nav-list/div[2]/md-list-item/div/md-nav-list/md-list-item[1]/div/a").click()
         #scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new user option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
         #Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(superusername)
         #Enter User Full name
