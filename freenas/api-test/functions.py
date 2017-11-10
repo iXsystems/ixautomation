@@ -61,6 +61,9 @@ def DELETE_ALL(testpath, payload):
     return deleteitall.status_code
 
 
+
+
+
 def RC_TEST(command):
     process = run(command, shell=True)
     if process.returncode != 0:
