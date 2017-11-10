@@ -1,22 +1,6 @@
 #!/usr/bin/env python3.6
 
 ###########################################################################
-# Generic settings
-###########################################################################
-
-## (Optional)
-#sftpuser = ""
-#SFTPHOST = ""
-
-## Set the remote dirs to store finshed ISO/PKGS
-# (Optional)
-#SFTPFINALDIR = ""
-
-## Set the remote dir to use for storing temp build data
-# (Optional)
-#SFTPWORKDIR = ""
-
-###########################################################################
 # FreeNAS specific settings
 ###########################################################################
 
@@ -62,4 +46,3 @@
 # LDAPBASEDN = ""
 # LDAPBINDDN = ""
 # LDAPBINDPASSWORD = ""
-
