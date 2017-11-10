@@ -61,6 +61,25 @@ def DELETE_ALL(testpath, payload):
     return deleteitall.status_code
 
 
+def BSD_TEST(command):
+    try:
+        BSD_PASSWORD
+        BSD_USERNAME
+        BSD_HOST
+    except NameError:
+        return False
+    else:
+        cmd ="sshpass -p %s " % BSD_PASSWORD
+        cmd += "ssh -o StrictHostKeyChecking=no "
+        cmd += "-o UserKnownHostsFile=/dev/null "
+        cmd += "-o VerifyHostKeyDNS=no "
+        cmd += "%s@%s %s" % (BSD_USERNAME, BSD_HOST, command)
+        process = run(cmd, shell=True)
+        if process.returncode != 0:
+            return False
+        else:
+            return True
+
 
 
 
