@@ -6,11 +6,20 @@
 
 import unittest
 from functions import PUT, POST, GET_OUTPUT, DELETE
+from auto_config import ip
+
+try:
+    import config
+except ImportError:
+    pass
+else:
+    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
+    from config import LDAPBASEDN, LDAPBINDDN, LDAPHOSTNAME, LDAPBINDPASSWORD
 
 DATASET="ad-bsd"
 SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/${DATASET}"
-MOUNTPOINT="/tmp/${BRIDGEHOST}ad-bsd"
+SMB_PATH="/mnt/tank/" + DATASET
+MOUNTPOINT="/tmp/ad-bsd" + BRIDGEHOST
 VOL_GROUP="qa"
 
 class ad_bsd_test(unittest.TestCase):
@@ -21,28 +30,29 @@ class ad_bsd_test(unittest.TestCase):
                     "ad_netbiosname_a": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
                     "ad_enable":"false" }
-        PUT("/directoryservice/activedirectory/1/" payload1)
+        PUT("/directoryservice/activedirectory/1/", payload1)
         payload2 = {"ldap_basedn": LDAPBASEDN,
-                    "ldap_binddn": LDAPBINDDN},
+                    "ldap_binddn": LDAPBINDDN,
                     "ldap_bindpw": LDAPBINDPASSWORD,
                     "ldap_netbiosname_a": BRIDGEHOST,
                     "ldap_hostname": LDAPHOSTNAME,
                     "ldap_has_samba_schema": "true",
                     "ldap_enable": "false"}
         PUT("/directoryservice/ldap/1/", payload2)
-        PUT("/services/services/cifs/" {"srv_enable": false})
+        PUT("/services/services/cifs/", {"srv_enable": "false"})
         payload3 = {"cfs_comment": "My Test SMB Share",
-                    "cifs_path": "'"${SMB_PATH}"'",
-                    "cifs_name": "'"${SMB_NAME}"'",
+                    "cifs_path": SMB_PATH,
+                    "cifs_name": SMB_NAME,
                     "cifs_guestok": "true",
                     "cifs_vfsobjects": "streams_xattr"}
-        DELETE("/sharing/cifs/", payload3)
-        DELETE("/storage/volume/1/datasets/${DATASET}/")
-        #bsd_test "umount -f \"${MOUNTPOINT}\" &>/dev/null; rmdir \"${MOUNTPOINT}\" &>/dev/null"
+        DELETE_ALL("/sharing/cifs/", payload3)
+        DELETE("/storage/volume/1/datasets/%s/" % DATASET)
+        BSD_TEST("umount -f " + MOUNTPOINT)
+        BSD_TEST("rmdir " + MOUNTPOINT)
 
     # Set auxilary parameters to allow mount_smbfs to work with Active Directory
     def test_02_Creating_SMB_dataset(self):
-        assert POST("/storage/volume/tank/datasets/" { "name": DATASET}) == 201
+        assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def Enabling_Active_Directory(self):
         payload = { "ad_bindpw": ADPASSWORD,
@@ -54,7 +64,7 @@ class ad_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     def test_04_Checking_Active_Directory(self):
-        GET("/directoryservice/activedirectory/", "ad_enable") ==
+        assert GET_OUTPUT("/directoryservice/activedirectory/", "ad_enable") == True
 
     def test_05_Checking_to_see_if_SMB_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
@@ -69,13 +79,12 @@ class ad_bsd_test(unittest.TestCase):
 
     # Now start the service
     def test_07_Starting_SMB_service(self):
-        PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
+        assert PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
 
-    #echo_test_title "Creating SMB mountpoint"
-    #bsd_test "mkdir -p '${MOUNTPOINT}' && sync"
-    #check_exit_status || return 1
+    def test_08_Creating_SMB_mountpoint(self):
+        assert BSD_TEST( "mkdir -p '%s' && sync" % MOUNTPOINT) == True
 
-    def test_08_Changing_permissions_on_SMB_PATH(self):
+    def test_09_Changing_permissions_on_SMB_PATH(self):
         payload = { "mp_path": SMB_PATH,
                     "mp_acl": "unix",
                     "mp_mode": "777", "mp_user":

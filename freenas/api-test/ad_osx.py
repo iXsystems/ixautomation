@@ -6,11 +6,20 @@
 import unittest
 from functions import POST, GET_OUTPUT
 
-DATASET="ad-osx"
-SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/${DATASET}"
-MOUNTPOINT="/tmp/ad-osx${BRIDGEHOST}"
-VOL_GROUP="qa"
+try:
+    import config
+except ImportError:
+    pass
+else:
+    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
+    from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
+
+
+DATASET = "ad-osx"
+SMB_NAME = "TestShare"
+SMB_PATH = "/mnt/tank/" + DATASET
+MOUNTPOINT = "/tmp/ad-osx" + BRIDGEHOST
+VOL_GROUP = "qa"
 
 class ad_osx_test(unittest.TestCase):
 

@@ -8,11 +8,10 @@ import unittest
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
 try:
     import config
-except NameError:
+except ImportError:
     pass
 else:
-    from config import BRIDGEIP, BRIDGEHOST
-
+    from config import BRIDGEIP, BRIDGEHOST, AFP_PATH, AFP_NAME
 
 DATASET = "afp-osx"
 AFP_NAME = "My AFP Share"
@@ -70,15 +69,14 @@ class ad_bsd_test(unittest.TestCase):
     #check_exit_status || return 1
 
     # Mount share on OSX system and create a test file
-    #echo_test_title "Create mount-point for AFP on OSX system"
-    #osx_test "mkdir -p '${MOUNTPOINT}'"
-    #check_exit_status || return 1
+    def test_08_Create_mount_point_for_AFP_on_OSX_system(self):
+        assert OSX_TEST("mkdir -p " + MOUNTPOINT) == True
 
-    #echo_test_title "Mount AFP share on OSX system"
-    #osx_test "mount -t afp 'afp://${BRIDGEIP}/${AFP_NAME}' '${MOUNTPOINT}'"
-    #check_exit_status || return 1
+    def test_09_Mount_AFP_share_on_OSX_system(self):
+        cmd = "mount -t afp 'afp://%s/%s %s" % (BRIDGEIP, AFP_NAME, MOUNTPOINT)
+        assert OSX_TEST(cmd) == True
 
-    #local device_name=`dirname "${MOUNTPOINT}"`
+    device_name=`dirname "${MOUNTPOINT}"`
     #echo_test_title "Checking permissions on ${MOUNTPOINT}"
     #osx_test "ls -la '${device_name}' | awk '\$4 == \"${VOL_GROUP}\" && \$9 == \"${DATASET}\" ' "
     #check_exit_status || return 1
@@ -108,11 +106,11 @@ class ad_bsd_test(unittest.TestCase):
     #fi
 
     # Test disable AFP
-    def test_08_Verify_AFP_service_can_be_disabled(self):
+    def test_16_Verify_AFP_service_can_be_disabled(self):
         assert PUT("/services/afp/", {"afp_srv_guest": "false"}) == 200
 
     # Test delete AFP dataset
-    def test_09_Verify_AFP_dataset_can_be_destroyed(self):
+    def test_17_Verify_AFP_dataset_can_be_destroyed(self):
      assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 
