@@ -11,6 +11,15 @@ from subprocess import run, PIPE
 import logging
 import re
 
+try:
+    import config
+except ImportError:
+    pass
+else:
+    from config import BSD_HOST, BSD_USERNAME, BSD_PASSWORD
+    from config import OSX_HOST, OSX_PASSWORD, OSX_PASSWORD
+
+
 global header
 header = {'Content-Type': 'application/json', 'Vary': 'accept'}
 global authentification
@@ -81,6 +90,24 @@ def BSD_TEST(command):
             return True
 
 
+def OSX_TEST(command):
+    try:
+        OSX_PASSWORD
+        OSX_USERNAME
+        OSX_HOST
+    except NameError:
+        return False
+    else:
+        cmd ="sshpass -p %s " % OSX_PASSWORD
+        cmd += "ssh -o StrictHostKeyChecking=no "
+        cmd += "-o UserKnownHostsFile=/dev/null "
+        cmd += "-o VerifyHostKeyDNS=no "
+        cmd += "%s@%s %s" % (OSX_USERNAME, OSX_HOST, command)
+        process = run(cmd, shell=True)
+        if process.returncode != 0:
+            return False
+        else:
+            return True
 
 
 def RC_TEST(command):
