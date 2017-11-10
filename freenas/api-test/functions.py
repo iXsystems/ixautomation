@@ -7,7 +7,7 @@ import requests
 from auto_config import freenas_url, password, user
 import json
 import os
-from subprocess import run, PIPE
+from subprocess import run, Popen, PIPE
 import logging
 import re
 
@@ -116,6 +116,11 @@ def RC_TEST(command):
         return False
     else:
         return True
+
+
+def return_output(command):
+    process = Popen(command, shell=True, stdout=PIPE, universal_newlines=True)
+    return process.stdout.readlines()[0].strip()
 
 
 def start_ssh_agent():

@@ -5,7 +5,7 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, POST, GET_OUTPUT, DELETE
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, return_output
 from auto_config import ip
 
 try:
@@ -92,7 +92,7 @@ class ad_bsd_test(unittest.TestCase):
                     "mp_recursive": "true" }
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_09_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = { "cfs_comment": "My Test SMB Share",
                     "cifs_path": SMB_PATH,
                     "cifs_name": SMB_NAME,
@@ -103,75 +103,67 @@ class ad_bsd_test(unittest.TestCase):
     #sleep 10
 
     # The ADUSER user must exist in AD with this password
-    #echo_test_title "Store AD credentials in a file for mount_smbfs"
-    #bsd_test "echo \"[TESTNAS:ADUSER]\" > ~/.nsmbrc && echo password=12345678 >> ~/.nsmbrc"
-    #check_exit_status || return 1
+    def test_11_Store_AD_credentials_in_a_file_for_mount_smbfs(self):
+        cmd = "echo \"[TESTNAS:ADUSER]\" > ~/.nsmbrc && echo password=12345678 >> ~/.nsmbrc"
+        assert BSD_TEST(cmd) == True
 
-    #echo_test_title "Mounting SMB"
-    #bsd_test "mount_smbfs -N -I ${BRIDGEIP} -W AD01 \"//aduser@testnas/${SMB_NAME}\" \"${MOUNTPOINT}\""
-    #check_exit_status || return 1
+    def test_12_Mounting_SMB(self):
+        cmd == "mount_smbfs -N -I %s -W AD01 \"//aduser@testnas/%s\" \"%s\"" % (ip, SMB_NAME, MOUNTPOINT)
+        assert BSD_TEST(cmd) == True
 
-    #echo_test_title "Verify that SMB share has finished mounting"
+    #def test_13_Verify_that_SMB_share_has_finished_mounting(self):
     #wait_for_bsd_mnt "${MOUNTPOINT}"
     #check_exit_status || return 1
 
-    #local device_name=`dirname "${MOUNTPOINT}"`
-    #echo_test_title "Checking permissions on ${MOUNTPOINT}"
-    #bsd_test "ls -la '${device_name}' | awk '\$4 == \"${VOL_GROUP}\" && \$9 == \"${DATASET}\" ' "
-    #check_exit_status
+    def test_14_Checking_permissions_on_MOUNTPOINT(self):
+        device_name = return_output("dirname " + MOUNTPOINT)
+        cmd = "ls -la '%s' | awk '\$4 == \"%s\" && \$9 == \"%s\" ' " % (device_name, VOL_GROUP, DATASET)
+        assert BSD_TEST(cmd) == True
 
     #echo_test_title "Creating SMB file"
     #bsd_test "touch '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
 
     #echo_test_title "Moving SMB file"
     #bsd_test "mv '${MOUNTPOINT}/testfile' '${MOUNTPOINT}/testfile2'"
-    #check_exit_status || return 1
 
     #echo_test_title "Copying SMB file"
     #bsd_test "cp '${MOUNTPOINT}/testfile2' '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
 
     #echo_test_title "Deleting SMB file 1/2"
     #bsd_test "rm '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
 
     #echo_test_title "Deleting SMB file 2/2"
     #bsd_test "rm \"${MOUNTPOINT}/testfile2\""
-    #check_exit_status || return 1
 
     #echo_test_title "Unmounting SMB"
     #bsd_test "umount \"${MOUNTPOINT}\""
-    #check_exit_status || return 1
 
     #echo_test_title "Removing SMB mountpoint"
     #bsd_test "test -d \"${MOUNTPOINT}\" && rmdir \"${MOUNTPOINT}\" || exit 0"
-    #check_exit_status || return 1
 
     #echo_test_title "Removing SMB share on ${SMB_PATH}"
     #rest_request "DELETE" "/sharing/cifs/" '{ "cfs_comment": "My Test SMB Share", "cifs_path": "'"${SMB_PATH}"'", "cifs_name": "'"${SMB_NAME}"'", "cifs_guestok": true, "cifs_vfsobjects": "streams_xattr" }'
-    #check_rest_response "204"
 
     # Disable Active Directory Directory
-    def test_10_Disabling_Active_Directory(test):
-        payload = { "ad_bindpw": "'${ADPASSWORD}'",
-                "ad_bindname": "'${ADUSERNAME}'",
-                "ad_domainname": "'${BRIDGEDOMAIN}'",
-                "ad_netbiosname_a": "'${BRIDGEHOST}'",
+    def test_23_Disabling_Active_Directory(test):
+        payload = { "ad_bindpw": ADPASSWORD,
+                "ad_bindname": ADUSERNAME,
+                "ad_domainname": BRIDGEDOMAIN,
+                "ad_netbiosname_a": BRIDGEHOST,
                 "ad_idmap_backend": "rid",
                 "ad_enable":"false" }
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     # Check Active Directory
-    def test_11_Verify_Active_Directory_is_disabled(self):
-        GET_OUTPUT("/directoryservice/activedirectory/", "ad_enable") == False
+    def test_24_Verify_Active_Directory_is_disabled(self):
+        assert GET_OUTPUT("/directoryservice/activedirectory/", "ad_enable") == False
 
-    def test_12_Verify_SMB_service_is_disabled(self):
+    def test_25_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_14_Destroying_SMB_dataset(self):
-        assert DELETE("/storage/volume/1/datasets/${DATASET}/") == 204
+    def test_26_Destroying_SMB_dataset(self):
+        assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 
 if __name__ == "__main__":
