@@ -6,6 +6,7 @@
 
 import unittest
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, return_output
+from functions import BSD_TEST
 from auto_config import ip
 
 try:
@@ -27,40 +28,40 @@ class ad_bsd_test(unittest.TestCase):
         payload1 = {"ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
+                    "ad_netbiosname": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
-                    "ad_enable":"false" }
-        PUT("/directoryservice/activedirectory/1/", payload1)
+                    "ad_enable": False }
+        assert PUT("/directoryservice/activedirectory/1/", payload1) == 200
         payload2 = {"ldap_basedn": LDAPBASEDN,
                     "ldap_binddn": LDAPBINDDN,
                     "ldap_bindpw": LDAPBINDPASSWORD,
-                    "ldap_netbiosname_a": BRIDGEHOST,
+                    "ldap_netbiosname": BRIDGEHOST,
                     "ldap_hostname": LDAPHOSTNAME,
                     "ldap_has_samba_schema": "true",
                     "ldap_enable": "false"}
-        PUT("/directoryservice/ldap/1/", payload2)
-        PUT("/services/services/cifs/", {"srv_enable": "false"})
+        assert PUT("/directoryservice/ldap/1/", payload2) == 200
+        assert PUT("/services/services/cifs/", {"srv_enable": "false"}) == 200
         payload3 = {"cfs_comment": "My Test SMB Share",
                     "cifs_path": SMB_PATH,
                     "cifs_name": SMB_NAME,
                     "cifs_guestok": "true",
                     "cifs_vfsobjects": "streams_xattr"}
-        DELETE_ALL("/sharing/cifs/", payload3)
-        DELETE("/storage/volume/1/datasets/%s/" % DATASET)
-        BSD_TEST("umount -f " + MOUNTPOINT)
-        BSD_TEST("rmdir " + MOUNTPOINT)
+        assert DELETE_ALL("/sharing/cifs/", payload3) == 204
+        assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
+        assert BSD_TEST("umount -f " + MOUNTPOINT) == True
+        assert BSD_TEST("rmdir " + MOUNTPOINT) == True
 
     # Set auxilary parameters to allow mount_smbfs to work with Active Directory
     def test_02_Creating_SMB_dataset(self):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
-    def Enabling_Active_Directory(self):
+    def test_03_Enabling_Active_Directory(self):
         payload = { "ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
+                    "ad_netbiosname": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
-                    "ad_enable":"true" }
+                    "ad_enable": "true" }
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     def test_04_Checking_Active_Directory(self):
@@ -108,17 +109,17 @@ class ad_bsd_test(unittest.TestCase):
         assert BSD_TEST(cmd) == True
 
     def test_12_Mounting_SMB(self):
-        cmd == "mount_smbfs -N -I %s -W AD01 \"//aduser@testnas/%s\" \"%s\"" % (ip, SMB_NAME, MOUNTPOINT)
+        cmd = "mount_smbfs -N -I %s -W AD01 \"//aduser@testnas/%s\" \"%s\"" % (ip, SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) == True
 
     #def test_13_Verify_that_SMB_share_has_finished_mounting(self):
     #wait_for_bsd_mnt "${MOUNTPOINT}"
     #check_exit_status || return 1
 
-    def test_14_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output("dirname " + MOUNTPOINT)
-        cmd = "ls -la '%s' | awk '\$4 == \"%s\" && \$9 == \"%s\" ' " % (device_name, VOL_GROUP, DATASET)
-        assert BSD_TEST(cmd) == True
+    #def test_14_Checking_permissions_on_MOUNTPOINT(self):
+    #    device_name = return_output("dirname " + MOUNTPOINT)
+    #    cmd = "ls -la '%s' | awk '\$4 == \"%s\" && \$9 == \"%s\" ' " % (device_name, VOL_GROUP, DATASET)
+    #    assert BSD_TEST(cmd) == True
 
     #echo_test_title "Creating SMB file"
     #bsd_test "touch '${MOUNTPOINT}/testfile'"
@@ -149,9 +150,9 @@ class ad_bsd_test(unittest.TestCase):
         payload = { "ad_bindpw": ADPASSWORD,
                 "ad_bindname": ADUSERNAME,
                 "ad_domainname": BRIDGEDOMAIN,
-                "ad_netbiosname_a": BRIDGEHOST,
+                "ad_netbiosname": BRIDGEHOST,
                 "ad_idmap_backend": "rid",
-                "ad_enable":"false" }
+                "ad_enable": "false" }
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     # Check Active Directory

@@ -1,3 +1,18 @@
 {
-  "debug.py::debug_test::test_02_Verify_that_API_returns_WWW_download_path": true
+  "ad_bsd.py::ad_bsd_test::test_01_Clean_up_any_leftover_items": true,
+  "ad_bsd.py::ad_bsd_test::test_03_Enabling_Active_Directory": true,
+  "ad_bsd.py::ad_bsd_test::test_04_Checking_Active_Directory": true,
+  "ad_bsd.py::ad_bsd_test::test_06_Enabling_SMB_service": true,
+  "ad_bsd.py::ad_bsd_test::test_09_Changing_permissions_on_SMB_PATH": true,
+  "ad_bsd.py::ad_bsd_test::test_11_Store_AD_credentials_in_a_file_for_mount_smbfs": true,
+  "ad_bsd.py::ad_bsd_test::test_12_Mounting_SMB": true,
+  "ad_bsd.py::ad_bsd_test::test_23_Disabling_Active_Directory": true,
+  "ad_bsd.py::ad_bsd_test::test_25_Verify_SMB_service_is_disabled": true,
+  "ad_osx.py::ad_osx_test::test_03_Enabling_Active_Directory": true,
+  "ad_osx.py::ad_osx_test::test_04_Checking_Active_Directory": true,
+  "ad_osx.py::ad_osx_test::test_05_Checking_to_see_if_SMB_service_is_enabled": true,
+  "ad_osx.py::ad_osx_test::test_06_Enabling_SMB_service": true,
+  "debug.py::debug_test::test_02_Verify_that_API_returns_WWW_download_path": true,
+  "network.py::network::test_01_configure_interface_dhcp": true,
+  "test.py": true
 }

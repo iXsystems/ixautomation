@@ -4,7 +4,7 @@
 # License: BSD
 
 import unittest
-from functions import POST, GET_OUTPUT
+from functions import POST, GET_OUTPUT, PUT, DELETE, DELETE_ALL
 
 try:
     import config
@@ -28,7 +28,7 @@ class ad_osx_test(unittest.TestCase):
         payload1 = {"ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
+                    "ad_netbiosname": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
                     "ad_enable":"false"}
         PUT("/directoryservice/activedirectory/1/", payload1)
@@ -57,7 +57,7 @@ class ad_osx_test(unittest.TestCase):
         payload = { "ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
+                    "ad_netbiosname": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
                     "ad_enable":"true" }
         assert PUT("/directoryservice/activedirectory/1/",payload) == 200
@@ -66,7 +66,7 @@ class ad_osx_test(unittest.TestCase):
         assert GET_OUTPUT("/directoryservice/activedirectory/", "ad_enable") == True
 
     def test_05_Checking_to_see_if_SMB_service_is_enabled(self):
-        assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
+        assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
     def test_06_Enabling_SMB_service(self):
         payload = { "cifs_srv_description": "Test FreeNAS Server",

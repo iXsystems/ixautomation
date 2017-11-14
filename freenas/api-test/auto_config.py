@@ -4,7 +4,7 @@ import os
 
 user = "root"
 password = "testing"
-ip = "192.168.2.22"
+ip = "192.168.2.26"
 freenas_url = 'http://' + ip + '/api/v1.0'
 interface = "vtnet0"
 ntpServer = "10.20.20.122"
