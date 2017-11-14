@@ -78,6 +78,7 @@ class create_user_test(unittest.TestCase):
         time.sleep(5)
 
     def test_02_create_superuser(self):
+        time.sleep(2)
         #Click User submenu
         driver.find_element_by_xpath("//*[@id='scroll-area']/navigation/md-nav-list/div[2]/md-list-item/div/md-nav-list/md-list-item[1]/div/a").click()
         #scroll down to find hover tab

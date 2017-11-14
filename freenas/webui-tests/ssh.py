@@ -47,6 +47,10 @@ class configure_ssh_test(unittest.TestCase):
 
         #Click on the ssh toggle button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle").click()
+        time.sleep(1)
+        #re-confirming if the turning off the service
+        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]"):
+            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]").click()
 
         #attempt to conditionally execute toggle command
         #s = driver.findElement(By.XPath("//*[@id='md-slide-toggle-14-input']").getAttribute("class")

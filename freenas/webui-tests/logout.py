@@ -41,6 +41,8 @@ class logout_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/button[4]/div").click()
         #driver.find_element_by_xpath("//*[@id='cdk-overlay-12']/div/div/button[3]").click()
         time.sleep(2)
+        #check the logout confirmation checkbox
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
         #Click on OK when re-confirm logout
         driver.find_element_by_xpath("/html/body/div[3]/div[2]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
         time.sleep(2)
