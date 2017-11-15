@@ -25,7 +25,7 @@ except ImportError:
     import unittest
 
 
-xpaths = { 'service' : "//*[@id='scroll-area']/navigation/md-nav-list/div[9]/md-list-item/div/a",
+xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]"
         }
 
 class configure_ssh_test(unittest.TestCase):
@@ -38,7 +38,7 @@ class configure_ssh_test(unittest.TestCase):
     def test_01_turnon_ssh (self):
         time.sleep(5)
         #Click Service Menu
-        driver.find_element_by_xpath(xpaths['service']).click()
+        driver.find_element_by_xpath(xpaths['navservice']).click()
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)

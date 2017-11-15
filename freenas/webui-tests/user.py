@@ -28,7 +28,9 @@ except ImportError:
 xpaths = { 'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
          'newUserName' : "//*[@id='7']/form-input/div/md-input-container/div/div[1]/div/input",
          'newUserPass' : "//*[@id='9']/form-input/div/md-input-container/div/div[1]/div/input",
-        'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input"
+        'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
+        'navAccount' : "//*[@id='nav-1']/div/a[1]",
+        'submenuUser' : "//*[@id='1-0']"
         }
 
 class create_user_test(unittest.TestCase):
@@ -40,12 +42,12 @@ class create_user_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_create_newuser(self):
         #Click  Account menu
-        a = driver.find_element_by_xpath("//*[@id='scroll-area']/navigation/md-nav-list/div[2]/md-list-item/div/a")
+        a = driver.find_element_by_xpath(xpaths['navAccount'])
         a.click()
         #allowing the button to load
         time.sleep(1)
         #Click User submenu
-        driver.find_element_by_xpath("//*[@id='scroll-area']/navigation/md-nav-list/div[2]/md-list-item/div/md-nav-list/md-list-item[1]/div/a").click()
+        driver.find_element_by_xpath(xpaths['submenuUser']).click()
 
         #cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
@@ -80,7 +82,7 @@ class create_user_test(unittest.TestCase):
     def test_02_create_superuser(self):
         time.sleep(2)
         #Click User submenu
-        driver.find_element_by_xpath("//*[@id='scroll-area']/navigation/md-nav-list/div[2]/md-list-item/div/md-nav-list/md-list-item[1]/div/a").click()
+        driver.find_element_by_xpath(xpaths['submenuUser']).click()
         #scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)

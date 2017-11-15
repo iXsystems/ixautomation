@@ -51,6 +51,9 @@ if path.exists('logout.pyc'):
 if path.exists('guide.pyc'):
     call(["rm", "guide.pyc"])
 
+if path.exists('driver.pyc'):
+    call(["rm", "driver.pyc"])
+
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
 
