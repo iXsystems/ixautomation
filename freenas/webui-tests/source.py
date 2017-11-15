@@ -6,19 +6,26 @@ from os import getcwd
 
 #baseurl = "http://10.20.20.135/ui"
 baseurl = "http://10.211.1.117/ui"
-
+#username for the machine
 username = "root"
-
+#password for the machine
 password = "testing"
-
+#new user with create primary group check
 newusername = "userNAS"
-
+#new user full name
 newuserfname = "user NAS"
-
+#userpassword
 newuserpassword = "abcd1234"
-
+#usergroupname
 newgroupname = "groupNAS"
 
+#new user with create primary group UNcheck
+newusernameuncheck = "userNASuncheck"
+#new user full name
+newuserfnameuncheck = "user NASuncheck"
+
+
+#new user with sudo permit
 superusername = "superNAS"
 
 superuserfname = "super NAS"

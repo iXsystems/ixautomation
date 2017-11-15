@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 2
+#Test case count: 1
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -38,7 +38,7 @@ class configure_ssh_test(unittest.TestCase):
     def test_01_turnon_ssh (self):
         time.sleep(5)
         #Click Service Menu
-        driver.find_element_by_xpath(xpaths['navservice']).click()
+        driver.find_element_by_xpath(xpaths['navService']).click()
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
