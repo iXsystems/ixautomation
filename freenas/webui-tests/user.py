@@ -33,7 +33,8 @@ xpaths = { 'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1
         'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
         'navAccount' : "//*[@id='nav-1']/div/a[1]",
         'submenuUser' : "//*[@id='1-0']",
-        'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div"
+        'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div",
+        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div"
         }
 
 class create_user_test(unittest.TestCase):

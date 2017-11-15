@@ -51,7 +51,14 @@ class configure_ssh_test(unittest.TestCase):
         #re-confirming if the turning off the service
         if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]"):
             driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]").click()
+        #click on configure button
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-card-actions/button").click()
 
+        #click on Login as Root with Passsword
+        driver.find_element_by_xpath("//*[@id='2']/form-checkbox/div/md-checkbox/label/div").click()
+        #click on save button
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/ssh-edit/entity-form/md-card/div/form/md-card-actions/button[1]").click()
+        time.sleep(5)
         #attempt to conditionally execute toggle command
         #s = driver.findElement(By.XPath("//*[@id='md-slide-toggle-14-input']").getAttribute("class")
         #if s.Contains("mat-slide-toggle-input cdk-visually-hidden"):

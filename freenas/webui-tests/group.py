@@ -27,7 +27,8 @@ except ImportError:
 
 xpaths = {
          'newGroupName' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
-         'submenuGroup' : "//*[@id='1-1']"
+         'submenuGroup' : "//*[@id='1-1']",
+        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div"
         }
 
 class create_group_test(unittest.TestCase):
