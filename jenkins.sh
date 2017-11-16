@@ -47,6 +47,7 @@ api-tests                    - Runs FreeNAS VM Python API tests against built re
 -- VM Commands --
 vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freenas, or trueos)
 start-vm                     - Start a VM with SYSTYPE (freenas, or trueos)
+vm-destroy-all               - Destroy all vm created
 
 EOF
 
