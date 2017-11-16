@@ -52,8 +52,10 @@ freenas_url = 'http://' + ip + '/api/v1.0'
 interface = "%s"
 ntpServer = "10.20.20.122"
 localHome = "%s"
-disk1 = "vtbd1"
-disk2 = "vtbd2"
+#disk1 = "vtbd1"
+#disk2 = "vtbd2"
+disk1 = "da1"
+disk2 = "da2"
 keyPath = "%s"
 """ % (passwd, ip, interface, localHome, keyPath)
 

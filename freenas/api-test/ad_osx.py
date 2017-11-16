@@ -28,7 +28,7 @@ class ad_osx_test(unittest.TestCase):
         payload1 = {"ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname": BRIDGEHOST,
+                    "ad_netbiosname_a": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
                     "ad_enable":"false"}
         PUT("/directoryservice/activedirectory/1/", payload1)
@@ -57,7 +57,7 @@ class ad_osx_test(unittest.TestCase):
         payload = { "ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname": BRIDGEHOST,
+                    "ad_netbiosname_a": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
                     "ad_enable":"true" }
         assert PUT("/directoryservice/activedirectory/1/",payload) == 200
