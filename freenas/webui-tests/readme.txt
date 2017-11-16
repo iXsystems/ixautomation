@@ -46,3 +46,18 @@ pkg-static install -y py36-pytest
 pkg-static install -y geckodriver
 pip-3.6 install selenium
 pip-3.6 install unittest-xml-reporting
+
+
+#Jenkins instructions
+10.20.20.72 - rishabh-server.tn.ixsystems.com (Jenkins master node)
+This virtual machine will run the jenkins web interface only
+http://10.20.20.72:8180/jenkins
+
+
+10.20.20.73 - rishabh-desktop.tn.ixsystems.com (Jenkins slave node)
+This virtual machine run tests with firefox
+10.20.20.74 - rishabh-nas.tn.ixsystems.com (FreeNAS target for webui tests)
+This virtual machine will be the FreeNAS target running ui tests with firefox.
+
+
+
