@@ -11,6 +11,8 @@ from login import run_login_test
 from group import run_create_group_test
 from user import run_create_user_test
 from ssh import run_configure_ssh_test
+from afp import run_configure_afp_test
+from webdav import run_configure_webdav_test
 from logout import run_logout_test
 
 
@@ -24,6 +26,8 @@ run_login_test(runDriver)
 run_create_user_test(runDriver)
 run_create_group_test(runDriver)
 run_configure_ssh_test(runDriver)
+run_configure_afp_test(runDriver)
+run_configure_webdav_test(runDriver)
 run_logout_test(runDriver)
 
 ## Example test run
@@ -53,6 +57,12 @@ if path.exists('guide.pyc'):
 
 if path.exists('driver.pyc'):
     call(["rm", "driver.pyc"])
+
+if path.exists('afp.pyc'):
+    call(["rm", "afp.pyc"])
+
+if path.exists('webdav.pyc'):
+    call(["rm", "webdav.pyc"])
 
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
