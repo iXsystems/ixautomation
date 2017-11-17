@@ -61,7 +61,7 @@ class ad_bsd_test(unittest.TestCase):
                     "ad_domainname": BRIDGEDOMAIN,
                     "ad_netbiosname_a": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
-                    "ad_enable": "true" }
+                    "ad_enable": True }
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     def test_04_Checking_Active_Directory(self):
@@ -74,8 +74,8 @@ class ad_bsd_test(unittest.TestCase):
     def test_06_Enabling_SMB_service(self):
         payload = { "cifs_srv_description": "Test FreeNAS Server",
                     "cifs_srv_guest": "nobody",
-                    "cifs_hostname_lookup": "false",
-                    "cifs_srv_aio_enable": "false" }
+                    "cifs_hostname_lookup": False,
+                    "cifs_srv_aio_enable": False }
         assert PUT("/services/cifs/", payload) == 200
 
     # Now start the service
@@ -88,8 +88,9 @@ class ad_bsd_test(unittest.TestCase):
     def test_09_Changing_permissions_on_SMB_PATH(self):
         payload = { "mp_path": SMB_PATH,
                     "mp_acl": "unix",
-                    "mp_mode": "777", "mp_user":
-                    "root", "mp_group": "AD01\\QA",
+                    "mp_mode": "777",
+                    "mp_user": "root",
+                    "mp_group": "AD01\\QA",
                     "mp_recursive": "true" }
         assert PUT("/storage/permission/", payload) == 201
 
