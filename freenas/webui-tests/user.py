@@ -46,6 +46,7 @@ class create_user_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_create_newuser(self):
         #Click  Account menu
+        print " :creating a new user with create new primary group"
         a = driver.find_element_by_xpath(xpaths['navAccount'])
         a.click()
         #allowing the button to load
@@ -84,6 +85,7 @@ class create_user_test(unittest.TestCase):
 
     def test_02_create_newuser_primarygroup_uncheck(self):
         time.sleep(2)
+        print " :creating a new user without creating a primary group"
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
         #scroll down to find hover tab
@@ -120,6 +122,7 @@ class create_user_test(unittest.TestCase):
 
 
     def test_03_create_superuser(self):
+        print " :creating a super user with root access"
         time.sleep(2)
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()

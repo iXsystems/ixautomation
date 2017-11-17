@@ -25,7 +25,8 @@ except ImportError:
     import unittest
 
 
-xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]"
+xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
+          'turnoffConfirm' : "/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]"
         }
 
 class configure_ssh_test(unittest.TestCase):
@@ -34,8 +35,8 @@ class configure_ssh_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_turnon_ssh (self):
+        print " :turning on the ssh service"
         time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
@@ -49,10 +50,11 @@ class configure_ssh_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle").click()
         time.sleep(1)
         #re-confirming if the turning off the service
-        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]"):
-            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]").click()
+        if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
+            driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
 
     def test_02_configure_ssh(self):
+        print " :configuring ssh service with root access"
         time.sleep(2)
         #click on configure button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-card-actions/button").click()

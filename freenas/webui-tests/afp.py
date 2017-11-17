@@ -35,6 +35,7 @@ class configure_afp_test(unittest.TestCase):
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_turnon_afp (self):
+        print " :turning on the afp service"
         time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
