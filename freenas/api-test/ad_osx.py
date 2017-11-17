@@ -71,8 +71,8 @@ class ad_osx_test(unittest.TestCase):
     def test_06_Enabling_SMB_service(self):
         payload = { "cifs_srv_description": "Test FreeNAS Server",
                     "cifs_srv_guest": "nobody",
-                    "cifs_hostname_lookup": "false",
-                    "cifs_srv_aio_enable": "false" }
+                    "cifs_hostname_lookup": False,
+                    "cifs_srv_aio_enable": False }
         assert PUT("/services/cifs/", payload) ==  200
 
     # Now start the service
