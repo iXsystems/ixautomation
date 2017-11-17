@@ -40,6 +40,7 @@ class login_test(unittest.TestCase):
     #Tests in numerals in order to sequence the tests
     #Test enter username,password,login and check successfully login
     def test_01_login(self):
+        print ("loging in FreeNAS new webui- woot woot"
         #enter username in the username textbox
         driver.find_element_by_xpath(xpaths['usernameTxtBox']).clear()
         driver.find_element_by_xpath(xpaths['usernameTxtBox']).send_keys(username)

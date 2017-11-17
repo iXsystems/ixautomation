@@ -36,7 +36,7 @@ class configure_ssh_test(unittest.TestCase):
         pass
 
     def test_01_turnon_ssh (self):
-        print " :turning on the ssh service"
+        print (" turning on the ssh service")
         time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
@@ -54,7 +54,7 @@ class configure_ssh_test(unittest.TestCase):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
 
     def test_02_configure_ssh(self):
-        print " :configuring ssh service with root access"
+        print (" configuring ssh service with root access")
         time.sleep(2)
         #click on configure button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-card-actions/button").click()
