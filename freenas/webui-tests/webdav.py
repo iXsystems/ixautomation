@@ -60,7 +60,7 @@ class configure_webdav_test(unittest.TestCase):
         driver.find_element_by_xpath("//*[@id='6']/form-input/div/md-input-container/div/div[1]/div/input").send_keys(newuserpassword)
         #Click on save button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/webdav-edit/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        time.sleep(5)
+        time.sleep(10)
         # Next step-- To check if the new user is present in the list via automation
 
     #method to test if an element is present

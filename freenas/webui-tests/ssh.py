@@ -62,7 +62,7 @@ class configure_ssh_test(unittest.TestCase):
         driver.find_element_by_xpath("//*[@id='2']/form-checkbox/div/md-checkbox/label/div").click()
         #click on save button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/ssh-edit/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        time.sleep(5)
+        time.sleep(10)
 
 
         # Next step-- To check if the new user is present in the list via automation

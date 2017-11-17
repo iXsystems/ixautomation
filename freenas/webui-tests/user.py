@@ -81,7 +81,7 @@ class create_user_test(unittest.TestCase):
         #check if the the user list is loaded after addding a new user
         self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(15)
+        time.sleep(20)
 
     def test_02_create_newuser_primarygroup_uncheck(self):
         time.sleep(2)
@@ -117,7 +117,7 @@ class create_user_test(unittest.TestCase):
         #check if the the user list is loaded after addding a new user
         self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(15)
+        time.sleep(20)
 
 
 
@@ -151,7 +151,7 @@ class create_user_test(unittest.TestCase):
         #check if the the user list is loaded after addding a new user
         #self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(10)
+        time.sleep(20)
 
 
 

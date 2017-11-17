@@ -48,6 +48,7 @@ class configure_afp_test(unittest.TestCase):
         #re-confirming if the turning off the service
         if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
+        time.sleep(10)
 
 #    def test_02_configure_afp(self):
 #        time.sleep(1)

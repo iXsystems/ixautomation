@@ -40,7 +40,7 @@ class create_group_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_create_newgroup(self):
         print (" creating a new group without root access")
-        #time.sleep(5)
+        time.sleep(5)
         #Click Group submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
         #scroll down to find hover tab
@@ -59,7 +59,7 @@ class create_group_test(unittest.TestCase):
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #wait to confirm new user in the list visually
-        time.sleep(10)
+        time.sleep(20)
 
     def test_02_create_supergroup(self):
         print (" creating a new Super group with root access")
@@ -80,7 +80,7 @@ class create_group_test(unittest.TestCase):
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #wait to confirm new user in the list visually
-        time.sleep(10)
+        time.sleep(20)
 
 
 
