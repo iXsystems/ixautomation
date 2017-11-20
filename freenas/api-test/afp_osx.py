@@ -20,7 +20,7 @@ AFP_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/afp-osx" + BRIDGEHOST
 VOL_GROUP = "qa"
 
-class ad_bsd_test(unittest.TestCase):
+class afp_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed runs
     def test_01_Clean_up_any_leftover_items(self):
