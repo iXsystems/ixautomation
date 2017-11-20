@@ -86,6 +86,7 @@ call(["py.test-3.6", "--junitxml", "%sstorage_result.xml" % results_xml, "storag
 call(["py.test-3.6", "--junitxml", "%sntp_result.xml" % results_xml, "ntp.py"])
 call(["py.test-3.6", "--junitxml", "%sad_bsd_result.xml" % results_xml, "ad_bsd.py"])
 call(["py.test-3.6", "--junitxml", "%sad_osx_result.xml" % results_xml, "ad_osx.py"])
+call(["py.test-3.6", "--junitxml", "%safp_osx_result.xml" % results_xml, "afp_osx.py"]))
 call(["py.test-3.6", "--junitxml", "%sbootenv_result.xml" % results_xml, "bootenv.py"])
 call(["py.test-3.6", "--junitxml", "%scronjob_result.xml" % results_xml, "cronjob.py"])
 #call(["py.test-3.6", "--junitxml", "%sdebug_result.xml" % results_xml, "debug.py"])
