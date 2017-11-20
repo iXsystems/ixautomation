@@ -33,6 +33,7 @@ class logout_test(unittest.TestCase):
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_logout(self):
+        print (" loging out of the ui, see ya")
         #Click on root account
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/topbar/md-toolbar/div/md-toolbar-row/button[6]").click()
         #Click on logout

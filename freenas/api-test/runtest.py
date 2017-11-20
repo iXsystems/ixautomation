@@ -54,6 +54,8 @@ ntpServer = "10.20.20.122"
 localHome = "%s"
 disk1 = "vtbd1"
 disk2 = "vtbd2"
+#disk1 = "da1"
+#disk2 = "da2"
 keyPath = "%s"
 """ % (passwd, ip, interface, localHome, keyPath)
 
@@ -84,10 +86,11 @@ call(["py.test-3.6", "--junitxml", "%sstorage_result.xml" % results_xml, "storag
 call(["py.test-3.6", "--junitxml", "%sntp_result.xml" % results_xml, "ntp.py"])
 call(["py.test-3.6", "--junitxml", "%sad_bsd_result.xml" % results_xml, "ad_bsd.py"])
 call(["py.test-3.6", "--junitxml", "%sad_osx_result.xml" % results_xml, "ad_osx.py"])
-call(["py.test-3.6", "--junitxml", "%salerts_result.xml" % results_xml, "alerts.py"])
+call(["py.test-3.6", "--junitxml", "%safp_osx_result.xml" % results_xml, "afp_osx.py"])
+#call(["py.test-3.6", "--junitxml", "%salerts_result.xml" % results_xml, "alerts.py"])
 call(["py.test-3.6", "--junitxml", "%sbootenv_result.xml" % results_xml, "bootenv.py"])
 call(["py.test-3.6", "--junitxml", "%scronjob_result.xml" % results_xml, "cronjob.py"])
-call(["py.test-3.6", "--junitxml", "%sdebug_result.xml" % results_xml, "debug.py"])
+#call(["py.test-3.6", "--junitxml", "%sdebug_result.xml" % results_xml, "debug.py"])
 call(["py.test-3.6", "--junitxml", "%semails_result.xml" % results_xml, "emails.py"])
 call(["py.test-3.6", "--junitxml", "%suser_result.xml" % results_xml, "user.py"])
 call(["py.test-3.6", "--junitxml", "%sftp_result.xml" % results_xml, "ftp.py"])

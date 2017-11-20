@@ -5,13 +5,14 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
+from auto_config import ip
 try:
     import config
 except ImportError:
     pass
 else:
-    from config import BRIDGEIP, BRIDGEHOST, AFP_PATH, AFP_NAME
+    from config import BRIDGEHOST
 
 DATASET = "afp-osx"
 AFP_NAME = "My AFP Share"
@@ -19,7 +20,7 @@ AFP_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/afp-osx" + BRIDGEHOST
 VOL_GROUP = "qa"
 
-class ad_bsd_test(unittest.TestCase):
+class afp_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed runs
     def test_01_Clean_up_any_leftover_items(self):
@@ -31,23 +32,18 @@ class ad_bsd_test(unittest.TestCase):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def test_03_Enabling_AFP_service(self):
-        try:
-            BRIDGEIP
-        except NameError:
-            payload = {"afp_srv_guest": "true" }
-        else:
-            payload = {"afp_srv_guest": "true",
-                       "afp_srv_bindip": BRIDGEIP}
+        payload = {"afp_srv_guest": "true",
+                   "afp_srv_bindip": ip}
         assert PUT("/services/afp/", payload) == 200
 
     def test_04_Starting_AFP_service(self):
         assert PUT("/services/services/afp/", {"srv_enable": "true"}) == 200
 
     def test_05_Checking_to_see_if_AFP_service_is_enabled(self):
-        assert GET("/services/services/afp/", "srv_state") == "RUNNING"
+        assert GET_OUTPUT("/services/services/afp/", "srv_state") == "RUNNING"
 
     def test_06_Changing_permissions_on_AFP_PATH(self):
-        payload = { "mp_path": "'${AFP_PATH}'",
+        payload = { "mp_path": AFP_PATH,
                     "mp_acl": "unix", "mp_mode":
                     "777", "mp_user": "root",
                     "mp_group": "wheel" }
@@ -69,14 +65,14 @@ class ad_bsd_test(unittest.TestCase):
     #check_exit_status || return 1
 
     # Mount share on OSX system and create a test file
-    def test_08_Create_mount_point_for_AFP_on_OSX_system(self):
-        assert OSX_TEST("mkdir -p " + MOUNTPOINT) == True
+    #def test_08_Create_mount_point_for_AFP_on_OSX_system(self):
+    #    assert OSX_TEST("mkdir -p " + MOUNTPOINT) == True
 
-    def test_09_Mount_AFP_share_on_OSX_system(self):
-        cmd = "mount -t afp 'afp://%s/%s %s" % (BRIDGEIP, AFP_NAME, MOUNTPOINT)
-        assert OSX_TEST(cmd) == True
+    #def test_09_Mount_AFP_share_on_OSX_system(self):
+    #    cmd = "mount -t afp 'afp://%s/%s %s" % (ip, AFP_NAME, MOUNTPOINT)
+    #    assert OSX_TEST(cmd) == True
 
-    device_name=`dirname "${MOUNTPOINT}"`
+    #device_name=`dirname "${MOUNTPOINT}"`
     #echo_test_title "Checking permissions on ${MOUNTPOINT}"
     #osx_test "ls -la '${device_name}' | awk '\$4 == \"${VOL_GROUP}\" && \$9 == \"${DATASET}\" ' "
     #check_exit_status || return 1
