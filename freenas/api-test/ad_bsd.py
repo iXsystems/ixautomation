@@ -85,14 +85,14 @@ class ad_bsd_test(unittest.TestCase):
     def test_08_Creating_SMB_mountpoint(self):
         assert BSD_TEST( "mkdir -p '%s' && sync" % MOUNTPOINT) == True
 
-    def test_09_Changing_permissions_on_SMB_PATH(self):
-        payload = { "mp_path": SMB_PATH,
-                    "mp_acl": "unix",
-                    "mp_mode": "777",
-                    "mp_user": "root",
-                    "mp_group": "AD01\\QA",
-                    "mp_recursive": "true" }
-        assert PUT("/storage/permission/", payload) == 201
+    #def test_09_Changing_permissions_on_SMB_PATH(self):
+    #    payload = { "mp_path": SMB_PATH,
+    #                "mp_acl": "unix",
+    #                "mp_mode": "777",
+    #                "mp_user": "root",
+    #                "mp_group": "AD01\\QA",
+    #                "mp_recursive": "true" }
+    #    assert PUT("/storage/permission/", payload) == 201
 
     def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = { "cfs_comment": "My Test SMB Share",
@@ -103,14 +103,14 @@ class ad_bsd_test(unittest.TestCase):
         assert POST("/sharing/cifs/", payload) == 201
 
 
-    # The ADUSER user must exist in AD with this password
-    def test_11_Store_AD_credentials_in_a_file_for_mount_smbfs(self):
-        cmd = "echo \"[TESTNAS:ADUSER]\" > ~/.nsmbrc && echo password=12345678 >> ~/.nsmbrc"
-        assert BSD_TEST(cmd) == True
+    ## The ADUSER user must exist in AD with this password
+    #def test_11_Store_AD_credentials_in_a_file_for_mount_smbfs(self):
+    #    cmd = "echo \"[TESTNAS:ADUSER]\" > ~/.nsmbrc && echo password=12345678 >> ~/.nsmbrc"
+    #    assert BSD_TEST(cmd) == True
 
-    def test_12_Mounting_SMB(self):
-        cmd = "mount_smbfs -N -I %s -W AD01 \"//aduser@testnas/%s\" \"%s\"" % (ip, SMB_NAME, MOUNTPOINT)
-        assert BSD_TEST(cmd) == True
+    #def test_12_Mounting_SMB(self):
+    #    cmd = "mount_smbfs -N -I %s -W AD01 \"//aduser@testnas/%s\" \"%s\"" % (ip, SMB_NAME, MOUNTPOINT)
+    #    assert BSD_TEST(cmd) == True
 
     #def test_13_Verify_that_SMB_share_has_finished_mounting(self):
     #wait_for_bsd_mnt "${MOUNTPOINT}"
