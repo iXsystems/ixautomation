@@ -7,6 +7,12 @@
 import unittest
 from functions import PUT, POST, GET_OUTPUT
 
+try:
+    import config
+except ImportError:
+    pass
+else:
+    from config import JAILIP, JAILGW, JAILNETMASK
 
 class jails_test(unittest.TestCase):
 
@@ -14,22 +20,17 @@ class jails_test(unittest.TestCase):
         payload = {"jc_ipv4_network_start": JAILIP,
                    "jc_path": "/mnt/tank/jails" }
         assert PUT("/jails/configuration/", payload) == 201
-        # Timeout if jail creation hangs
-  .     #${PROGDIR}/../utils/resty -W "http://${ip}:80/api/v1.0" -H "Accept: application/json" -H "Content-Type: application/json" -u ${fuser}:${fpass} -m 1200
 
     def test_02_Creating_jail_VNET_OFF(self):
-        payload == {"jail_host": "testjail",
+        payload = {"jail_host": "testjail",
                     "jail_defaultrouter_ipv4": JAILGW,
                     "jail_ipv4": JAILIP,
                     "jail_ipv4_netmask": JAILNETMASK,
                     "jail_vnet": "false"}
         assert POST("/jails/jails/", payload) == 201
 
-        # Remove timeout for other tests
-  .     # ${PROGDIR}/../utils/resty -W "http://${ip}:80/api/v1.0" -H "Accept: application/json" -H "Content-Type: application/json" -u ${fuser}:${fpass}
-
     def test_03_Mount_tank_share_into_jail(self):
-        payload == {"destination": "/mnt",
+        payload = {"destination": "/mnt",
                      "jail": "testjail",
                      "mounted": "true",
                      "readonly": "false",

@@ -96,4 +96,6 @@ call(["py.test-3.6", "--junitxml", "%sdomaincontroller_result.xml" % results_xml
 call(["py.test-3.6", "--junitxml", "%suser_result.xml" % results_xml, "user.py"])
 call(["py.test-3.6", "--junitxml", "%sftp_result.xml" % results_xml, "ftp.py"])
 call(["py.test-3.6", "--junitxml", "%sgroup_result.xml" % results_xml, "group.py"])
+call(["py.test-3.6", "--junitxml", "%siscsi_result.xml" % results_xml, "iscsi.py"])
+#call(["py.test-3.6", "--junitxml", "%sjails_result.xml" % results_xml, "jails.py"])
 
