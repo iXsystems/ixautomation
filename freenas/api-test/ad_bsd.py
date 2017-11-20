@@ -90,8 +90,8 @@ class ad_bsd_test(unittest.TestCase):
     #                "mp_acl": "unix",
     #                "mp_mode": "777",
     #                "mp_user": "root",
-    #                "mp_group": "AD01\\QA", # PUT output {"mp_group": ["The group AD01\\QA is not valid."]}
-    #                "mp_recursive": "true" }
+    #                "mp_group": r"AD01\QA", # PUT output {"mp_group": ["The group AD01\\\\QA is not valid."]}
+    #                "mp_recursive": True }
     #    assert PUT("/storage/permission/", payload) == 201
 
     def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
