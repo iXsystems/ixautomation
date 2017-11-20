@@ -92,6 +92,7 @@ call(["py.test-3.6", "--junitxml", "%sbootenv_result.xml" % results_xml, "booten
 call(["py.test-3.6", "--junitxml", "%scronjob_result.xml" % results_xml, "cronjob.py"])
 #call(["py.test-3.6", "--junitxml", "%sdebug_result.xml" % results_xml, "debug.py"])
 call(["py.test-3.6", "--junitxml", "%semails_result.xml" % results_xml, "emails.py"])
+call(["py.test-3.6", "--junitxml", "%sdomaincontroller_result.xml" % results_xml, "domaincontroller.py"])
 call(["py.test-3.6", "--junitxml", "%suser_result.xml" % results_xml, "user.py"])
 call(["py.test-3.6", "--junitxml", "%sftp_result.xml" % results_xml, "ftp.py"])
 call(["py.test-3.6", "--junitxml", "%sgroup_result.xml" % results_xml, "group.py"])
