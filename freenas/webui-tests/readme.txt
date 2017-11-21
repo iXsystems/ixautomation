@@ -12,7 +12,7 @@ sudo apt-get install git
 #Geckodriver 
 git clone https://github.com/rishabh27892/webui-test-files/
 cd webui-test-files/
-tar -xvzf geckodriver-v0.11.1-linux64.tar.gz
+tar -xvzf geckodriver-v0.18.0-linux64.tar.gz
 chmod +x geckodriver
 sudo cp geckodriver /usr/local/bin/
 cd ~/
