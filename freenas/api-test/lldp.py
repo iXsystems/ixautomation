@@ -7,6 +7,9 @@
 import unittest
 from functions import PUT, POST, GET_OUTPUT
 
+LOCATION = "Maryville, TN"
+COUNTRY = "US"
+INTDESC = True
 
 class lldp_test(unittest.TestCase):
 
@@ -25,7 +28,7 @@ class lldp_test(unittest.TestCase):
         assert GET_OUTPUT("/services/lldp/", "lldp_location") == LOCATION
 
     def test_04_Enable_LLDP_service(self):
-        assert PUT("/services/services/lldp/", {"srv_enable": "true"}) == 200
+        assert PUT("/services/services/lldp/", {"srv_enable": True}) == 200
 
     def test_05_Checking_to_see_if_LLDP_service_is_running(self):
         assert GET_OUTPUT("/services/services/lldp/", "srv_state") == "RUNNING"
