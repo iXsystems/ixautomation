@@ -97,5 +97,7 @@ call(["py.test-3.6", "--junitxml", "%suser_result.xml" % results_xml, "user.py"]
 call(["py.test-3.6", "--junitxml", "%sftp_result.xml" % results_xml, "ftp.py"])
 call(["py.test-3.6", "--junitxml", "%sgroup_result.xml" % results_xml, "group.py"])
 call(["py.test-3.6", "--junitxml", "%siscsi_result.xml" % results_xml, "iscsi.py"])
+# jails API Broken
 #call(["py.test-3.6", "--junitxml", "%sjails_result.xml" % results_xml, "jails.py"])
+call(["py.test-3.6", "--junitxml", "%sldap_bsd_result.xml" % results_xml, "ldap_bsd.py"])
 

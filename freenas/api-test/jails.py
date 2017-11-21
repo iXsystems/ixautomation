@@ -26,15 +26,15 @@ class jails_test(unittest.TestCase):
                     "jail_defaultrouter_ipv4": JAILGW,
                     "jail_ipv4": JAILIP,
                     "jail_ipv4_netmask": JAILNETMASK,
-                    "jail_vnet": "false"}
+                    "jail_vnet": True}
         assert POST("/jails/jails/", payload) == 201
 
     def test_03_Mount_tank_share_into_jail(self):
         payload = {"destination": "/mnt",
-                     "jail": "testjail",
-                     "mounted": "true",
-                     "readonly": "false",
-                     "source": "/mnt/tank/share"}
+                   "jail": "testjail",
+                   "mounted": True,
+                   "readonly": False,
+                   "source": "/mnt/tank/share"}
         assert POST("/jails/mountpoints/", payload) == 201
 
     def test_04_Starting_jail(self):
