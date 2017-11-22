@@ -5,7 +5,7 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, POST, GET_OUTPUT
+from functions import PUT, GET, GET_OUTPUT
 
 LOCATION = "Maryville, TN"
 COUNTRY = "US"
