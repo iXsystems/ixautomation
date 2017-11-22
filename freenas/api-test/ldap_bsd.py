@@ -82,24 +82,27 @@ class ldap_bsd_test(unittest.TestCase):
     def test_07_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
     
-    def test_08_Changing_permissions_on_SMB_PATH(self):
+    def test_08_Checking_to_see_if_SMB_service_is_enabled(self):
+        GET_OUTPUT("/services/services/cifs/", "srv_state")
+    
+    def test_09_Changing_permissions_on_SMB_PATH(self):
         payload = { "mp_path": SMB_PATH,
                     "mp_acl": "unix",
                     "mp_mode": "777",
                     "mp_user": "root",
                     "mp_group": "qa",
-                    "mp_recursive": "true" }
+                    "mp_recursive": True }
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_09_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = { "cfs_comment": "My Test SMB Share",
                     "cifs_path": SMB_PATH,
                     "cifs_name": SMB_NAME,
-                    "cifs_guestok": "true",
+                    "cifs_guestok": True,
                     "cifs_vfsobjects": "streams_xattr" }
         assert POST("/sharing/cifs/", payload) == 201
 
-    def test_10_Checking_to_see_if_SMB_service_is_enabled(self):
+    def test_11_Checking_to_see_if_SMB_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
     # BSD test to be done when when BSD_TEST is functional
