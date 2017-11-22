@@ -100,6 +100,7 @@ call(["py.test-3.6", "--junitxml", "%siscsi_result.xml" % results_xml, "iscsi.py
 # jails API Broken
 #call(["py.test-3.6", "--junitxml", "%sjails_result.xml" % results_xml, "jails.py"])
 call(["py.test-3.6", "--junitxml", "%sldap_bsd_result.xml" % results_xml, "ldap_bsd.py"])
+call(["py.test-3.6", "--junitxml", "%sldap_osx_result.xml" % results_xml, "ldap_osx.py"])
 call(["py.test-3.6", "--junitxml", "%slldp_result.xml" % results_xml, "lldp.py"])
 
 
