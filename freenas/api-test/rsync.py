@@ -15,15 +15,15 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/services/rsyncd/", {"rsyncd_port": 873}) == 200
 
     def test_02_Starting_rsyncd_service(self):
-        assert PUT("/services/services/rsync/" {"srv_enable": True}) == 200
+        assert PUT("/services/services/rsync/", {"srv_enable": True}) == 200
 
     def test_03_Checking_to_see_if_rsync_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/rsync/", "srv_state") == "RUNNING"
 
-    def test_04_Creating_rsync_resource(self):
-        payload = {"rsyncmod_name": "testmod",
-                   "rsyncmod_path": "/mnt/thank/share" }
-        assert POST("/services/rsyncmod/", payload) == 201
+#    def test_04_Creating_rsync_resource(self):
+#        payload = {"rsyncmod_name": "testmod",
+#                   "rsyncmod_path": "/mnt/thank/share" }
+#        assert POST("/services/rsyncmod/", payload) == 201
 
     # Test rsync
     def test_05_Testings_rsync_access(self):
