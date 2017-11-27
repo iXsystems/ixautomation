@@ -104,3 +104,5 @@ call(["py.test-3.6", "--junitxml", "%sldap_osx_result.xml" % results_xml, "ldap_
 call(["py.test-3.6", "--junitxml", "%slldp_result.xml" % results_xml, "lldp.py"])
 call(["py.test-3.6", "--junitxml", "%snfs_result.xml" % results_xml, "nfs.py"])
 call(["py.test-3.6", "--junitxml", "%rsync_result.xml" % results_xml, "rsync.py"])
+#call(["py.test-3.6", "--junitxml", "%smarttest_result.xml" % results_xml, "smarttest.py"])
+
