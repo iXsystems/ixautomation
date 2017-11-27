@@ -102,5 +102,5 @@ call(["py.test-3.6", "--junitxml", "%siscsi_result.xml" % results_xml, "iscsi.py
 call(["py.test-3.6", "--junitxml", "%sldap_bsd_result.xml" % results_xml, "ldap_bsd.py"])
 call(["py.test-3.6", "--junitxml", "%sldap_osx_result.xml" % results_xml, "ldap_osx.py"])
 call(["py.test-3.6", "--junitxml", "%slldp_result.xml" % results_xml, "lldp.py"])
-
+call(["py.test-3.6", "--junitxml", "%snfs_result.xml" % results_xml, "nfs.py"])
 
