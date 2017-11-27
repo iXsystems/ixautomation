@@ -9,7 +9,7 @@ sudo apt-get install python-pytest
 sudo apt-get install git
 sudo pip install unittest-xml-reportin
 
-
+#NOTE: If using selenium with firefox48 and above, use the mariotte setting commented in the driver.py file or use selenium 3.0 or above(it is enabled by default)
 
 #Geckodriver 
 git clone https://github.com/rishabh27892/webui-test-files/
