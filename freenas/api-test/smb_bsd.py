@@ -17,7 +17,7 @@ else:
 DATASET="smb-bsd"
 SMB_NAME="TestShare"
 SMB_PATH="/mnt/tank/" + DATASET
-local MOUNTPOINT="/tmp/smb-bsd" + BRIDGEHOST
+MOUNTPOINT="/tmp/smb-bsd" + BRIDGEHOST
 
 
 class smb_bsd_test(unittest.TestCase):
