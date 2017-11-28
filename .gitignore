@@ -9,3 +9,6 @@ config.py
 auto_config.py
 ixautomation.conf
 build/*
+src/build
+dist
+ixautomation.egg-info
