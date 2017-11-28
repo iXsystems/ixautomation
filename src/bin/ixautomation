@@ -21,7 +21,7 @@ if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
-. ../etc/ixautomation.conf
+. /usr/local/etc/ixautomation.conf
 
 # Check for tests
 if [ -z "$WORKSPACE" ] ; then
@@ -62,8 +62,8 @@ if [ -z "$1" ] ; then
 fi
 
 # Source our functions
-. ../lib/ixautomation/functions.sh
-. ../lib/ixautomation/functions-vm.sh
+. /usr/local/lib/ixautomation/functions.sh
+. /usr/local/lib/ixautomation/functions-vm.sh
 
 ######################################################
 
