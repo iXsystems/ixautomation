@@ -73,24 +73,43 @@ Specify a connected ethernet interface with access to DHCP for VMs ( Substitue r
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
 ```
 
-# Edit ixautomation.cfg and set location of git repo with tests when running local
+Copy ixautomation conf.dist to ixautomation.conf 
 
 ```
 cp src/etc/ixautomation.cfg.dist src/etc/ixautomation.cfg
+```
+
+Edit ixautomation.cfg
+
+```
 edit src/etc/ixautomation.cfg
+```
+
+Set location of git repo with tests when running local
+
+```
+# When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation/"
+export WORKSPACE
+```
+
+Enter the directory for running ixautomation
+
+```
+cd bin
 ```
 
 Create a VM, and test install using vm-bhyve
 
 ```
-sudo ./src/bin/ixautomation vm-tests freenas
-sudo ./src/bin/ixautomation vm-tests trueos
+sudo ./ixautomation vm-tests freenas
+sudo ./ixautomation vm-tests trueos
 ```
 
 Stop, and destroy all VMs
 
 ```
-sudo ./src/bin/ixautomation vm-destroy-all
+sudo ./ixautomation vm-destroy-all
 ```
 
 
@@ -101,7 +120,7 @@ ReST API Tests
 
 Create a VM, test install using vm-bhyve, and run API tests:
 ```
-sudo ./src/bin/ixautomation vm-tests freenas api-tests
+sudo ./ixautomation vm-tests freenas api-tests
 ```
 
 
@@ -110,17 +129,17 @@ Selenium Tests
 To install iXautomation dependencies run:
 
 ```
-sudo ./src/bin/ixautomation bootstrap-webui
+sudo ./ixautomation bootstrap-webui
 ```
 
 Test webui with selenium
 ```
-sudo ./src/bin/ixautomation freenas-webui-tests
+sudo ./ixautomation freenas-webui-tests
 ```
 
 
 iocage Tests
 ============
 ```
-sudo ./src/bin/ixautomation iocage-tests
+sudo ./ixautomation iocage-tests
 ```
