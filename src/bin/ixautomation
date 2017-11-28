@@ -21,7 +21,10 @@ if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
-. /usr/local/etc/ixautomation.conf
+# Check for global configuration
+if [ -f "/usr/local/etc/ixautomation.conf" ] ; then
+  . /usr/local/etc/ixautomation.conf
+fi
 
 # Check for tests
 if [ -z "$WORKSPACE" ] ; then
