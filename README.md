@@ -50,6 +50,10 @@ Enter the directory for running ixautomation from git:
 cd ixautomation/src/
 ```
 
+Install the framework
+```
+sudo python3.6 setup.py install
+```
 
 VM Tests
 ============
