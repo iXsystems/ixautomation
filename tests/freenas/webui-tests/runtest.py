@@ -2,6 +2,7 @@
 
 from subprocess import call
 from os import path
+#when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
 #from driver import webDriver
 from driverU import webDriver
 ## Importing test
@@ -66,6 +67,9 @@ if path.exists('webdav.pyc'):
 
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
+
+if path.exist('geckodriver.log'):
+    call(["rm", "geckodriver.log"])
 
 if path.exists('__pycache__'):
     call(["rm", "-r", "__pycache__"])

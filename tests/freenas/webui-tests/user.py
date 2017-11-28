@@ -32,9 +32,11 @@ xpaths = { 'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1
          'newUserPass' : "//*[@id='9']/form-input/div/md-input-container/div/div[1]/div/input",
         'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
         'navAccount' : "//*[@id='nav-1']/div/a[1]",
-        'submenuUser' : "//*[@id='1-0']",
+        'submenuUser' : "//*[@id='1-1']",
         'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div",
-        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div"
+        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
+        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button",
+        'fabAction' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions/button"
         }
 
 class create_user_test(unittest.TestCase):
@@ -62,12 +64,13 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+  
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new user option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
         #Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusername)
         #Enter User Full name
@@ -92,12 +95,12 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new user option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
         #Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusernameuncheck)
         #uncheck create primary group  Checkbox
@@ -130,12 +133,12 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new user option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
         #Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(superusername)
         #Enter User Full name

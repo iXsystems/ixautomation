@@ -27,8 +27,10 @@ except ImportError:
 
 xpaths = {
          'newGroupName' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
-         'submenuGroup' : "//*[@id='1-1']",
-        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div"
+         'submenuGroup' : "//*[@id='1-0']",
+        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
+        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button",
+        'fabAction' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions/button"
         }
 
 class create_group_test(unittest.TestCase):
@@ -47,12 +49,12 @@ class create_group_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new group option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
         #Enter New Groupname
         time.sleep(1)
         driver.find_element_by_xpath(xpaths['newGroupName']).send_keys(newgroupname)
@@ -66,12 +68,12 @@ class create_group_test(unittest.TestCase):
         #Click Group submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
         #Perform hover to show menu
-        hover_element = driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button")
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
         #Click create new group option
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-list/entity-table/div/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions").click()
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
         #Enter New Groupname
         time.sleep(1)
         driver.find_element_by_xpath(xpaths['newGroupName']).send_keys(supergroupname)
