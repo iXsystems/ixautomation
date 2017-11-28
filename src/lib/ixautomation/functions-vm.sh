@@ -2,12 +2,12 @@
 
 vm_setup()
 {
-  $VM_BHYVE init
+  vm init
 }
 
 vm_select_iso()
 {
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
   if [ -z "$SYSTYPE" ]; then
     echo "Please specify SYSTYPE as freenas, trueos, etc"
     exit 1
@@ -18,13 +18,7 @@ vm_select_iso()
   # If we aren't running as part of the build process, list ISOs in the $ISODIR
   if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
 
-  # Default to prompting for ISOs from ./ixbuild/freenas/iso/*
-  if [ -n "$USING_JENKINS" ] ; then
-    local ISODIR="${WORKSPACE/artifacts/iso}"
-  else
-    local ISODIR="${PROGDIR}/vms/.iso/"
-  fi
-
+  local ISODIR="${WORKSPACE}/tests/${SYSTYPE}/iso/"
   # [ ! -d "${ISODIR}" ] && "Directory not found: ${ISODIR}" && exit_clean
   if [ ! -d "${ISODIR}" ] ; then
     echo "Please create ${ISODIR} directory first"
@@ -99,37 +93,34 @@ vm_select_iso()
     fi
   fi
 
-  # Copy selected ISO to temporary location for VM
-  if [ -n "$USING_JENKINS" ] ; then
-    $VM_BHYVE iso ${ISODIR}/${iso_name}
-  fi
-  $VM_BHYVE create -t ${SYSTYPE} ${VM}
-  $VM_BHYVE install ${VM} ${iso_name}
+  vm iso ${ISODIR}/${iso_name}
+  vm create -t ${SYSTYPE} ${VM}
+  vm install ${VM} ${iso_name}
 }
 
 vm_start()
 {
-export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-${VM_BHYVE} start ${VM}
+export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
+vm start ${VM}
 sleep 5
 }
 
 vm_stop()
 {
-export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-yes | ${VM_BHYVE} stop ${VM}
+export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
+yes | vm stop ${VM}
 sleep 10
 }
 
 vm_install()
 {
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
   # Get console device for newly created VM
   sleep 1
   local VM_OUTPUT="/tmp/${VM}console.log"
 
   # Run our expect/tcl script to automate the installation dialog
-  ${PROGDIR}/${SYSTYPE}/bhyve-installer.exp "$VM_BHYVE" "${VM}" "${VM_OUTPUT}"
+  ${WORKSPACE}/tests/${SYSTYPE}/bhyve-installer.exp "${VM}" "${VM_OUTPUT}"
   echo -e \\033c # Reset/clear to get native term dimensions
   echo "Success: Shutting down the installation VM.."
   vm_stop
@@ -138,12 +129,12 @@ vm_install()
 vm_boot()
 {
   vm_start
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
+  export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
   # Get console device for newly created VM
   sleep 1
   local COM_LISTEN=`cat ${vm_dir}/${VM}/console | cut -d/ -f3`
   local VM_OUTPUT="/tmp/${VM}console.log"
-  ${PROGDIR}/${SYSTYPE}/bhyve-bootup.exp "${VM_BHYVE}" "${VM}" "${VM_OUTPUT}"
+  ${WORKSPACE}/tests/${SYSTYPE}/bhyve-bootup.exp "${VM}" "${VM_OUTPUT}"
 
   echo -e \\033c # Reset/clear to get native term dimensions
 
@@ -160,15 +151,15 @@ vm_boot()
 
 vm_destroy()
 {
-  export VM=`echo "${MASTERWRKDIR}" | cut -f 4 -d '/'`
-  yes | $VM_BHYVE poweroff ${VM}
+  export VM=`echo "${MASTERWRKDIR}" | tail -c 5`
+  yes | vm poweroff ${VM}
   sleep 5
-  yes | $VM_BHYVE destroy ${VM}
+  yes | vm destroy ${VM}
 }
 
 vm_stop_all()
 {
-  $VM_BHYVE stopall
+  vm stopall
 }
 
 vm_destroy_all()

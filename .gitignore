@@ -7,4 +7,5 @@ __pycache__
 .cache
 config.py
 auto_config.py
+ixautomation.conf
 build/*

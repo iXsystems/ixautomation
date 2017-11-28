@@ -44,6 +44,12 @@ To prep a new system for testing, first download the repo:
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 ```
 
+Enter the directory for running ixautomation from git:
+
+```
+cd ixautomation/src/
+```
+
 
 VM Tests
 ============
@@ -51,7 +57,14 @@ VM Tests
 To install iXautomation dependencies run:
 
 ```
-sudo ./jenkins.sh bootstrap
+sudo ./src/bin/ixautomation bootstrap
+```
+
+Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
+
+```
+sysrc -f /etc/rc.conf vm_enable="YES"
+sysrc -f vm_dir="/usr/local/ixautomation/vms"
 ```
 
 Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
@@ -60,17 +73,24 @@ Specify a connected ethernet interface with access to DHCP for VMs ( Substitue r
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
 ```
 
+# Edit ixautomation.cfg and set location of git repo with tests when running local
+
+```
+cp src/etc/ixautomation.cfg.dist src/etc/ixautomation.cfg
+edit src/etc/ixautomation.cfg
+```
+
 Create a VM, and test install using vm-bhyve
 
 ```
-sudo ./jenkins.sh vm-tests freenas
-sudo ./jenkins.sh vm-tests trueos
+sudo ./src/bin/ixautomation vm-tests freenas
+sudo ./src/bin/ixautomation vm-tests trueos
 ```
 
 Stop, and destroy all VMs
 
 ```
-sudo ./jenkins.sh vm-destroy-all
+sudo ./src/bin/ixautomation vm-destroy-all
 ```
 
 
@@ -81,7 +101,7 @@ ReST API Tests
 
 Create a VM, test install using vm-bhyve, and run API tests:
 ```
-/jenkins.sh vm-tests freenas api-tests
+sudo ./src/bin/ixautomation vm-tests freenas api-tests
 ```
 
 
@@ -90,17 +110,17 @@ Selenium Tests
 To install iXautomation dependencies run:
 
 ```
-sudo ./jenkins.sh bootstrap-webui
+sudo ./src/bin/ixautomation bootstrap-webui
 ```
 
 Test webui with selenium
 ```
-sudo ./jenkins.sh freenas-webui-tests
+sudo ./src/bin/ixautomation freenas-webui-tests
 ```
 
 
 iocage Tests
 ============
 ```
-sudo ./jenkins.sh iocage-tests
+sudo ./src/bin/ixautomation iocage-tests
 ```

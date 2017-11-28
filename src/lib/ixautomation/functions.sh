@@ -73,6 +73,11 @@ bootstrap()
     rc_halt "pkg-static install -y bhyve-firmware"
   fi
 
+  if [ ! -f "/usr/local/bin/vm" ] ; then
+  echo "Installing sysutils/vm-bhyve"
+    rc_halt "pkg-static install -y vm-bhyve"
+  fi
+
   which python3.6 >/dev/null 2>/dev/null
   if [ "$?" != "0" ]; then
     echo "Installing lang/python36"
@@ -187,11 +192,11 @@ create_workdir()
 {
   if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
 
-  if [ ! -d "${cwd}/build" ] ; then
-     mkdir -p ${cwd}/build
+  if [ ! -d "${cwd}/../../tests/${SYSTYPE}/build" ] ; then
+     mkdir -p ${cwd}/../../tests/${SYSTYPE}/build
   fi
 
-  MASTERWRKDIR=$(mktemp -d ${cwd}/build/XXXX)
+  MASTERWRKDIR=$(mktemp -d ${cwd}/../../tests/${SYSTYPE}/build/XXXX)
   #if [ $? -ne 0 ] ; then exit_clean; fi
 
   cd "${MASTERWRKDIR}" || exit_clean

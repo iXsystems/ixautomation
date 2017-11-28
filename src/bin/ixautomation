@@ -21,9 +21,12 @@ if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
 . "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
-# Are we using jenkins?
-if [ -n "$WORKSPACE" ] ; then
-  export USING_JENKINS="YES"
+. ../etc/ixautomation.conf
+
+# Check for tests
+if [ -z "$WORKSPACE" ] ; then
+  echo "Please define path to git repo for tests by defining WORKSPACE= ixautomation.conf"
+  exit 1
 fi
 
 display_usage() {
@@ -59,13 +62,8 @@ if [ -z "$1" ] ; then
 fi
 
 # Source our functions
-. backend/functions.sh
-. backend/functions-vm.sh
-
-# Set the variables for vm-bhyve
-export VM_BHYVE="${PROGDIR}/utils/vm-bhyve/vm-bhyve"
-export LIB="${PROGDIR}/utils/vm-bhyve/lib"
-export vm_dir="${PROGDIR}/vms"
+. ../lib/ixautomation/functions.sh
+. ../lib/ixautomation/functions-vm.sh
 
 ######################################################
 

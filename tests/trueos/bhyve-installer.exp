@@ -2,19 +2,17 @@
 
 # Automates the installation of bhyve VM's for TrueOS.
 # Note since the internal utility cannot be called outside of jenkins.sh vm-bhyve must be used for manual testing
-# Usage: ./bhyve-installer.exp /usr/local/sbin/vm /dev/nmdm0B /tmp/bhyve-installer.out
+# Usage: ./bhyve-installer.exp vm /dev/nmdm0B /tmp/bhyve-installer.out
 
-# Set the path used for vm-bhyve
-set cmd [lindex $argv 0];
 # Listening end of a nullmodem connection to the bhyve serial output
-set nullmodem [lindex $argv 1];
+set nullmodem [lindex $argv 0];
 # File path of where the serial output should be logged.
-set logfilepath [lindex $argv 2];
+set logfilepath [lindex $argv 1];
 
 log_file -noappend "$logfilepath"
 set timeout 1800
 # Connect to our bhyve instance over the specified nullmodem serial connection
-set PID [spawn "$cmd" console "$nullmodem"]
+set PID [spawn vm console "$nullmodem"]
 send_user "Spawned PID: $PID \n"
 
 # Install menu, options being:
