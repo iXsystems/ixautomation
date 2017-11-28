@@ -73,11 +73,24 @@ Specify a connected ethernet interface with access to DHCP for VMs ( Substitue r
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
 ```
 
-# Edit ixautomation.cfg and set location of git repo with tests when running local
+Copy ixautomation conf.dist to ixautomation.conf 
 
 ```
 cp src/etc/ixautomation.cfg.dist src/etc/ixautomation.cfg
+```
+
+Edit ixautomation.cfg
+
+```
 edit src/etc/ixautomation.cfg
+```
+
+Set location of git repo with tests when running local
+
+```
+# When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation/"
+export WORKSPACE
 ```
 
 Enter the directory for running ixautomation
