@@ -2,22 +2,6 @@
 
 vm_setup()
 {
-  if [ ! -d "/usr/local/share/trueos" ] ; then
-    echo "Host is not running TrueOS!"
-    exit 1
-  fi
-  if [ ! -f "/usr/local/etc/init.d/ixautomation" ] ; then
-    cp ${cwd}/init.d/ixautomation /usr/local/etc/init.d/ixautomation
-  fi
-  if [ ! -f "/etc/runlevels/default/ixautomation" ] ; then
-    rc-update add ixautomation
-  fi
-  if [ ! -f "/libexec/rc/init.d/started/ixautomation" ] ; then
-    service ixautomation start
-  fi
-  if [ ! -f "/libexec/rc/init.d/started/ixautomation" ] ; then
-    exit 1
-  fi
   $VM_BHYVE init
 }
 
