@@ -1,3 +1,3 @@
 # When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
-# WORKSPACE="/home/jmaloney/Projects/ixsystems/ixautomation/"
+# WORKSPACE="/home/jmaloney/Projects/ixsystems/ixautomation"
 # export WORKSPACE
