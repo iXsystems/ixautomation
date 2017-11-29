@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import os
+import signal
 import sys
 from subprocess import Popen, run, PIPE
 import random
