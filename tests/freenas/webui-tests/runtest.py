@@ -59,6 +59,9 @@ if path.exists('guide.pyc'):
 if path.exists('driver.pyc'):
     call(["rm", "driver.pyc"])
 
+if path.exists('driverU.pyc'):
+    call(["rm", "driverU.pyc"])
+
 if path.exists('afp.pyc'):
     call(["rm", "afp.pyc"])
 
@@ -68,7 +71,7 @@ if path.exists('webdav.pyc'):
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
 
-if path.exist('geckodriver.log'):
+if path.exists('geckodriver.log'):
     call(["rm", "geckodriver.log"])
 
 if path.exists('__pycache__'):

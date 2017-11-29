@@ -48,8 +48,16 @@ class login_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['passwordTxtBox']).send_keys(password)
         #click
         driver.find_element_by_xpath("/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/form/button").click()
+
         #check if the dashboard opens
-        self.assertTrue(self.is_element_present(By.XPATH,"/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div"),"Unsuccessful Login")
+        time.sleep(1)
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
+        #get the weather data
+        page_data=ui_element.text
+        print "The page now is: " + page_data
+        #assert response
+        self.assertTrue("Dashboard" in page_data)
 
         #cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[3]/div[1]/button"):

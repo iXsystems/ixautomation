@@ -45,6 +45,18 @@ class create_group_test(unittest.TestCase):
         time.sleep(5)
         #Click Group submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
+
+        #check if the Account/Group is opens
+        time.sleep(1)
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
+        #get the weather data
+        page_data=ui_element.text
+        print "the Page now is: " + page_data
+        #assert response
+        self.assertTrue("Group" in page_data)
+
+
         #scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
