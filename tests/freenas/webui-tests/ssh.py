@@ -48,7 +48,7 @@ class configure_ssh_test(unittest.TestCase):
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
         #get the weather data
         page_data=ui_element.text
-        print "the Page now is: " + page_data
+        print ("the Page now is: " + page_data)
         #assert response
         self.assertTrue("Services" in page_data)
 
@@ -61,14 +61,14 @@ class configure_ssh_test(unittest.TestCase):
         ui_element_status=driver.find_element_by_xpath(xpaths['status'])
         #get the weather data
         status_data=ui_element_status.text
-        print "current status is: " + status_data
+        print ("current status is: " + status_data)
         if status_data == "stopped": 
             #Click on the ssh toggle button
             driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle/label/div").click()
             time.sleep(1)
-            print "status has now changed to running"
+            print ("status has now changed to running")
         else:
-            print "current status is--: " + status_data
+            print ("current status is--: " + status_data)
         #re-confirming if the turning off the service
         if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()

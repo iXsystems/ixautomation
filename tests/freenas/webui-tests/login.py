@@ -55,7 +55,7 @@ class login_test(unittest.TestCase):
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
         #get the weather data
         page_data=ui_element.text
-        print "The page now is: " + page_data
+        print ("The page now is: " + page_data)
         #assert response
         self.assertTrue("Dashboard" in page_data)
 
