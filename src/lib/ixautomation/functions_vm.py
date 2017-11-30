@@ -17,7 +17,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     # [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
     # IXBUILD_ROOT_ZVOL = "tank"
 
-    # If we aren't running as part of the build process, list ISOs in the iso_dir
+    # If we aren't running as part of the build process, list ISO in the iso_dir
     # if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
     iso_dir = "%s/tests/%s/iso/" % (workspace, systype)
     # [ ! -d "${iso_dir}" ] && "Directory not found: ${iso_dir}" && exit_clean
@@ -43,7 +43,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             print("Fetching $iso_name...")
             # fetch $iso_url
             # USER=$(sh -c 'echo ${SUDO_USER}')
-            #.if.USER.is.empty.we.are.not.running.with.sudo.get.the.real.username
+            # if USER is empty we are not running with sudo get the real user
             # if [ -z "$USER" ] ; then
             #    USER=$(id -nu)
             #    chown $USER ${SYSNAME}*.iso

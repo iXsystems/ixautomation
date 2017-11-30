@@ -16,9 +16,10 @@ export PROGDIR
 TYPE="${1}"
 SYSTYPE="${2}"
 TEST="${3}"
-if [ -f "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
+
+if [ -f "${cwd}/tests/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
   echo "##########################################"
-. "${cwd}/${SYSTYPE}/${SYSTYPE}.cfg"
+. "${cwd}/tests/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
 # Check for global configuration
