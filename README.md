@@ -44,7 +44,7 @@ To prep a new system for testing, first download the repo:
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 ```
 
-Enter the directory for running ixautomation from git:
+Enter the directory for installing ixautomation from git:
 
 ```
 cd ixautomation/src/
@@ -61,7 +61,7 @@ VM Tests
 To install iXautomation dependencies run:
 
 ```
-sudo ./src/bin/ixautomation bootstrap
+sudo ixautomation bootstrap
 ```
 
 Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
@@ -80,40 +80,34 @@ sysrc -f /etc/rc.conf ixautomation_iface="re0"
 Copy ixautomation conf.dist to ixautomation.conf 
 
 ```
-cp src/etc/ixautomation.cfg.dist src/etc/ixautomation.cfg
+cp /usr/local/etc/ixautomation.cfg.dist /usr/local/etc/ixautomation.cfg
 ```
 
 Edit ixautomation.cfg
 
 ```
-edit src/etc/ixautomation.cfg
+edit /usr/local/etc/ixautomation.cfg
 ```
 
 Set location of git repo with tests when running local
 
 ```
 # When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
-WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation/"
+WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation"
 export WORKSPACE
-```
-
-Enter the directory for running ixautomation
-
-```
-cd bin
 ```
 
 Create a VM, and test install using vm-bhyve
 
 ```
-sudo ./ixautomation vm-tests freenas
-sudo ./ixautomation vm-tests trueos
+sudo ixautomation vm-tests freenas
+sudo ixautomation vm-tests trueos
 ```
 
 Stop, and destroy all VMs
 
 ```
-sudo ./ixautomation vm-destroy-all
+sudo ixautomation vm-destroy-all
 ```
 
 
@@ -124,7 +118,7 @@ ReST API Tests
 
 Create a VM, test install using vm-bhyve, and run API tests:
 ```
-sudo ./ixautomation vm-tests freenas api-tests
+sudo ixautomation vm-tests freenas api-tests
 ```
 
 
@@ -133,17 +127,17 @@ Selenium Tests
 To install iXautomation dependencies run:
 
 ```
-sudo ./ixautomation bootstrap-webui
+sudo ixautomation bootstrap-webui
 ```
 
 Test webui with selenium
 ```
-sudo ./ixautomation freenas-webui-tests
+ixautomation freenas-webui-tests freenas
 ```
 
 
 iocage Tests
 ============
 ```
-sudo ./ixautomation iocage-tests
+sudo ixautomation iocage-tests
 ```
