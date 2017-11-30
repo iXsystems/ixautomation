@@ -24,7 +24,8 @@ except ImportError:
     import unittest
 
 xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
-           'turnoffConfirm' : "/html/body/div[3]/div[2]/div[2]/md-dialog-container/app-confirm/div[2]/button[1]"
+           'turnoffConfirm' : "/html/body/div[3]/div[2]/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
+          'status' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/md-list/md-list-item[1]/div/p/em"
         }
 
 class configure_webdav_test(unittest.TestCase):
@@ -39,12 +40,33 @@ class configure_webdav_test(unittest.TestCase):
         time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
+
+        #check if the Services page is open
+        time.sleep(1)
+        #get the ui element
+        ui_element_page=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
+        #get the weather data
+        page_data=ui_element_page.text
+        print "the Page now is: " + page_data
+        #assert response
+        self.assertTrue("Services" in page_data)
+
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #Click on the afp toggle button
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle/label/div").click()
-        time.sleep(1)
+
+        #get the ui element
+        ui_element_status=driver.find_element_by_xpath(xpaths['status'])
+        #get the weather data
+        status_data=ui_element_status.text
+        print "current status is: " + status_data
+        if status_data == "stopped": 
+            #Click on the webdav toggle button
+            driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle/label/div").click()
+            time.sleep(1)
+            print "the status has now changed to running"
+        else:
+            print "the status is--: " + status_data
         #re-confirming if the turning off the service
         if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
