@@ -17,11 +17,6 @@ TYPE="${1}"
 SYSTYPE="${2}"
 TEST="${3}"
 
-if [ -f "${cwd}/tests/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
-  echo "##########################################"
-. "${cwd}/tests/${SYSTYPE}/${SYSTYPE}.cfg"
-fi
-
 # Check for global configuration
 if [ -f "/usr/local/etc/ixautomation.conf" ] ; then
   . /usr/local/etc/ixautomation.conf
@@ -29,8 +24,13 @@ fi
 
 # Check for tests
 if [ -z "$WORKSPACE" ] ; then
-  echo "Please define path to git repo for tests by defining WORKSPACE= ixautomation.conf"
+  echo "Please define path to git repo for tests by defining WORKSPACE in ixautomation.conf"
   exit 1
+fi
+
+if [ -f "${WORKSPACE}/tests/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
+  echo "##########################################"
+. "${WORKSPACE}/tests/${SYSTYPE}/${SYSTYPE}.cfg"
 fi
 
 display_usage() {
