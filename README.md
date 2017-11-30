@@ -93,7 +93,7 @@ Set location of git repo with tests when running local
 
 ```
 # When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
-WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation/"
+WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation"
 export WORKSPACE
 ```
 
