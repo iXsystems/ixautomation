@@ -132,7 +132,7 @@ sudo ixautomation bootstrap-webui
 
 Test webui with selenium
 ```
-sudo ixautomation freenas-webui-tests freenas
+ixautomation freenas-webui-tests freenas
 ```
 
 
