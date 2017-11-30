@@ -44,7 +44,7 @@ To prep a new system for testing, first download the repo:
 git clone --depth=1 https://github.com/iXsystems/ixautomation.git
 ```
 
-Enter the directory for running ixautomation from git:
+Enter the directory for installing ixautomation from git:
 
 ```
 cd ixautomation/src/
