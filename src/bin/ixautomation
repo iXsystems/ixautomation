@@ -1,88 +1,100 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python3.6
 
-# Only run as superuser
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
+import os
+import sys
+import getpass
+import getopt
+sys.path.append("/usr/local/lib/ixautomation")
+# Source our functions
+from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
 
-# Set the current working directory and program directory
-cwd="$(realpath "$0" | xargs dirname)"
-export cwd
-PROGDIR="$(realpath "$0" | xargs dirname)"
-export PROGDIR
+ixautomationconfig = "/usr/local/etc/ixautomation.conf"
+ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
 
-# Define our arguments
-TYPE="${1}"
-SYSTYPE="${2}"
-TEST="${3}"
 
-# Check for global configuration
-if [ -f "/usr/local/etc/ixautomation.conf" ] ; then
-  . /usr/local/etc/ixautomation.conf
-fi
+for line in ixautomationcfglist:
+    linelist = line.rstrip().split('=')
+    if "WORKSPACE" in linelist[0] and "#" not in linelist[0]:
+        workspace = linelist[1]
 
-# Check for tests
-if [ -z "$WORKSPACE" ] ; then
-  echo "Please define path to git repo for tests by defining WORKSPACE in ixautomation.conf"
-  exit 1
-fi
+loginUser = os.getlogin()
+curentUser = getpass.getuser()
+argument = sys.argv
+if curentUser != "root":
+    print("This script must be run as root")
+    sys.exit(1)
 
-if [ -f "${WORKSPACE}/tests/${SYSTYPE}/${SYSTYPE}.cfg" ] ; then
-  echo "##########################################"
-. "${WORKSPACE}/tests/${SYSTYPE}/${SYSTYPE}.cfg"
-fi
+# ** iXautomation Commands **
+# --bootstrap               - Install all the packages need for iXautomation
+# --bootstrap-webui         - Install all the packages need for iXautomation webui
+# ** iocage Commands **
+# --iocage-tests            - Run CI from iocage git (Requires pool name)
 
-display_usage() {
+# ** API test Commands **
+# --api-tests               - Runs Python API tests (freenas or trueos)
 
-    cat << EOF
+# ** VM Commands **
+# --tests-vm <system>       - Runs a (freenas, or trueos) in a VM using vm-bhyve
+# --start-vm <system>       - Start a VM with (freenas, or trueos)
+# --destroy-all-vm          - Destroy all vm created
+
+UsageMSG = """
+Usage for %s:
+
 Available Commands:
 
--- iXautomation Commands --
-bootstrap                    - Install all the packages need for iXautomation
-bootstrap-webui              - Install all the packages need for iXautomation webui
+--run                     - Runs option givin
+        vm-tests          - Runs a (freenas, or trueos) in a VM using vm-bhyve
+        api-tests         - Runs Python API tests (freenas or trueos)
+        webui-tests       - Runs FreeNAS web UI tests using webdriver
 
--- FreeNAS Commands --
-freenas-webui-tests          - Runs FreeNAS webui tests using webdriver
+--systype                 - Use by run to see what type of system we need to run
+        freenas           - Give FreeNAS to run
+        trueos            - Give TrueOS to run
+""" % argument[0]
 
--- iocage Commands --
-iocage-tests                 - Run CI from iocage git (Requires pool name)
+# if have no argumment stop
+if len(argument) == 1:
+    print(UsageMSG)
+    exit()
 
--- API test Commands --
-api-tests                    - Runs FreeNAS VM Python API tests against built release (freenas or trueos)
+# list of argument that chould be use.
+optionlist = ["run=", "systype="]
+systypelist = ["freenas", "trueos"]
+runlist = ["vm-tests", "api-tests", "webui-tests"]
+# look if all the argument are there.
 
--- VM Commands --
-vm-tests                     - Runs a SYSTYPE in a VM using vm-bhyve (freenas, or trueos)
-start-vm                     - Start a VM with SYSTYPE (freenas, or trueos)
-vm-destroy-all               - Destroy all vm created
+try:
+    myopts, args = getopt.getopt(argument[1:], 'rs', optionlist)
+except getopt.GetoptError as e:
+    print(str(e))
+    print(UsageMSG)
+    sys.exit(1)
 
-EOF
+if "--systype" not in myopts and "--run" in myopts:
+    print("--run need --systype")
+    print(UsageMSG)
+    sys.exit(1)
 
-}
+for output, arg in myopts:
+    if output == '--run':
+        run = arg
+    elif output == '--systype':
+        systype = arg
 
-if [ -z "$1" ] ; then
-  display_usage
-  exit 1
-fi
+if run not in runlist:
+    print(run + " is not a valid --run option")
+    print(UsageMSG)
+    sys.exit(1)
 
-# Source our functions
-. /usr/local/lib/ixautomation/functions.sh
-. /usr/local/lib/ixautomation/functions-vm.sh
+if systype not in systypelist:
+    print(systype + " is not a valid --systype option")
+    print(UsageMSG)
+    sys.exit(1)
 
-######################################################
-
-case $TYPE in
-                   bootstrap) bootstrap ;;
-             bootstrap-webui) bootstrap_webui ;;
-                   api-tests) jenkins_api_tests;;
-         freenas-webui-tests) jenkins_freenas_webui_tests ;;
-                iocage-tests) jenkins_iocage_tests ;;
-                    vm-tests) jenkins_vm_tests ;;
-                    start-vm) jenkins_start_vm ;;
-              vm-destroy-all) jenkins_vm_destroy_all ;;
-                           *) echo "Invalid command: $1"
-                              display_usage
-                              exit 1
-                              ;;
-esac
-
+if run == "vm-tests":
+    jenkins_vm_tests(workspace, systype, False)
+elif run == "api-tests":
+    jenkins_vm_tests(workspace, systype, True)
+elif run == "webui-tests":
+    jenkins_freenas_webui_tests(workspace, systype)

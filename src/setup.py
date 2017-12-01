@@ -37,5 +37,5 @@ setup(
     package_dir={'': '.'},
     data_files=data_files,
     install_requires=['setuptools'],
-    scripts=['bin/ixautomation2']
+    scripts=['bin/ixautomation']
 )
