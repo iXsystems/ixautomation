@@ -95,7 +95,7 @@ def jenkins_api_tests():
 def jenkins_freenas_webui_tests():
     pass
     # export DISPLAY=:0
-    # cd "${cwd}/freenas/webui-tests" || exit_clean
+    # cd "${WORKSPACE}/tests/${SYSTYPE}/webui-tests" || exit_clean
     # python runtest.py
     # cd -
 

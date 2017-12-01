@@ -52,7 +52,7 @@ class create_group_test(unittest.TestCase):
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
         #get the weather data
         page_data=ui_element.text
-        print "the Page now is: " + page_data
+        print ("the Page now is: " + page_data)
         #assert response
         self.assertTrue("Group" in page_data)
 
