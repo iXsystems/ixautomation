@@ -15,7 +15,8 @@ from ssh import run_configure_ssh_test
 from afp import run_configure_afp_test
 from webdav import run_configure_webdav_test
 from logout import run_logout_test
-
+import sys
+sys.stdout.flush()
 
 global runDriver
 runDriver = webDriver()
