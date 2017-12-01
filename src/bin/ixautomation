@@ -35,11 +35,11 @@ fi
 
 display_usage() {
 
-   cat << EOF
+    cat << EOF
 Available Commands:
 
 -- iXautomation Commands --
-bootstrap         	     - Install all the packages need for iXautomation
+bootstrap                    - Install all the packages need for iXautomation
 bootstrap-webui              - Install all the packages need for iXautomation webui
 
 -- FreeNAS Commands --

@@ -13,7 +13,7 @@ from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
 def create_workdir(workspace, systype):
     # if [ -n "$USING_JENKINS" ] ; then return 0
     builddir = "%s/tests/%s/build" % (workspace, systype)
-    tempdir = random.choices(string.ascii_uppercase, k=4)
+    tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
     global MASTERWRKDIR
     MASTERWRKDIR = builddir + '/' + tempdir
     if not os.path.exists(builddir):
@@ -54,12 +54,12 @@ def exit_fail():
     return 1
 
 
-def jenkins_vm_tests():
-    create_workdir()
+def jenkins_vm_tests(workspace, systype, test):
+    create_workdir(workspace, systype)
     vm_setup()
-    vm_select_iso()
-    vm_install(MASTERWRKDIR)
-    vm_boot(MASTERWRKDIR)
+    vm_select_iso(MASTERWRKDIR, systype, workspace)
+    vm_install(MASTERWRKDIR, systype, workspace)
+    vm_boot(MASTERWRKDIR, systype, workspace)
     # if [ "${TEST}" = "api-tests" ]; then
     #     cd "${cwd}/freenas/api-test" || exit_clean
     #     python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3.6
 
 import os
-# import sys
+import sys
 from subprocess import run
 from time import sleep
-from functions import exit_fail
+# from functions import exit_fail
 
 
 def vm_setup():
@@ -12,7 +12,11 @@ def vm_setup():
 
 
 def vm_select_iso(MASTERWRKDIR, systype, workspace):
-    VM = MASTERWRKDIR.slip('/')[-1]
+    VM = MASTERWRKDIR.split('/')[-1]
+    if systype == "freenas":
+        sysname = "FreeNAS"
+    elif systype == "trueos":
+        sysname = "TrueOS"
     # if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
     # [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
     # IXBUILD_ROOT_ZVOL = "tank"
@@ -21,41 +25,40 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     # if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
     iso_dir = "%s/tests/%s/iso/" % (workspace, systype)
     # [ ! -d "${iso_dir}" ] && "Directory not found: ${iso_dir}" && exit_clean
-    try:
-        iso_dir
-    except NameError:
-        print("Please create ${iso_dir} directory first")
-        exit_fail()
-    else:
-        pass
+    if not os.path.isdir(iso_dir):
+        os.makedirs(iso_dir)
 
     # List ISOs in iso_dir and allow the user to select the target
     iso_list = os.listdir(iso_dir)
-    iso_cnt = iso_list.remove(".keepme")
+    iso_list.remove(".keepme")
+    iso_cnt = len(iso_list)
 
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
-    if len(iso_cnt) == 0:
-        ask = "No local ISO found would you like to fetch the latest "
-        ask += systype + " ISO? (Y/n): "
-        answer = input(ask)
-        if answer in ["Y", "y", "Yes", "yes", "YES"]:
-            # cd iso_dir
-            print("Fetching $iso_name...")
-            # fetch $iso_url
-            # USER=$(sh -c 'echo ${SUDO_USER}')
-            # if USER is empty we are not running with sudo get the real user
-            # if [ -z "$USER" ] ; then
-            #    USER=$(id -nu)
-            #    chown $USER ${SYSNAME}*.iso
-            # cd -
-        else:
-            print("Please put a ${SYSNAME} ISO in \"${iso_dir}\"")
-            exit_fail()
+    if iso_cnt is 0:
+        print('Please put a %s ISO in "%s"' % (sysname, iso_dir))
+        sys.exit(1)
+        # ask = "No local ISO found would you like to fetch the latest "
+        # ask += systype + " ISO? (Y/n): "
+        # answer = input(ask)
+        # if answer in ["Y", "y", "Yes", "yes", "YES"]:
+        #     # cd iso_dir
+        #     print("Fetching $iso_name...")
+        #     # fetch $iso_url
+        #     # USER=$(sh -c 'echo ${SUDO_USER}')
+        #     # if USER is empty we are not running with sudo get the real user
+        #     # if [ -z "$USER" ] ; then
+        #     #    USER=$(id -nu)
+        #     #    chown $USER ${SYSNAME}*.iso
+        #     # cd -
+        # else:
+        #     print("Please put a ${SYSNAME} ISO in \"${iso_dir}\"")
+        #     # exit_fail()
+        #     exit()
 
     # Repopulate the list iso_dir and allow the user to select the target
     iso_list = os.listdir(iso_dir)
-    iso_list = iso_list.remove(".keepme")
-    iso_cnt = len(iso_cnt)
+    iso_list.remove(".keepme")
+    iso_cnt = len(iso_list)
 
     # Our to-be-determined file name of the ISO to test; must be inside $iso_dir
     iso_name = ""
@@ -93,19 +96,19 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
 
 
 def vm_start(MASTERWRKDIR):
-    VM = MASTERWRKDIR.slip('/')[-1]
+    VM = MASTERWRKDIR.split('/')[-1]
     run("vm start " + VM, shell=True)
     sleep(5)
 
 
 def vm_stop(MASTERWRKDIR):
-    VM = MASTERWRKDIR.slip('/')[-1]
-    run("vm stop " + VM, shell=True)
+    VM = MASTERWRKDIR.split('/')[-1]
+    run("yes | vm stop " + VM, shell=True)
     sleep(10)
 
 
 def vm_install(MASTERWRKDIR, systype, workspace):
-    VM = MASTERWRKDIR.slip('/')[-1]
+    VM = MASTERWRKDIR.split('/')[-1]
     # Get console device for newly created VM
     sleep(1)
     vm_output = "/tmp/%sconsole.log" % VM
@@ -124,7 +127,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
 
 def vm_boot(MASTERWRKDIR, systype, workspace):
     vm_start(MASTERWRKDIR)
-    VM = MASTERWRKDIR.slip('/')[-1]
+    VM = MASTERWRKDIR.split('/')[-1]
     sleep(1)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = "/tmp/%sconsole.log" % VM
@@ -155,10 +158,10 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
 
 
 def vm_destroy(MASTERWRKDIR):
-    VM = MASTERWRKDIR.slip('/')[-1]
-    run("vm poweroff " + VM, shell=True)
+    VM = MASTERWRKDIR.split('/')[-1]
+    run("yes | vm poweroff " + VM, shell=True)
     sleep(5)
-    run("vm destroy " + VM, shell=True)
+    run("yes | vm destroy " + VM, shell=True)
 
 
 def vm_stop_all():

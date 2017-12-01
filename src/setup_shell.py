@@ -3,6 +3,7 @@
 # Author: Eric Turgeon
 # License: BSD
 
+import os
 import sys
 
 from setuptools import setup
@@ -15,7 +16,7 @@ __VERSION__ = '0.10'
 PROGRAM_VERSION = __VERSION__
 
 data_files = [
-    # ('{prefix}/bin'.format(prefix=sys.prefix), ['bin/ixautomation']),
+    ('{prefix}/bin'.format(prefix=sys.prefix), ['bin/ixautomation']),
     ('{prefix}/etc/init.d'.format(prefix=sys.prefix), ['etc/init.d/ixautomation']),
     ('{prefix}/etc'.format(prefix=sys.prefix), ['etc/ixautomation.conf.dist']),
     ('{prefix}/etc/rc.d'.format(prefix=sys.prefix), ['etc/rc.d/ixautomation']),
@@ -23,8 +24,8 @@ data_files = [
     ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix), ['ixautomation/vms/.config/system.conf']),
     ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix), ['ixautomation/vms/.templates/freenas.conf']),
     ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix), ['ixautomation/vms/.templates/trueos.conf']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions_vm.py']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions.py']),
+    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions-vm.sh']),
+    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions.sh']),
 ]
 
 setup(
@@ -37,5 +38,5 @@ setup(
     package_dir={'': '.'},
     data_files=data_files,
     install_requires=['setuptools'],
-    scripts=['bin/ixautomation2']
+    #scripts=['bin/ixautomation',]
 )

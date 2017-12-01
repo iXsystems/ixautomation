@@ -5,7 +5,7 @@
 
 from subprocess import call
 from sys import argv
-from os import path, remove, getcwd, makedirs
+from os import path, getcwd, makedirs
 import getopt
 
 results_xml = getcwd() + '/results/'
@@ -27,9 +27,9 @@ if len(argv) == 1:
 # look if all the argument are there.
 try:
     myopts, args = getopt.getopt(argv[1:], 'ipI', ["ip=",
-        "password=","interface="])
+                                                   "password=", "interface="])
 except getopt.GetoptError as e:
-    print (str(e))
+    print(str(e))
     print(error_msg)
     exit()
 
@@ -73,7 +73,7 @@ if path.exists(keyPath) is False:
     create_key(keyPath)
 add_ssh_key(keyPath)
 
-f = open(keyPath +'.pub', 'r')
+f = open(keyPath + '.pub', 'r')
 Key = f.readlines()[0].rstrip()
 
 cfg_file = open("auto_config.py", 'a')
