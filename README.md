@@ -68,7 +68,7 @@ Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
 
 ```
 sysrc -f /etc/rc.conf vm_enable="YES"
-sysrc -f vm_dir="/usr/local/ixautomation/vms"
+sysrc -f /etc/rc.conf vm_dir="/usr/local/ixautomation/vms"
 ```
 
 Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
