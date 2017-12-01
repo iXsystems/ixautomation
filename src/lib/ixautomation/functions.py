@@ -90,7 +90,7 @@ def jenkins_api_tests(workspace, systype, ip, test):
 def jenkins_freenas_webui_tests(workspace, systype):
     webUIpath = "%s/tests/%s/webui-tests" % (workspace, systype)
     os.chdir(webUIpath)
-    cmd = "export DISPLAY=:0 && python runtest.py"
+    cmd = "export DISPLAY=:0 && python -u runtest.py"
     run(cmd, shell=True)
     os.chdir(workspace)
 
