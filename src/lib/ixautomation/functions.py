@@ -59,11 +59,8 @@ def jenkins_vm_tests(workspace, systype, test):
     vm_setup()
     vm_select_iso(MASTERWRKDIR, systype, workspace)
     vm_install(MASTERWRKDIR, systype, workspace)
-    vm_boot(MASTERWRKDIR, systype, workspace)
-    # if [ "${TEST}" = "api-tests" ]; then
-    #     cd "${cwd}/freenas/api-test" || exit_clean
-    #     python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
-    # cd -
+    ip = vm_boot(MASTERWRKDIR, systype, workspace)
+    jenkins_api_tests(workspace, systype, ip, test)
     exit_clean()
 
 
@@ -80,24 +77,22 @@ def jenkins_vm_destroy_all():
     vm_destroy_all()
 
 
-def jenkins_api_tests():
-    create_workdir()
-    vm_setup()
-    vm_select_iso()
-    vm_install()
-    vm_boot()
-    # cd "${cwd}/freenas/api-test" || exit_clean
-    # python3.6 runtest.py --ip ${FNASTESTIP} --password testing --interface vtnet0
-    # cd -
-    exit_clean()
+def jenkins_api_tests(workspace, systype, ip, test):
+    if test is True:
+        apipath = "%s/tests/%s/api-test" % (workspace, systype)
+        os.chdir(apipath)
+        cmd = "python3.6 runtest.py --ip %s" % ip
+        cmd += " --password testing --interface vtnet0"
+        run(cmd, shell=True)
+        os.chdir(workspace)
 
 
-def jenkins_freenas_webui_tests():
-    pass
-    # export DISPLAY=:0
-    # cd "${WORKSPACE}/tests/${SYSTYPE}/webui-tests" || exit_clean
-    # python runtest.py
-    # cd -
+def jenkins_freenas_webui_tests(workspace, systype):
+    webUIpath = "%s/tests/%s/webui-tests" % (workspace, systype)
+    os.chdir(webUIpath)
+    cmd = "export DISPLAY=:0 && python runtest.py"
+    run(cmd, shell=True)
+    os.chdir(workspace)
 
 
 def jenkins_iocage_tests():

@@ -140,12 +140,10 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
     os.system('clear')
     # echo -e \\033c
     consolelog = open(vm_output, 'r')
-    outputlog = consolelog.read()
     outputloglist = consolelog.readlines()
-    if "web user interface" in outputlog:
-        for line in outputloglist:
-            if "http" in line:
-                FNASTESTIP = line.replace("http://" "")
+    for line in outputloglist:
+        if "http" in line:
+            FNASTESTIP = line.rstrip().replace("http://", "")
     try:
         FNASTESTIP
     except NameError:
