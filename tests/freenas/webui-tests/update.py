@@ -24,7 +24,8 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'navSystem' : "//*[@id='nav-2']/div/a[1]",
+xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
+           'navSystem' : "//*[@id='nav-2']/div/a[1]",
           'submenuUpdate' : "//*[@id='2-7']",
          'buttonChecknow' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[3]/div/button[1]"
         }
@@ -72,6 +73,7 @@ class check_update_test(unittest.TestCase):
             print ("There is no update or an error")
         #assert response
         self.assertTrue("Upgrade" in update_data)
+        driver.find_element_by_xpath(xpaths['navService']).click()
         time.sleep(10)
 
     #method to test if an element is present
