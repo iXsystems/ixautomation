@@ -24,11 +24,6 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'XPATH1' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
-          'XPATH2' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
-         'XPATH' : "//*[@id='3']/form-select/div/md-select/div"
-          }
-
 
 class create_nameofthetest(unittest.TestCase):
     @classmethod
@@ -37,7 +32,7 @@ class create_nameofthetest(unittest.TestCase):
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_nameofthe_testcase(self):
+    def test_01_nav_sys_update(self):
         #Click an element indirectly
         a = driver.find_element_by_xpath("XPATH1")
         a.click()
