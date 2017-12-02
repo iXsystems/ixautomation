@@ -58,12 +58,6 @@ sudo python3.6 setup.py install
 VM Tests
 ============
 
-To install iXautomation dependencies run:
-
-```
-sudo ixautomation bootstrap
-```
-
 Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
 
 ```
@@ -75,6 +69,18 @@ Specify a connected ethernet interface with access to DHCP for VMs ( Substitue r
 
 ```
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
+```
+
+Add the ixautomation service
+
+```
+rc-update add ixautomation
+```
+
+Start the ixautomation service
+
+```
+service ixautomation start
 ```
 
 Copy ixautomation conf.dist to ixautomation.conf 
@@ -100,16 +106,9 @@ export WORKSPACE
 Create a VM, and test install using vm-bhyve
 
 ```
-sudo ixautomation vm-tests freenas
-sudo ixautomation vm-tests trueos
+sudo ixautomation --run vm-tests --systype freenas
+sudo ixautomation --run vm-tests --systype trueos
 ```
-
-Stop, and destroy all VMs
-
-```
-sudo ixautomation vm-destroy-all
-```
-
 
 ReST API Tests
 ============
