@@ -39,8 +39,7 @@ class configure_ssh_test(unittest.TestCase):
     def test_01_nav_services(self):
         #Click  Account menu
         print (" navigating to the service")
-        a = driver.find_element_by_xpath(xpaths['navService'])
-        a.click()
+        driver.find_element_by_xpath(xpaths['navService']).click()
         #allowing the button to load
         time.sleep(1)
         #get the ui element

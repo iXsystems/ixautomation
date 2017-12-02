@@ -72,7 +72,7 @@ class check_update_test(unittest.TestCase):
             print ("There is no update or an error")
         #assert response
         self.assertTrue("Upgrade" in update_data)
-        time.sleep(5)
+        time.sleep(10)
 
     #method to test if an element is present
     def is_element_present(self, how, what):
