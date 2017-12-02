@@ -74,7 +74,7 @@ class create_nameofthetest(unittest.TestCase):
         ui_element_page=driver.find_element_by_xpath("XPATH OF THE UI ELEMENT")
         #get the text of element data  into page_data
         page_data=ui_element_page.text
-        print "the Page now is: " + page_data
+        print ("the Page now is: " + page_data)
         #assert response to check if "Certain_String" is in the page_data 
         self.assertTrue("Certain_String" in page_data)
         #similarly if status_data = page_data
@@ -84,10 +84,10 @@ class create_nameofthetest(unittest.TestCase):
             #Click on the toggle button if the current status = stopped and print changing status
             driver.find_element_by_xpath("XPATH OF THE STATUS TEXT").click()
             time.sleep(1)
-            print "the status has now changed to running"
+            print ("the status has now changed to running")
         else:
             #otheriwse just print status
-            print "the status is--: " + status_data
+            print ("the status is--: " + status_data)
 
 
     #method to test if an element is present

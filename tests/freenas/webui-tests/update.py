@@ -67,9 +67,9 @@ class check_update_test(unittest.TestCase):
         #get the weather data
         update_data=ui_element.text
         if update_data == "Upgrade":
-            print "There is an available upgrade"
+            print ("There is an available upgrade")
         else:
-            print "There is no update or an error"
+            print ("There is no update or an error")
         #assert response
         self.assertTrue("Upgrade" in update_data)
         time.sleep(5)
