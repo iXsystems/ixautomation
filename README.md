@@ -32,6 +32,7 @@ Required Jenkins Plugins:
 * [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
 * [Copy Artifact](https://wiki.jenkins.io/display/JENKINS/Copy+Artifact+Plugin)
 * [Xvfb Plugin](https://wiki.jenkins.io/display/JENKINS/Xvfb+Plugin)
+* [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
 Getting Started
