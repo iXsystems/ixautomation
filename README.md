@@ -14,9 +14,8 @@ Requirements
 Recommended hardware:
 * CPU: 1 Cores or more
 * Memory: 16GB
-* Disk: 20GB (For FreeNAS)
-* Wired ethernet connection for bhyve bridge
-* At least 1 ZFS pool named tank
+* Disk: 100GB
+* Wired ethernet connection for vm-bhyve bridge
 
 Required OS:
 
