@@ -7,7 +7,6 @@ It includes support to test the following projects:
 
  * FreeNAS
  * TrueOS
- * iocage
 
 Requirements
 ============
@@ -110,33 +109,10 @@ sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
 ```
 
-ReST API Tests
-============
-
-*This requires following the steps above in VM tests.*
-
-Create a VM, test install using vm-bhyve, and run API tests:
-```
-sudo ixautomation vm-tests freenas api-tests
-```
-
-
 Selenium Tests
 ============
-To install iXautomation dependencies run:
-
-```
-sudo ixautomation bootstrap-webui
-```
 
 Test webui with selenium
 ```
-ixautomation freenas-webui-tests freenas
-```
-
-
-iocage Tests
-============
-```
-sudo ixautomation iocage-tests
+ixautomation --run webui-test --systype freenas
 ```
