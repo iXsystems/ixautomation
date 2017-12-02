@@ -37,7 +37,7 @@ class configure_ssh_test(unittest.TestCase):
         pass
 
     def test_01_nav_services(self):
-        #Click  Account menu
+        #Click  Service menu
         if self.is_element_present(By.XPATH,xpaths['navService']):
             driver.find_element_by_xpath(xpaths['navService']).click()
             print (" navigating to the service")
@@ -57,6 +57,10 @@ class configure_ssh_test(unittest.TestCase):
 
 
     def test_02_turnon_ssh (self):
+        #click Service Menu
+        driver.find_element_by_xpath(xpaths['navService']).click()
+        #allowing the button to load
+        time.sleep(1)
         print (" turning on the ssh service")
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
