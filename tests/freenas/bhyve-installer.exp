@@ -49,16 +49,6 @@ expect {
   }
 }
 
-# This computer has less than the recommended 4GB of RAM.
-# Performance might be very slow. Continue installation?
-# Options: [Y]es, [N]o
-expect {
-  "Continue installation?" {
-    sleep .5
-    send "Y"
-  }
-}
-
 # Choose destination media
 # Select a target drive with the spacebar (\040)
 # Options: [O]K, [C]ancel
