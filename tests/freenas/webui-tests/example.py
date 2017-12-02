@@ -45,7 +45,9 @@ class create_nameofthetest(unittest.TestCase):
         time.sleep(1)
         #Click an element directly
         driver.find_element_by_xpath("XPATH2").click()
-
+        #cancelling the tour
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
         #Checking and executing if the condition is true
         if self.is_element_present(By.XPATH,"XPATH"):
             driver.find_element_by_xpath("XPATH").click()

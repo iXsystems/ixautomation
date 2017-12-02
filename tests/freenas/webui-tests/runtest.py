@@ -3,8 +3,8 @@
 from subprocess import call
 from os import path
 #when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
-from driver import webDriver
-#from driverU import webDriver
+#from driver import webDriver
+from driverU import webDriver
 ## Importing test
 
 from login import run_login_test
@@ -15,6 +15,7 @@ from ssh import run_configure_ssh_test
 from afp import run_configure_afp_test
 from webdav import run_configure_webdav_test
 from logout import run_logout_test
+from update import run_check_update_test
 import sys
 sys.stdout.flush()
 
@@ -27,6 +28,7 @@ run_login_test(runDriver)
 # run_guide_test(runDriver)
 run_create_user_test(runDriver)
 run_create_group_test(runDriver)
+run_check_update_test(runDriver)
 run_configure_ssh_test(runDriver)
 run_configure_afp_test(runDriver)
 run_configure_webdav_test(runDriver)
@@ -68,6 +70,9 @@ if path.exists('afp.pyc'):
 
 if path.exists('webdav.pyc'):
     call(["rm", "webdav.pyc"])
+
+if path.exists('update.pyc'):
+    call(["rm", "update.pyc"])
 
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])

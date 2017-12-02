@@ -9,6 +9,7 @@ from group import run_create_group_test
 from user import run_create_user_test
 from ssh import run_configure_ssh_test
 from logout import run_logout_test
+from update import run_check_update_test
 from os import path
 from selenium import webdriver
 #from example import run_creat_nameofthetest

@@ -24,8 +24,13 @@ try:
 except ImportError:
     import unittest
 
+xpaths = { 'navSystem' : "//*[@id='nav-2']/div/a[1]",
+          'submenuUpdate' : "//*[@id='2-7']",
+         'buttonChecknow' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[3]/div/button[1]"
+        }
 
-class create_nameofthetest(unittest.TestCase):
+
+class check_update_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.implicitly_wait(30)
@@ -33,55 +38,41 @@ class create_nameofthetest(unittest.TestCase):
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_sys_update(self):
-        #Click an element indirectly
-        a = driver.find_element_by_xpath("XPATH1")
+        #Navigating to System>Update page
+        a = driver.find_element_by_xpath(xpaths['navSystem'])
         a.click()
         #allowing page to load by giving explicit time(in seconds)
         time.sleep(1)
-        #Click an element directly
-        driver.find_element_by_xpath("XPATH2").click()
+        #Click on the Update submenu
+        driver.find_element_by_xpath(xpaths['submenuUpdate']).click()
 
-        #Checking and executing if the condition is true
-        if self.is_element_present(By.XPATH,"XPATH"):
-            driver.find_element_by_xpath("XPATH").click()
+        #cancelling the tour
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
 
-        #scroll down to find an element
-        driver.find_element_by_tag_name('html').send_keys(Keys.END)
-        #give some sleep time
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
+        #get the weather data
+        page_data=ui_element.text
+        print ("the Page now is: " + page_data)
+        #assert response
+        self.assertTrue("Update" in page_data)
 
-        #Perform HOVER
-        hover_element = driver.find_element_by_xpath("XPATH OF THE HOVER ELEMENT")
-        hover = ActionChains(driver).move_to_element(hover_element)
-        hover.perform()
-        time.sleep(1)
-
-        #Enter in a textbox using an external variable
-        driver.find_element_by_xpath("XPATH OF THE TEXTBOX").send_keys(EXTERNAL_VARIABLE)
-        #Enter in a textbox without a variable
-        driver.find_element_by_xpath("XPATH OF THE TEXTBOX").send_keys("STRING TO BE ENTERED")
-        #check if an element is found, if not display an ERROR
-        self.assertTrue(self.is_element_present(By.XPATH, "XPATH OF THE ELEMENT TO BE FOUND"), "ERROR")
-
-
-        #get the ui element content
-        ui_element_page=driver.find_element_by_xpath("XPATH OF THE UI ELEMENT")
-        #get the text of element data  into page_data
-        page_data=ui_element_page.text
-        print "the Page now is: " + page_data
-        #assert response to check if "Certain_String" is in the page_data 
-        self.assertTrue("Certain_String" in page_data)
-        #similarly if status_data = page_data
-        #conditional execution(eg-toggle service on/off based on current status)
-        print "current status is: " + status_data
-        if status_data == "stopped": 
-            #Click on the toggle button if the current status = stopped and print changing status
-            driver.find_element_by_xpath("XPATH OF THE STATUS TEXT").click()
-            time.sleep(1)
-            print "the status has now changed to running"
+    def test_02_check_update_now(self):
+        #Click on the checknow button
+        driver.find_element_by_xpath(xpaths['buttonChecknow']).click()
+        time.sleep(2)
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]")
+        #get the weather data
+        update_data=ui_element.text
+        if update_data == "Upgrade":
+            print "There is an available upgrade"
         else:
-            #otheriwse just print status
-            print "the status is--: " + status_data
-
+            print "There is no update or an error"
+        #assert response
+        self.assertTrue("Upgrade" in update_data)
+        time.sleep(5)
 
     #method to test if an element is present
     def is_element_present(self, how, what):
@@ -101,8 +92,8 @@ class create_nameofthetest(unittest.TestCase):
         #if it is the last module
         #driver.close()
 
-def run_create_nameofthetest(webdriver):
+def run_check_update_test(webdriver):
     global driver
     driver = webdriver
-    suite = unittest.TestLoader().loadTestsFromTestCase(create_nameofthetest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(check_update_test)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)
