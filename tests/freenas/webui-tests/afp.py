@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 2
+#Test case count: 1
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -37,7 +37,6 @@ class configure_afp_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_turnon_afp (self):
         print (" turning on the afp service")
-        time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
 
@@ -72,22 +71,6 @@ class configure_afp_test(unittest.TestCase):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
 
         time.sleep(10)
-
-#    def test_02_configure_afp(self):
-#        time.sleep(1)
-        #click on configure button
-#        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/md-card-actions/button").click()
-        #Click on the Guest access dropdownlist
-#        driver.find_element_by_xpath("//*[@id='0']/form-select/div/md-select/div").click()
-#        time.sleep(1)
-        #Select userNAS for Guest Access (temporary)
-#        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/md-option[3]").click()
-        #click on Guest Account checkbox
-#        driver.find_element_by_xpath("//*[@id='1']/form-checkbox/div/md-checkbox/label/div").click()
-        #click on save button
-#        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/afp-edit/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-#        time.sleep(5)
-        # Next step-- To check if the new user is present in the list via automation
 
     #method to test if an element is present
     def is_element_present(self, how, what):

@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 3
+#Test case count: 4
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -46,18 +46,15 @@ class create_user_test(unittest.TestCase):
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_create_newuser(self):
+    def test_01_nav_acc_user(self):
         #Click  Account menu
-        print (" creating a new user with create new primary group")
+        print (" navigating to the user submenu")
         a = driver.find_element_by_xpath(xpaths['navAccount'])
         a.click()
         #allowing the button to load
         time.sleep(1)
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-
-        #check if the Account/User is opens
-        time.sleep(1)
         #get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
         #get the weather data
@@ -67,6 +64,8 @@ class create_user_test(unittest.TestCase):
         self.assertTrue("User" in page_data)
 
 
+    def test_02_create_newuser(self):
+        print (" creating a new user with create new primary group")
         #cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
@@ -95,9 +94,8 @@ class create_user_test(unittest.TestCase):
         #check if the the user list is loaded after addding a new user
         self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(20)
 
-    def test_02_create_newuser_primarygroup_uncheck(self):
+    def test_03_create_newuser_primarygroup_uncheck(self):
         time.sleep(2)
         print (" creating a new user without creating a primary group")
         #Click User submenu
@@ -131,11 +129,10 @@ class create_user_test(unittest.TestCase):
         #check if the the user list is loaded after addding a new user
         self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(20)
 
 
 
-    def test_03_create_superuser(self):
+    def test_04_create_superuser(self):
         print (" creating a super user with root access")
         time.sleep(2)
         #Click User submenu
@@ -162,10 +159,11 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['permitSudocheckbox']).click()
         #Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
+
+        time.sleep(20)
         #check if the the user list is loaded after addding a new user
         #self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
         #wait to confirm new user in the list visually
-        time.sleep(20)
 
 
 

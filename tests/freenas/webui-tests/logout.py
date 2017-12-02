@@ -34,7 +34,7 @@ xpaths = {
 class logout_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
-        #driver.implicitly_wait(30)
+        driver.implicitly_wait(30)
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
@@ -53,8 +53,6 @@ class logout_test(unittest.TestCase):
         #Click on OK when re-confirm logout
         driver.find_element_by_xpath(xpaths['logoutconfirmationButton']).click()
         time.sleep(2)
-        #self.assertTrue(self.is_element_present(By.XPATH, "//input[@id='md-input-1']"),
-                        #"Logout failed")
 
     # Next step-- To check if the new user is present in the list via automation
 

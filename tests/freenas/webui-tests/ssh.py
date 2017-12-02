@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 2
+#Test case count: 3
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -36,13 +36,12 @@ class configure_ssh_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    def test_01_turnon_ssh (self):
-        print (" turning on the ssh service")
-        time.sleep(5)
-        #Click Service Menu
-        driver.find_element_by_xpath(xpaths['navService']).click()
-
-        #check if the Services page is opens
+    def test_01_nav_services(self):
+        #Click  Account menu
+        print (" navigating to the service")
+        a = driver.find_element_by_xpath(xpaths['navService'])
+        a.click()
+        #allowing the button to load
         time.sleep(1)
         #get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
@@ -52,11 +51,13 @@ class configure_ssh_test(unittest.TestCase):
         #assert response
         self.assertTrue("Services" in page_data)
 
+
+
+    def test_02_turnon_ssh (self):
+        print (" turning on the ssh service")
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #check if the element is present
-
         #get the ui element
         ui_element_status=driver.find_element_by_xpath(xpaths['status'])
         #get the weather data
@@ -73,7 +74,7 @@ class configure_ssh_test(unittest.TestCase):
         if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
             driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
 
-    def test_02_configure_ssh(self):
+    def test_03_configure_ssh(self):
         print (" configuring ssh service with root access")
         time.sleep(2)
         #click on configure button

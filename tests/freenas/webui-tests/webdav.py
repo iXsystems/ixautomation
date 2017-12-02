@@ -37,7 +37,6 @@ class configure_webdav_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_turnon_webdav (self):
         print (" turning on the webdav service")
-        time.sleep(5)
         #Click Service Menu
         driver.find_element_by_xpath(xpaths['navService']).click()
 
@@ -54,7 +53,6 @@ class configure_webdav_test(unittest.TestCase):
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-
         #get the ui element
         ui_element_status=driver.find_element_by_xpath(xpaths['status'])
         #get the weather data

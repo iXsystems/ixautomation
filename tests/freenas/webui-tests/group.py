@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 2
+#Test case count: 3
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -40,23 +40,23 @@ class create_group_test(unittest.TestCase):
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_create_newgroup(self):
-        print (" creating a new group without root access")
-        time.sleep(5)
-        #Click Group submenu
+    def test_01_nav_acc_group(self):
+        #Click  Account menu
+        print (" navigating to the group submenu")
+        #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
-
-        #check if the Account/Group is opens
-        time.sleep(1)
+        time.sleep(2)
         #get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
+        ui_element1=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
         #get the weather data
-        page_data=ui_element.text
+        page_data=ui_element1.text
         print ("the Page now is: " + page_data)
         #assert response
         self.assertTrue("Group" in page_data)
 
 
+    def test_02_create_newgroup(self):
+        print (" creating a new group without root access")
         #scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
@@ -73,9 +73,8 @@ class create_group_test(unittest.TestCase):
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #wait to confirm new user in the list visually
-        time.sleep(20)
 
-    def test_02_create_supergroup(self):
+    def test_03_create_supergroup(self):
         print (" creating a new Super group with root access")
         #Click Group submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
