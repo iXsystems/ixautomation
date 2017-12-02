@@ -22,6 +22,10 @@ Required OS:
 
 * [TrueOS](http://download.trueos.org/master/amd64/)
 
+Required Packages:
+
+* See Run Depends in port Makefile
+
 Jenkins Requirements:
 * One master node
 * Slave nodes for running ixautomation
