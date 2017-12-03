@@ -1,11 +1,12 @@
 # Created by: Joe Maloney <jmaloney@ixsystems.com>
+# $FreeBSD$
 
 PORTNAME=	pc-updatemanager
 PORTVERSION=	%%CHGVERSION%%
 CATEGORIES=	sysutils
 
 MAINTAINER=	jmaloney@ixsystems.com
-COMMENT=	iXsystems automation framework
+COMMENT=	Automation framework for iXsystems projects
 
 LICENSE=	BSD2CLAUSE
 
