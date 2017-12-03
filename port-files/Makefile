@@ -9,7 +9,7 @@ COMMENT=	iXsystems automation framework
 
 LICENSE=	BSD2CLAUSE
 
-RUN_DEPENDS=	${LOCALBASE}/bin/vm:sysutils/vm-bhyve
+RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
