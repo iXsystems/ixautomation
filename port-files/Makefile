@@ -13,6 +13,7 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
+USE_PYTHON=	distutils
 MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 
 USE_GITHUB=	yes
