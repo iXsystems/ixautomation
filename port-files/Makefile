@@ -14,7 +14,6 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/geckodriver:www/geckodriver
 
-
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
 USE_PYTHON=	distutils, pytest, requests, pip
