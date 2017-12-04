@@ -3,8 +3,8 @@
 from subprocess import call
 from os import path
 #when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
-from driver import webDriver
-#from driverU import webDriver
+#from driver import webDriver
+from driverU import webDriver
 ## Importing test
 #from autoflush import autoflush
 from login import run_login_test
@@ -28,7 +28,7 @@ run_login_test(runDriver)
 # run_guide_test(runDriver)
 run_create_user_test(runDriver)
 run_create_group_test(runDriver)
-#run_check_update_test(runDriver)
+run_check_update_test(runDriver)
 run_configure_ssh_test(runDriver)
 run_configure_afp_test(runDriver)
 run_configure_webdav_test(runDriver)

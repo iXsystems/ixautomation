@@ -39,8 +39,8 @@ class configure_ssh_test(unittest.TestCase):
     def test_01_nav_services(self):
         #Click  Service menu
         print ("navigating to service menu")
-        wait = WebDriverWait(driver, 10)
-        element = wait.until(EC.element_to_be_clickable((By.ID, 'nav-8')))
+#        wait = WebDriverWait(driver, 10)
+#        element = wait.until(EC.element_to_be_clickable((By.ID, 'nav-8')))
         driver.find_element_by_xpath(xpaths['navService']).click()
 
 #        if self.is_element_present(By.XPATH,xpaths['navService']):
