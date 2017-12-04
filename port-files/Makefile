@@ -11,7 +11,7 @@ COMMENT=	Automation framework for iXsystems projects
 LICENSE=	BSD2CLAUSE
 
 RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
-		${LOCALBASE}/bin/expect:shells/expect \
+		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/geckodriver:www/geckodriver
 
 
