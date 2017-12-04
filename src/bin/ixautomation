@@ -8,17 +8,19 @@ sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
 sys.stdout.flush()
-
-
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
-ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
+
 try:
     workspace = os.environ["WORKSPACE"]
 except KeyError:
-    for line in ixautomationcfglist:
-        linelist = line.rstrip().split('=')
-        if "WORKSPACE" in linelist[0] and "#" not in linelist[0]:
-            workspace = linelist[1]
+    if os.path.exists(ixautomationconfig):
+        ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
+        for line in ixautomationcfglist:
+            linelist = line.rstrip().split('=')
+            if "WORKSPACE" in linelist[0] and "#" not in linelist[0]:
+                workspace = linelist[1]
+    else:
+        print("Please add " + ixautomationconfig)
 
 loginUser = os.getlogin()
 curentUser = getpass.getuser()
