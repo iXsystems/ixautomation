@@ -159,13 +159,8 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['permitSudocheckbox']).click()
         #Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-
         time.sleep(20)
         #check if the the user list is loaded after addding a new user
-        #self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
-        #wait to confirm new user in the list visually
-
-
 
 
     # Next step-- To check if the new user is present in the list via automation
