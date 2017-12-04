@@ -59,23 +59,23 @@ class check_update_test(unittest.TestCase):
         #assert response
         self.assertTrue("Update" in page_data)
 
-    def test_02_check_update_now(self):
+#    def test_02_check_update_now(self):
         #Click on the checknow button
-        driver.find_element_by_xpath(xpaths['buttonChecknow']).click()
-        time.sleep(2)
+#        driver.find_element_by_xpath(xpaths['buttonChecknow']).click()
+#        time.sleep(2)
         #get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]")
+#        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]")
         #get the weather data
-        update_data=ui_element.text
-        if update_data == "Upgrade":
-            print ("There is an available upgrade")
-        else:
-            print ("There is no update or an error")
+ #       update_data=ui_element.text
+ #       if update_data == "Upgrade":
+  #          print ("There is an available upgrade")
+   #     else:
+    #        print ("There is no update or an error")
         #assert response
-        self.assertTrue("Upgrade" in update_data)
-        driver.find_element_by_xpath(xpaths['navService']).click()
-        print ("Just clicked service menu for testing purpose")
-        time.sleep(10)
+#        self.assertTrue("Upgrade" in update_data)
+ #       driver.find_element_by_xpath(xpaths['navService']).click()
+  #      print ("Just clicked service menu for testing purpose")
+   #     time.sleep(10)
 
     #method to test if an element is present
     def is_element_present(self, how, what):
