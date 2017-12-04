@@ -11,7 +11,6 @@ from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
 
 
 def create_workdir(workspace, systype):
-    # if [ -n "$USING_JENKINS" ] ; then return 0
     builddir = "%s/tests/%s/build" % (workspace, systype)
     tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
     global MASTERWRKDIR
@@ -23,10 +22,6 @@ def create_workdir(workspace, systype):
 
 
 def cleanup_workdir():
-    # if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
-    # if [ -z "$MASTERWRKDIR" ] ; then return 0 ; fi
-    # if [ ! -d "$MASTERWRKDIR" ] ; then return 0 ; fi
-    # if [ "$MASTERWRKDIR" = "/" ] ; then return 0 ; fi
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:

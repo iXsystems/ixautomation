@@ -4,7 +4,6 @@ import os
 import sys
 from subprocess import run
 from time import sleep
-# from functions import exit_clean
 
 
 def vm_setup():
@@ -17,53 +16,23 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
         sysname = "FreeNAS"
     elif systype == "trueos":
         sysname = "TrueOS"
-    # if [ -n "$USING_JENKINS" ] ; then return 0 ; fi
-    # [ -z "${IXBUILD_ROOT_ZVOL}" ] && export IXBUILD_ROOT_ZVOL="tank"
-    # IXBUILD_ROOT_ZVOL = "tank"
-
-    # If we aren't running as part of the build process, list ISO in the iso_dir
-    # if [ -z "$SFTPHOST" -o -z "$SFTPUSER" ] ; then
     iso_dir = "%s/tests/%s/iso/" % (workspace, systype)
-    # [ ! -d "${iso_dir}" ] && "Directory not found: ${iso_dir}" && exit_clean
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
-
     # List ISOs in iso_dir and allow the user to select the target
     iso_list = os.listdir(iso_dir)
     iso_list.remove(".keepme")
     iso_cnt = len(iso_list)
-
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
     if iso_cnt is 0:
         print('Please put a %s ISO in "%s"' % (sysname, iso_dir))
         sys.exit(1)
-
-        # ask = "No local ISO found would you like to fetch the latest "
-        # ask += systype + " ISO? (Y/n): "
-        # answer = input(ask)
-        # if answer in ["Y", "y", "Yes", "yes", "YES"]:
-        #     # cd iso_dir
-        #     print("Fetching $iso_name...")
-        #     # fetch $iso_url
-        #     # USER=$(sh -c 'echo ${SUDO_USER}')
-        #     # if USER is empty we are not running with sudo get the real user
-        #     # if [ -z "$USER" ] ; then
-        #     #    USER=$(id -nu)
-        #     #    chown $USER ${SYSNAME}*.iso
-        #     # cd -
-        # else:
-        #     print("Please put a ${SYSNAME} ISO in \"${iso_dir}\"")
-        #     # exit_fail()
-        #     exit()
-
     # Repopulate the list iso_dir and allow the user to select the target
     iso_list = os.listdir(iso_dir)
     iso_list.remove(".keepme")
     iso_cnt = len(iso_list)
-
     # Our to-be-determined file name of the ISO to test; must be inside $iso_dir
     iso_name = ""
-
     # If there's only one ISO in the $iso_dir, assume it's for testing.
     if iso_cnt == 1:
         # Snatch the first (only) ISO listed in the directory
@@ -76,7 +45,6 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             for iso in iso_list:
                 # Listing ISOs
                 print(" %s - %s" % (count, iso))
-
             iso_selection = input("Enter your selection and press [ENTER]: ")
             # add 1 to iso_cnt to look in the full range.
             if int(iso_selection) in range(0, int(iso_cnt + 1)):
@@ -121,7 +89,6 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
-    # echo -e \\033c
     print("Success: Shutting down the installation VM..")
     vm_stop(MASTERWRKDIR)
 
@@ -136,10 +103,8 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
                                                                    systype, VM,
                                                                    vm_output)
     run(expectcnd, shell=True)
-
     # Reset/clear to get native term dimensions
     os.system('clear')
-    # echo -e \\033c
     consolelog = open(vm_output, 'r')
     outputloglist = consolelog.readlines()
     for line in outputloglist:
