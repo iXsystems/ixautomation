@@ -1,7 +1,7 @@
 # Created by: Joe Maloney <jmaloney@ixsystems.com>
 # $FreeBSD$
 
-PORTNAME=	pc-updatemanager
+PORTNAME=	ixautomation
 PORTVERSION=	%%CHGVERSION%%
 CATEGORIES=	sysutils
 
