@@ -12,7 +12,8 @@ LICENSE=	BSD2CLAUSE
 
 RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
-		${LOCALBASE}/bin/geckodriver:www/geckodriver
+		${LOCALBASE}/bin/geckodriver:www/geckodriver \
+		bhyve-firmware>=0:sysutils/bhyve-firmware		
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
