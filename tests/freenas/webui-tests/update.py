@@ -74,6 +74,7 @@ class check_update_test(unittest.TestCase):
         #assert response
         self.assertTrue("Upgrade" in update_data)
         driver.find_element_by_xpath(xpaths['navService']).click()
+        print ("Just clicked service menu for testing purpose")
         time.sleep(10)
 
     #method to test if an element is present
