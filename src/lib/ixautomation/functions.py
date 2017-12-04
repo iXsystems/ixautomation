@@ -40,14 +40,14 @@ def cleanup_workdir():
         run("rm -rf " + MASTERWRKDIR, shell=True)
 
 
-def exit_clean():
+def exit_clean(MASTERWRKDIR):
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir()
     sys.exit(0)
     return 0
 
 
-def exit_fail():
+def exit_fail(*args):
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir()
     sys.exit(1)
@@ -56,12 +56,14 @@ def exit_fail():
 
 def jenkins_vm_tests(workspace, systype, test):
     create_workdir(workspace, systype)
+    signal.signal(signal.SIGINT, exit_fail)
+    signal.signal(signal.SIGTERM, exit_fail)
     vm_setup()
     vm_select_iso(MASTERWRKDIR, systype, workspace)
     vm_install(MASTERWRKDIR, systype, workspace)
     ip = vm_boot(MASTERWRKDIR, systype, workspace)
     jenkins_api_tests(workspace, systype, ip, test)
-    exit_clean()
+    exit_clean(MASTERWRKDIR)
 
 
 def jenkins_start_vm():
@@ -93,12 +95,3 @@ def jenkins_freenas_webui_tests(workspace, systype):
     cmd = "export DISPLAY=:0 && stdbuf -oL python3.6 -u runtest.py"
     run(cmd, shell=True)
     os.chdir(workspace)
-
-
-def jenkins_iocage_tests():
-    gitrepo = "https://www.github.com/iocage/iocage"
-    exit_clean()
-
-
-for sgnl in [signal.SIGHUP, signal.SIGTERM, signal.SIGINT]:
-    signal.signal(sgnl, exit_fail)

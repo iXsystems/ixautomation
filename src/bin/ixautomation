@@ -20,8 +20,6 @@ except KeyError:
         if "WORKSPACE" in linelist[0] and "#" not in linelist[0]:
             workspace = linelist[1]
 
-print(workspace)
-
 loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
@@ -29,19 +27,6 @@ if curentUser != "root":
     print("This script must be run as root")
     sys.exit(1)
 
-# ** iXautomation Commands **
-# --bootstrap               - Install all the packages need for iXautomation
-# --bootstrap-webui         - Install all the packages need for iXautomation webui
-# ** iocage Commands **
-# --iocage-tests            - Run CI from iocage git (Requires pool name)
-
-# ** API test Commands **
-# --api-tests               - Runs Python API tests (freenas or trueos)
-
-# ** VM Commands **
-# --tests-vm <system>       - Runs a (freenas, or trueos) in a VM using vm-bhyve
-# --start-vm <system>       - Start a VM with (freenas, or trueos)
-# --destroy-all-vm          - Destroy all vm created
 
 UsageMSG = """
 Usage for %s:

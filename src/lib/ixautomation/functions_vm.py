@@ -4,7 +4,7 @@ import os
 import sys
 from subprocess import run
 from time import sleep
-# from functions import exit_fail
+# from functions import exit_clean
 
 
 def vm_setup():
@@ -37,6 +37,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     if iso_cnt is 0:
         print('Please put a %s ISO in "%s"' % (sysname, iso_dir))
         sys.exit(1)
+
         # ask = "No local ISO found would you like to fetch the latest "
         # ask += systype + " ISO? (Y/n): "
         # answer = input(ask)
