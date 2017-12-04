@@ -90,7 +90,7 @@ class AutoFlush(object):    # Terry R.'s idea was to use a context manager
 
 if __name__ == "__main__":
 #    unbuffered()
-    print "unbuffered text"
+    print ("unbuffered text")
 
     for i in range(20):
         sys.stdout.write('.')
