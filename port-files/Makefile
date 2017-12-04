@@ -10,11 +10,14 @@ COMMENT=	Automation framework for iXsystems projects
 
 LICENSE=	BSD2CLAUSE
 
-RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve
+RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
+		${LOCALBASE}/bin/expect:shells/expect \
+		${LOCALBASE}/bin/geckodriver:www/geckodriver
+
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
-USE_PYTHON=	distutils
+USE_PYTHON=	distutils, pytest, requests, pip
 MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 
 USE_GITHUB=	yes
