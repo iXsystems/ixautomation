@@ -14,13 +14,14 @@ except ImportError:
 else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME,
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
-DATASET="smb-bsd"
-SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/" + DATASET
-MOUNTPOINT="/tmp/smb-bsd" + BRIDGEHOST
 
+DATASET = "smb-osx"
+SMB_NAME = "TestShare"
+SMB_PATH = "/mnt/tank/" DATASET
+MOUNTPOINT = "/tmp/smb-osx" + BRIDGEHOST
+VOL_GROUP="qa"
 
-class smb_bsd_test(unittest.TestCase):
+class smb_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
     @classmethod
@@ -48,23 +49,14 @@ class smb_bsd_test(unittest.TestCase):
                     "cifs_vfsobjects": "streams_xattr"}
         DELETE("/sharing/cifs/", payload3)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
-        # BSD_TEST to add when functional
 
-    def test_01_Setting_auxilary_parameters_for_mount_smbfs(self):
-        toload = "lanman auth = yes\nntlm auth = yes \nraw NTLMv2 auth = yes"
-        payload = {"cifs_srv_smb_options": toload}
-        assert PUT("/services/cifs/", payload) = 200
-
-    def test_02_Creating_SMB_dataset(self):
+    def test_01_Creating_SMB_dataset(self):
         assert POST("/storage/volume/tank/datasets/" {"name": DATASET}) == 201
 
-    def test_03_Starting_SMB_service(self):
+    def test_02_Starting_SMB_service(self):
          assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
-    def test_04_Checking_to_see_if_SMB_service_is_running
-        assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
-
-    def test_05_Changing_permissions_on_SMB_PATH(self):
+    def test_03_Changing_permissions_on_SMB_PATH(self):
         payload = {"mp_path": SMB_PATH,
                    "mp_acl": "unix",
                    "mp_mode": "777",
@@ -72,7 +64,7 @@ class smb_bsd_test(unittest.TestCase):
                    "mp_group": "wheel"}
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_06_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_04_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -80,7 +72,12 @@ class smb_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    def test_07_SMB_share_on_SMB_PATH(self):
+    def test_05_Checking_to_see_if_SMB_service_is_running
+        assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
+
+    # OSX_TEST here when ready
+
+    def test_06_Removing_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -88,17 +85,15 @@ class smb_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert DELETE("/sharing/cifs/", payload) == 204
 
-    # BSD_TEST here when ready
-
     # Now stop the service
-    def test_08_Stopping_SMB_service(self):
+    def test_07_Stopping_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
-    def test_09_Verify_SMB_service_is_disabled(self):
+    def test_08_Verify_SMB_service_is_disabled(self):
         assert GET("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_10_Destroying_SMB_dataset(self):
+    def test_09_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" + DATASET) == 204
 
 
