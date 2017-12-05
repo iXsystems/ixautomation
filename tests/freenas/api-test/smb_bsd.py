@@ -53,7 +53,7 @@ class smb_bsd_test(unittest.TestCase):
     def test_01_Setting_auxilary_parameters_for_mount_smbfs(self):
         toload = "lanman auth = yes\nntlm auth = yes \nraw NTLMv2 auth = yes"
         payload = {"cifs_srv_smb_options": toload}
-        assert PUT("/services/cifs/", payload) = 200
+        assert PUT("/services/cifs/", payload) == 200
 
     def test_02_Creating_SMB_dataset(self):
         assert POST("/storage/volume/tank/datasets/" {"name": DATASET}) == 201
