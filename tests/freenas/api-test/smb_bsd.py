@@ -92,7 +92,7 @@ class smb_bsd_test(unittest.TestCase):
 
     # Now stop the service
     def test_08_Stopping_SMB_service(self):
-        assert PUT("/services/services/cifs/" {"srv_enable": False}) == 200
+        assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
     def test_09_Verify_SMB_service_is_disabled(self):
         assert GET("/services/services/cifs/", "srv_state") == "STOPPED"
