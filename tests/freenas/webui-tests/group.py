@@ -72,7 +72,8 @@ class create_group_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['newGroupName']).send_keys(newgroupname)
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #wait to confirm new user in the list visually
+        #check if there is a generic error when making a duplicate group, and print the error
+        self.error_check()
 
     def test_03_create_supergroup(self):
         print (" creating a new Super group with root access")
@@ -93,7 +94,8 @@ class create_group_test(unittest.TestCase):
         driver.find_element_by_xpath("//*[@id='2']/form-checkbox/div/md-checkbox/label/div").click()
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #wait to confirm new user in the list visually
+        #check if there is a generic error when making a duplicate group, and print the error
+        self.error_check()
         time.sleep(20)
 
 
@@ -111,6 +113,13 @@ class create_group_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def error_check(self):
+        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
+            ui_element=driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
+            error_element=ui_element.text
+            print (error_element)
+            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
 
     @classmethod
     def tearDownClass(inst):

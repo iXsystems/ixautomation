@@ -63,16 +63,28 @@ class check_update_test(unittest.TestCase):
         #Click on the checknow button
         driver.find_element_by_xpath(xpaths['buttonChecknow']).click()
         time.sleep(2)
-        #get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]")
-        #get the weather data
-        update_data=ui_element.text
-        if update_data == "Upgrade":
-            print ("There is an available upgrade")
+        #get the ui element, check if first element is present, if yes, check value text if as expected
+        if self.is_element_present(By.XPATH,"/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]"):
+            ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card[1]/div/div[4]/div/table/tbody/tr[1]/td[1]")
+            update_data=ui_element.text
+            if update_data == "Upgrade":
+                print ("There is an available upgrade")
+                #assert response
+                self.assertTrue("Upgrade" in update_data)
+            else:
+                print ("There is an unexpected issue: it is not an upgrade")
+        elif self.is_element_present(By.XPATH,"/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[4]/div/div"):
+            ui_element2=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[4]/div/div")
+            update_data2=ui_element2.text
+            if "No Update" in update_data2:
+                print ("There is no update available")
+                self.assertTrue("No" in update_data2)
+            else: 
+                print ("There is an unexpected issue: something wrong with no update available element")
         else:
-            print ("There is no update or an error")
+            print ("There is an unexpected issue")
+
         #assert response
-        self.assertTrue("Upgrade" in update_data)
         time.sleep(10)
         #Close the System Tab
         driver.find_element_by_xpath(xpaths['navSystem']).click()
