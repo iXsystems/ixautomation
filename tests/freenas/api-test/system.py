@@ -7,7 +7,7 @@
 import unittest
 from functions import PUT, GET_OUTPUT, POST
 
-class snmp_test(unittest.TestCase):
+class system_test(unittest.TestCase):
 
     def test_01_Checking_system_version(self)
         assert GET("/system/version/") == 200

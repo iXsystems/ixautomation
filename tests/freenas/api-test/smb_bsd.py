@@ -46,7 +46,7 @@ class smb_bsd_test(unittest.TestCase):
                     "cifs_name": SMB_NAME,
                     "cifs_guestok": True,
                     "cifs_vfsobjects": "streams_xattr"}
-        DELETE("/sharing/cifs/", payload3)
+        DELETE_ALL("/sharing/cifs/", payload3)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
         # BSD_TEST to add when functional
 
@@ -80,15 +80,15 @@ class smb_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
+    # BSD_TEST here when ready
+
     def test_07_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
                    "cifs_guestok": True,
                    "cifs_vfsobjects": "streams_xattr"}
-        assert DELETE("/sharing/cifs/", payload) == 204
-
-    # BSD_TEST here when ready
+        assert DELETE_ALL("/sharing/cifs/", payload) == 204
 
     # Now stop the service
     def test_08_Stopping_SMB_service(self):

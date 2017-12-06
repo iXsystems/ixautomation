@@ -47,7 +47,7 @@ class smb_osx_test(unittest.TestCase):
                     "cifs_name": SMB_NAME,
                     "cifs_guestok": True,
                     "cifs_vfsobjects": "streams_xattr"}
-        DELETE("/sharing/cifs/", payload3)
+        DELETE_ALL("/sharing/cifs/", payload3)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
 
     def test_01_Creating_SMB_dataset(self):
@@ -83,7 +83,7 @@ class smb_osx_test(unittest.TestCase):
                    "cifs_name": SMB_NAME,
                    "cifs_guestok": True,
                    "cifs_vfsobjects": "streams_xattr"}
-        assert DELETE("/sharing/cifs/", payload) == 204
+        assert DELETE_ALL("/sharing/cifs/", payload) == 204
 
     # Now stop the service
     def test_07_Stopping_SMB_service(self):
