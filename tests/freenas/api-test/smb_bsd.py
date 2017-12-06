@@ -12,7 +12,7 @@ try:
 except ImportError:
     pass
 else:
-    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME,
+    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
 DATASET="smb-bsd"
 SMB_NAME="TestShare"
@@ -56,12 +56,12 @@ class smb_bsd_test(unittest.TestCase):
         assert PUT("/services/cifs/", payload) == 200
 
     def test_02_Creating_SMB_dataset(self):
-        assert POST("/storage/volume/tank/datasets/" {"name": DATASET}) == 201
+        assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def test_03_Starting_SMB_service(self):
          assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
-    def test_04_Checking_to_see_if_SMB_service_is_running
+    def test_04_Checking_to_see_if_SMB_service_is_running(self):
         assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
 
     def test_05_Changing_permissions_on_SMB_PATH(self):

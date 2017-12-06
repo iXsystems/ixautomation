@@ -12,12 +12,12 @@ try:
 except ImportError:
     pass
 else:
-    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME,
+    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
 
 DATASET = "smb-osx"
 SMB_NAME = "TestShare"
-SMB_PATH = "/mnt/tank/" DATASET
+SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/smb-osx" + BRIDGEHOST
 VOL_GROUP="qa"
 
@@ -51,7 +51,7 @@ class smb_osx_test(unittest.TestCase):
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
 
     def test_01_Creating_SMB_dataset(self):
-        assert POST("/storage/volume/tank/datasets/" {"name": DATASET}) == 201
+        assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def test_02_Starting_SMB_service(self):
          assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
@@ -72,7 +72,7 @@ class smb_osx_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    def test_05_Checking_to_see_if_SMB_service_is_running
+    def test_05_Checking_to_see_if_SMB_service_is_running(self):
         assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
 
     # OSX_TEST here when ready

@@ -5,15 +5,7 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
-from auto_config import ip
-try:
-    import config
-except ImportError:
-    pass
-else:
-    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME,
-    from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
+from functions import PUT, GET_OUTPUT
 
 COMMUNITY = "public"
 TRAPS = False
@@ -30,13 +22,12 @@ class snmp_test(unittest.TestCase):
                    "snmp_v3_password": PASSWORD,
                    "snmp_v3_password2": PASSWORD}
         assert PUT ("/services/snmp/", payload)
-        check_rest_response "200"
 
     def test_02_Enable_SNMP_service(self):
         assert PUT("/services/services/snmp/", {"srv_enable": True}) == 200
 
     def test_03_Validate_that_SNMP_service_is_running(self):
-        assert GET_OUTPUT("/services/services/snmp/", "srv_status") == "RUNNING"
+        assert GET_OUTPUT("/services/services/snmp/", "srv_state") == "RUNNING"
 
     def test_04_Validate_that_SNMP_settings_were_preserved(self):
         assert GET_OUTPUT("/services/snmp/", "snmp_community") == COMMUNITY
