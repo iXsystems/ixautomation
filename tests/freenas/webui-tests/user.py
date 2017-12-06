@@ -74,7 +74,6 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
-  
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
@@ -91,9 +90,8 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
         #Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if the the user list is loaded after addding a new user
-        self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
-        #wait to confirm new user in the list visually
+        #check if there is a generic error when making a duplicate user, and print the error
+        self.error_check()
 
     def test_03_create_newuser_primarygroup_uncheck(self):
         time.sleep(2)
@@ -126,10 +124,8 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
         #Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if the the user list is loaded after addding a new user
-        self.assertTrue(self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a"), "User list not loaded")
-        #wait to confirm new user in the list visually
-
+        #check if there is a generic error when making a duplicate user, and print the error
+        self.error_check()
 
 
     def test_04_create_superuser(self):
@@ -159,6 +155,8 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['permitSudocheckbox']).click()
         #Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
+        #check if there is a generic error when making a duplicate user, and print the error
+        self.error_check()
         time.sleep(20)
         #check if the the user list is loaded after addding a new user
 
@@ -176,6 +174,13 @@ class create_user_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def error_check(self):
+        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
+            ui_element=driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
+            error_element=ui_element.text
+            print (error_element)
+            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
 
     @classmethod
     def tearDownClass(inst):
