@@ -76,6 +76,7 @@ class create_group_test(unittest.TestCase):
 
     def test_03_create_supergroup(self):
         print (" creating a new Super group with root access")
+        time.sleep(1)
         #Click Group submenu
         driver.find_element_by_xpath(xpaths['submenuGroup']).click()
         #Perform hover to show menu

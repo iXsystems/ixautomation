@@ -75,6 +75,9 @@ if path.exists('webdav.pyc'):
 if path.exists('update.pyc'):
     call(["rm", "update.pyc"])
 
+if path.exists('autoflush.pyc'):
+    call(["rm", "autoflush.pyc"])
+
 #if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
 

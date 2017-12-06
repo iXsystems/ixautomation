@@ -63,3 +63,19 @@ This virtual machine will be the FreeNAS target running ui tests with firefox.
 
 
 
+Important Notes regarding actual test scripts
+
+
+Runtest
+	#For running tests on a desktop, use driverU and for jenkins use driver
+	#Use a fixed delay on the end of each script to fix script execution issue(similar to race condition)
+	#click on main nav again before starting a new script to make sure failure of one script doesnt effect execution of the other
+Login
+User
+Group
+Update
+	#Make sure you click on System tab again at the end of the final script for system tests so that other navigation element are visible 
+Ssh
+Afp
+Webdav
+Logout
