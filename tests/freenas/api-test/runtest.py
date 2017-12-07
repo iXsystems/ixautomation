@@ -113,8 +113,8 @@ call(["py.test-3.6", "--junitxml", "%ssnmp_result.xml" % results_xml, "create/sn
 call(["py.test-3.6", "--junitxml", "%ssystem_result.xml" % results_xml, "create/system.py"])
 call(["py.test-3.6", "--junitxml", "%stftp_result.xml" % results_xml, "create/tftp.py"])
 call(["py.test-3.6", "--junitxml", "%sups_result.xml" % results_xml, "create/ups.py"])
-call(["py.test-3.6", "--junitxml", "%sweb_bsd_result.xml" % results_xml, "create/web_bsd.py"])
-call(["py.test-3.6", "--junitxml", "%sweb_osx_result.xml" % results_xml, "create/web_osx.py"])
+call(["py.test-3.6", "--junitxml", "%sweb_bsd_result.xml" % results_xml, "create/webdav_bsd.py"])
+call(["py.test-3.6", "--junitxml", "%sweb_osx_result.xml" % results_xml, "create/webdav_osx.py"])
 
 # Update test
 
