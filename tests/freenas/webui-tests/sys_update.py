@@ -76,11 +76,11 @@ class check_update_test(unittest.TestCase):
         elif self.is_element_present(By.XPATH,"/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[4]/div/div"):
             ui_element2=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[4]/div/div")
             update_data2=ui_element2.text
-            if "No Update" in update_data2:
+            if "No" in update_data2:
                 print ("There is no update available")
                 self.assertTrue("No" in update_data2)
             else: 
-                print ("There is an unexpected issue: something wrong with no update available element")
+                print ("There is an unexpected issue: something wrong with no update available element:" + update_data2)
         else:
             print ("There is an unexpected issue")
 

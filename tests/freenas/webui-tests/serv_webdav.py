@@ -75,6 +75,7 @@ class configure_webdav_test(unittest.TestCase):
         #click on configure button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/md-card-actions/button").click()
         #Enter password newuserpassword
+        driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").clear()
         driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").send_keys(newuserpassword)
         #Enter password confirmation newuserpassword
         driver.find_element_by_xpath("//*[@id='6']/form-input/div/md-input-container/div/div[1]/div/input").send_keys(newuserpassword)
