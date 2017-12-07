@@ -159,33 +159,13 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
-        time.sleep(20)
         #check if the the user list is loaded after addding a new user
 
     def test_05_delete_user(self):
         print (" deleting a user with root access")
         time.sleep(2)
-        #Click User submenu
-        driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #click on the item per page option
-        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
-        #click select the highest number i.e 100
-        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
-        #wait till the list is loaded
-        time.sleep(5)
-        #click on the 3 dots
-        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[1]/datatable-body-row/div[2]/datatable-body-cell[7]/div/app-entity-table-actions/div/md-icon").click()
-        #click on delete option
-        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[2]/button/div").click()
-        #click on confirmation checkbox
-        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
-        #click on Ok
-        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
-        time.sleep(5)
-        #click on the 3 dots
-#        driver.find_element_by_xpath("").click()
-        #click on the 3 dots
-#        driver.find_element_by_xpath("").click()
+        self.delete(newusernameuncheck)
+        time.sleep(20)
 
 
     # Next step-- To check if the new user is present in the list via automation
@@ -208,6 +188,38 @@ class create_user_test(unittest.TestCase):
             error_element=ui_element.text
             print (error_element)
             driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
+
+    def delete(self, name):
+        #Click User submenu
+        driver.find_element_by_xpath(xpaths['submenuUser']).click()
+        #click on the item per page option
+        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
+        #click select the highest number i.e 100
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
+        #wait till the list is loaded
+        time.sleep(5)
+        index = 0
+        ui_text = "null"
+        for x in range(0, 5):
+            if self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(x) + "]/datatable-body-row/div[2]/datatable-body-cell[1]/div/div"):
+                ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-list/entity-table/div/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(x) + "]/datatable-body-row/div[2]/datatable-body-cell[1]/div/div")
+                ui_text = ui_element.text
+            if (ui_text == name):
+                index = x
+                break
+            ui_element = " "
+
+        #click on the 3 dots
+        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[7]/div/app-entity-table-actions/div/md-icon").click()
+        #click on delete option
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[2]/button/div").click()
+        #click on confirmation checkbox
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
+        #click on Ok
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
+        print (newusernameuncheck + " deleted")
+
+
 
     @classmethod
     def tearDownClass(inst):
