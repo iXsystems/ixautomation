@@ -25,14 +25,16 @@ except ImportError:
     import unittest
 
 
-xpaths = { 'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
+xpaths = {
+        'navAccount' : "//*[@id='nav-1']/div/a[1]",
+        'submenuUser' : "//*[@id='1-1']",
+        'submenuGroup' : "//*[@id='1-0']",
+         'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
           'primaryGroupcheckbox' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
          'primaryGroupdropdown' : "//*[@id='3']/form-select/div/md-select/div",
          'newUserName' : "//*[@id='7']/form-input/div/md-input-container/div/div[1]/div/input",
          'newUserPass' : "//*[@id='9']/form-input/div/md-input-container/div/div[1]/div/input",
         'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
-        'navAccount' : "//*[@id='nav-1']/div/a[1]",
-        'submenuUser' : "//*[@id='1-1']",
         'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div",
         'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
         'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button",
