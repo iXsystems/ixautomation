@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 4
+#Test case count: 5
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -161,6 +161,31 @@ class create_user_test(unittest.TestCase):
         self.error_check()
         time.sleep(20)
         #check if the the user list is loaded after addding a new user
+
+    def test_05_delete_user(self):
+        print (" deleting a user with root access")
+        time.sleep(2)
+        #Click User submenu
+        driver.find_element_by_xpath(xpaths['submenuUser']).click()
+        #click on the item per page option
+        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
+        #click select the highest number i.e 100
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
+        #wait till the list is loaded
+        time.sleep(5)
+        #click on the 3 dots
+        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[1]/datatable-body-row/div[2]/datatable-body-cell[7]/div/app-entity-table-actions/div/md-icon").click()
+        #click on delete option
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[2]/button/div").click()
+        #click on confirmation checkbox
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
+        #click on Ok
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
+        time.sleep(5)
+        #click on the 3 dots
+#        driver.find_element_by_xpath("").click()
+        #click on the 3 dots
+#        driver.find_element_by_xpath("").click()
 
 
     # Next step-- To check if the new user is present in the list via automation
