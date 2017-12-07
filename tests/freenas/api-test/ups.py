@@ -7,16 +7,17 @@
 import unittest
 from functions import PUT
 
+
 class tftp_test(unittest.TestCase):
 
     def test_01_Enabling_UPS_Service(self):
-        assert PUT("/services/services/ups/" {"srv_enable": True}) == 200
+        assert PUT("/services/services/ups/", {"srv_enable": True}) == 200
 
     def test_02_Enabling_Remote_Monitor(self):
         assert PUT("/services/services/ups/", {"ups_rmonitor": True}) == 200
 
     def test_03_Disabling_Remote_Monitor_option(self):
-        assert PUT("/services/services/ups/", {"ups_rmonitor": false}) == 200
+        assert PUT("/services/services/ups/", {"ups_rmonitor": False}) == 200
 
     def test_04_Enabling_email_status_update_option(self):
         assert PUT("/services/services/ups/", {"ups_emailnotify": True}) == 200

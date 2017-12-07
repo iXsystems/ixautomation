@@ -108,3 +108,7 @@ call(["py.test-3.6", "--junitxml", "%rsync_result.xml" % results_xml, "rsync.py"
 call(["py.test-3.6", "--junitxml", "%ssmb_bsd_result.xml" % results_xml, "smb_bsd.py"])
 call(["py.test-3.6", "--junitxml", "%ssmb_osx_result.xml" % results_xml, "smb_osx.py"])
 call(["py.test-3.6", "--junitxml", "%ssnmp_result.xml" % results_xml, "snmp.py"])
+call(["py.test-3.6", "--junitxml", "%ssystem_result.xml" % results_xml, "system.py"])
+call(["py.test-3.6", "--junitxml", "%stftp_result.xml" % results_xml, "tftp.py"])
+call(["py.test-3.6", "--junitxml", "%sups_result.xml" % results_xml, "ups.py"])
+

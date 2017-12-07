@@ -5,11 +5,12 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, GET_OUTPUT, POST
+from functions import PUT, GET_OUTPUT, POST, GET
+
 
 class system_test(unittest.TestCase):
 
-    def test_01_Checking_system_version(self)
+    def test_01_Checking_system_version(self):
         assert GET("/system/version/") == 200
 
     # Set the timezone
@@ -30,8 +31,8 @@ class system_test(unittest.TestCase):
         assert GET_OUTPUT("/system/tunable/", "tun_var") == "dummynet_load"
 
     # Reboot system to enable tunable
-    def test_05_Reboot_system_to_enable_tunable(self):
-        assert POST("/system/reboot") == 202
+    #def test_05_Reboot_system_to_enable_tunable(self):
+    #    assert POST("/system/reboot") == 202
 
 
 if __name__ == "__main__":

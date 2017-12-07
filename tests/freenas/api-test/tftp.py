@@ -14,11 +14,11 @@ TESTFILE_PATH = "/tmp/"
 class tftp_test(unittest.TestCase):
 
     def test_01_Creating_dataset_tank_tftproot(self):
-        payload == {"name": "tftproot"}
+        payload = {"name": "tftproot"}
         assert POST("/storage/volume/tank/datasets/", payload) == 201
 
     def test_02_Setting_permissions_for_TFTP_on_mnt_tank_tftproot(self):
-        payload == {"mp_path": "/mnt/tank/tftproot",
+        payload = {"mp_path": "/mnt/tank/tftproot",
                     "mp_acl": "unix",
                     "mp_mode": "777",
                     "mp_user": "nobody",
@@ -26,7 +26,7 @@ class tftp_test(unittest.TestCase):
         assert PUT("/storage/permission/", payload) == 201
 
     def test_03_Configuring_TFTP_service(self):
-        payload {"tftp_directory": "/mnt/tank/tftproot",
+        payload = {"tftp_directory": "/mnt/tank/tftproot",
                  "tftp_username": "nobody",
                  "tftp_newfiles": True}
         assert PUT("/services/tftp/", payload) == 200

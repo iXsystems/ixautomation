@@ -62,7 +62,7 @@ class smb_bsd_test(unittest.TestCase):
          assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
     def test_04_Checking_to_see_if_SMB_service_is_running(self):
-        assert GET("/services/services/cifs/", "srv_state") == "RUNNING"
+        assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
     def test_05_Changing_permissions_on_SMB_PATH(self):
         payload = {"mp_path": SMB_PATH,
@@ -95,11 +95,11 @@ class smb_bsd_test(unittest.TestCase):
         assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
     def test_09_Verify_SMB_service_is_disabled(self):
-        assert GET("/services/services/cifs/", "srv_state") == "STOPPED"
+        assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
     def test_10_Destroying_SMB_dataset(self):
-        assert DELETE("/storage/volume/1/datasets/%s/" + DATASET) == 204
+        assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 
 if __name__ == "__main__":
