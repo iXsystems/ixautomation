@@ -35,7 +35,7 @@ class tftp_test(unittest.TestCase):
         assert PUT("/services/services/tftp/", {"srv_enable": True}) == 200
 
     def test_05_Checking_to_see_if_TFTP_service_is_enabled(self):
-        assert GET_OUTPUT("/services/services/tftp/", "srv_start") == "RUNNING"
+        assert GET_OUTPUT("/services/services/tftp/", "srv_state") == "RUNNING"
 
 
 if __name__ == "__main__":

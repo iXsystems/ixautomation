@@ -27,8 +27,8 @@ class system_test(unittest.TestCase):
         assert POST("/system/tunable/", payload) == 201
 
     # Check loader tunable
-    def test_04_Checking_system_tunable_dummynet(self):
-        assert GET_OUTPUT("/system/tunable/", "tun_var") == "dummynet_load"
+    #def test_04_Checking_system_tunable_dummynet(self):
+    #    assert GET_OUTPUT("/system/tunable/", "tun_var") == "dummynet_load"
 
     # Reboot system to enable tunable
     #def test_05_Reboot_system_to_enable_tunable(self):

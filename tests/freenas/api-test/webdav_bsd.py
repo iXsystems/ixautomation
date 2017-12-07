@@ -101,7 +101,7 @@ class webdav_bsd_test(unittest.TestCase):
         assert PUT("/services/services/webdav/", {"srv_enable": False}) == 200
 
     def test_06_Verifying_that_the_WebDAV_service_has_stopped(self):
-        assert GET("/services/services/webdav", "srv_state") == "STOPPED"
+        assert GET_OUTPUT("/services/services/webdav", "srv_state") == "STOPPED"
 
     #2nd test
     #echo_test_title "Destroying WebDAV dataset \"${DATASET}\""
