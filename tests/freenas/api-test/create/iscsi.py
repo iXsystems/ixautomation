@@ -5,6 +5,9 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT
 
 try:
@@ -24,17 +27,17 @@ class iscsi_test(unittest.TestCase):
         payload = {"srv_enable": "false"}
         assert PUT("/services/services/iscsitarget/", payload) == 200
         # When BSD_TEST is functional will need to add the code to clean test
-    
+
     # Add iSCSI initator
     def Test_02_Add_iSCSI_initiator(self):
         paylaod = {"id": 1,
                    "iscsi_target_initiator_auth_network": "ALL",
                    "iscsi_target_initiator_comment": "",
-                   "iscsi_target_initiator_initiators": "ALL", 
+                   "iscsi_target_initiator_initiators": "ALL",
                    "iscsi_target_initiator_tag": 1 }
         assert POST("/services/iscsi/authorizedinitiator/", payload) == 201
-                
-    
+
+
     def test_03_Add_ISCSI_portal(self):
         payload = {"iscsi_target_portal_ips": ["0.0.0.0:3620"]}
         assert POST("/services/iscsi/portal/", payload) == 201
@@ -66,7 +69,7 @@ class iscsi_test(unittest.TestCase):
 
     # Associate iSCSI target
     def test_07_Associate_ISCSI_target(self):
-        payload = {"id": 1, 
+        payload = {"id": 1,
                    "iscsi_extent": 1,
                    "iscsi_lunid": None,
                    "iscsi_target": 1 }
@@ -79,7 +82,7 @@ class iscsi_test(unittest.TestCase):
 
     def test_09_Verify_the_iSCSI_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/iscsitarget/", "srv_state") == "RUNNING"
-    
+
     # when BSD_TEST is functional test using it will need to be added
 
     # Disable the iSCSI service

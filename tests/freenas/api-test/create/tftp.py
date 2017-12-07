@@ -5,6 +5,9 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT, GET_OUTPUT, POST
 
 TESTFILE_NAME = "tftp-testfile.txt"

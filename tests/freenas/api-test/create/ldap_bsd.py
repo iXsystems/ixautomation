@@ -5,6 +5,9 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE_ALL, DELETE
 from time import sleep
 try:
@@ -81,10 +84,10 @@ class ldap_bsd_test(unittest.TestCase):
     # Now start the service
     def test_07_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
-    
+
     def test_08_Checking_to_see_if_SMB_service_is_enabled(self):
         GET_OUTPUT("/services/services/cifs/", "srv_state")
-    
+
     #def test_09_Changing_permissions_on_SMB_PATH(self):
     #    payload = { "mp_path": SMB_PATH,
     #                "mp_acl": "unix",

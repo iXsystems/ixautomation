@@ -4,6 +4,9 @@
 # License: BSD
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT, GET_OUTPUT, is_agent_setup, if_key_listed
 from auto_config import sshKey
 

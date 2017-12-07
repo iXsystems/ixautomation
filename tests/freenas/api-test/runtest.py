@@ -6,7 +6,10 @@
 from subprocess import call
 from sys import argv
 from os import path, getcwd, makedirs
-import getopt
+import getopt, sys
+
+apifolder = getcwd()
+sys.path.append(apifolder)
 
 results_xml = getcwd() + '/results/'
 localHome = path.expanduser('~')

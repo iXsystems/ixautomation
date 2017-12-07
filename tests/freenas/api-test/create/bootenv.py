@@ -4,6 +4,9 @@
 # License: BSD
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import POST
 
 

@@ -5,6 +5,9 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT
 
 try:
@@ -35,7 +38,7 @@ class domaincontroller_test(unittest.TestCase):
 
     def test_04_Setting_the_Admin_Password(self):
         payload = {"dc_passwd": ADPASSWORD}
-        assert PUT("/services/services/domaincontroller/", payload) == 200 
+        assert PUT("/services/services/domaincontroller/", payload) == 200
 
     def test_05_Setting_the_Forest_level(self):
         payload =  {"dc_forest_level": FORESTLEVEL}

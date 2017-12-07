@@ -3,9 +3,12 @@
 # Author: Eric Turgeon
 # License: BSD
 
+import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from auto_config import interface
 from functions import POST, PUT
-import unittest
 from config import BRIDGEDOMAIN, BRIDGEHOST, BRIDGEDNS, BRIDGEGW
 
 class network(unittest.TestCase):

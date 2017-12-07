@@ -4,6 +4,9 @@
 # License: BSD
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import PUT, GET, POST
 from auto_config import disk1, disk2
 

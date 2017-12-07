@@ -5,6 +5,9 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
+import sys, os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
 from functions import SSH_TEST
 from auto_config import ip
 alert_msg = "Testing system alerts with failure."
