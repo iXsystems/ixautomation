@@ -82,7 +82,7 @@ class delete_test(unittest.TestCase):
         page_data=ui_element.text
         print ("the Page now is: " + page_data)
         #assert response
-        self.assertTrue("User" in page_data)
+        self.assertTrue("Group" in page_data)
 
     def test_02_01_delete_user(self):
         print (" deleting a group: " + newusername)
