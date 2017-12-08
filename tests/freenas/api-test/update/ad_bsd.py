@@ -5,23 +5,24 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, return_output
-from functions import BSD_TEST
-from auto_config import ip
+import sys
+import os
+apifolder = os.getcwd()
+sys.path.append(apifolder)
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
 
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPHOSTNAME, LDAPBINDPASSWORD
+except ImportError:
+    exit()
 
-DATASET="ad-bsd"
-SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/" + DATASET
-MOUNTPOINT="/tmp/ad-bsd" + BRIDGEHOST
-VOL_GROUP="qa"
+DATASET = "ad-bsd"
+SMB_NAME = "TestShare"
+SMB_PATH = "/mnt/tank/" + DATASET
+MOUNTPOINT = "/tmp/ad-bsd" + BRIDGEHOST
+VOL_GROUP = "qa"
+
 
 class ad_bsd_test(unittest.TestCase):
 
@@ -52,9 +53,9 @@ class ad_bsd_test(unittest.TestCase):
         DELETE_ALL("/sharing/cifs/", payload)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
 
-    # Set auxilary parameters to allow mount_smbfs to work with Active Directory
+    # Set auxilary parameters allow mount_smbfs to work with Active Directory
     def test_01_Creating_SMB_dataset(self):
-        assert POST("/storage/volume/tank/datasets/",{"name": DATASET}) == 201
+        assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     # Enable Active Directory Directory
     def test_02_Enabling_Active_Directory(self):
@@ -67,8 +68,9 @@ class ad_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/activedirectory/1/", payload)
 
     # Check Active Directory
-    echo_test_title "Checking Active Directory.."
-        assert GET("/directoryservice/activedirectory/", "ad_enable") == True
+    def test_03_Checking_Active_Directory(self):
+        assert GET_OUTPUT("/directoryservice/activedirectory/",
+                          "ad_enable") is True
 
     def test_04_Checking_to_see_if_SMB_service_is_enabled(seff):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
@@ -91,21 +93,20 @@ class ad_bsd_test(unittest.TestCase):
                    "ad_domainname": BRIDGEDOMAIN,
                    "ad_netbiosname_a": BRIDGEHOST,
                    "ad_idmap_backend": "ad",
-                   "ad_enable":"false"}
+                   "ad_enable": "false"}
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     # Check Active Directory
     def test_08_Verify_Active_Directory_is_disabled(self):
-        assert GET("/directoryservice/activedirectory/", "ad_enable") == False
+        assert GET_OUTPUT("/directoryservice/activedirectory/",
+                          "ad_enable") is False
 
-    echo_test_title "Verify SMB service is disabled"
-        rest_request "GET" "/services/services/cifs/"
-        check_service_status "STOPPED"
+    def test_09_Verify_SMB_service_is_disabled(self):
+        assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    echo_test_title "Destroying SMB dataset"
-        rest_request "DELETE" "/storage/volume/1/datasets/${DATASET}/"
-        check_rest_response "204" || return 1
+    def test_10_Destroying_SMB_dataset(self):
+        assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
