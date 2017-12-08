@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 5
+#Test case count: 4
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -160,13 +160,7 @@ class create_user_test(unittest.TestCase):
         #check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
         #check if the the user list is loaded after addding a new user
-
-    def test_05_delete_user(self):
-        print (" deleting a user with root access")
-        time.sleep(2)
-        self.delete(newusernameuncheck)
         time.sleep(20)
-
 
     # Next step-- To check if the new user is present in the list via automation
 
