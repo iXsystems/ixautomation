@@ -15,6 +15,8 @@ from serv_ssh import run_configure_ssh_test
 from serv_afp import run_configure_afp_test
 from serv_webdav import run_configure_webdav_test
 from sys_update import run_check_update_test
+from acc_delete import run_delete_test
+from theme import run_change_theme_test
 from logout import run_logout_test
 import sys
 sys.stdout.flush()
@@ -32,6 +34,8 @@ run_check_update_test(runDriver)
 run_configure_ssh_test(runDriver)
 run_configure_afp_test(runDriver)
 run_configure_webdav_test(runDriver)
+run_delete_test(runDriver)
+run_change_theme_test(runDriver)
 run_logout_test(runDriver)
 #turning off autoflush, the default mode
 #autoflush(False)
@@ -45,14 +49,14 @@ if path.exists('login.pyc'):
 if path.exists('source.pyc'):
     call(["rm", "source.pyc"])
 
-if path.exists('user.pyc'):
-    call(["rm", "user.pyc"])
+if path.exists('acc_user.pyc'):
+    call(["rm", "acc_user.pyc"])
 
-if path.exists('ssh.pyc'):
-    call(["rm", "ssh.pyc"])
+if path.exists('serv_ssh.pyc'):
+    call(["rm", "serv_ssh.pyc"])
 
-if path.exists('group.pyc'):
-    call(["rm", "group.pyc"])
+if path.exists('acc_group.pyc'):
+    call(["rm", "acc_group.pyc"])
 
 if path.exists('logout.pyc'):
     call(["rm", "logout.pyc"])
@@ -66,14 +70,20 @@ if path.exists('driver.pyc'):
 if path.exists('driverU.pyc'):
     call(["rm", "driverU.pyc"])
 
-if path.exists('afp.pyc'):
-    call(["rm", "afp.pyc"])
+if path.exists('serv_afp.pyc'):
+    call(["rm", "serv_afp.pyc"])
 
-if path.exists('webdav.pyc'):
-    call(["rm", "webdav.pyc"])
+if path.exists('serv_webdav.pyc'):
+    call(["rm", "serv_webdav.pyc"])
 
-if path.exists('update.pyc'):
-    call(["rm", "update.pyc"])
+if path.exists('sys_update.pyc'):
+    call(["rm", "sys_update.pyc"])
+
+if path.exists('acc_delete.pyc'):
+    call(["rm", "acc_delete.pyc"])
+
+if path.exists('theme.pyc'):
+    call(["rm", "theme.pyc"])
 
 if path.exists('autoflush.pyc'):
     call(["rm", "autoflush.pyc"])
