@@ -5,24 +5,22 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT
-from auto_config import ip
 
 try:
-    import config
+    from config import NISSERVER, NISDOMAIN
 except ImportError:
-    pass
-else:
-    from config import  NISSERVER, NISDOMAIN
+    exit()
 
 # define variables
-SERVER=NISSERVER
-DOMAIN=NISDOMAIN
-DATASET="nis-bsd"
-NIS_PATH="/mnt/tank/" + DATASET
+SERVER = NISSERVER
+DOMAIN = NISDOMAIN
+DATASET = "nis-bsd"
+NIS_PATH = "/mnt/tank/" + DATASET
 
 
 class nis_bsd_test(unittest.TestCase):
@@ -36,7 +34,7 @@ class nis_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/nis/", {"nis_enable": True}) == 200
 
     def test_04_Checking_if_NIS_service_is_enable(self):
-        assert GET_OUTPUT("/directoryservice/nis/", "nis_enable") == True
+        assert GET_OUTPUT("/directoryservice/nis/", "nis_enable") is True
 
     def test_05_Creating_NIS_dataset(self):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
@@ -45,7 +43,7 @@ class nis_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/nis/", {"nis_secure_mode": True}) == 200
 
     def test_07_Checking_if_secure_mode_is_enable(self):
-        assert GET_OUTPUT("/directoryservice/nis/", "nis_secure_mode") == True
+        assert GET_OUTPUT("/directoryservice/nis/", "nis_secure_mode") is True
 
     def test_08_Disabling_secure_mode(self):
         assert PUT("/directoryservice/nis/", {"nis_secure_mode": False}) == 200
@@ -54,7 +52,7 @@ class nis_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/nis/", {"nis_manycast": True}) == 200
 
     def test_10_Checking_if_manycast_is_enable(self):
-        assert GET_OUTPUT("/directoryservice/nis/", "nis_manycast") == True
+        assert GET_OUTPUT("/directoryservice/nis/", "nis_manycast") is True
 
     def test_11_Disabling_manycast(self):
         assert PUT("/directoryservice/nis/", {"nis_manycast": False}) == 200

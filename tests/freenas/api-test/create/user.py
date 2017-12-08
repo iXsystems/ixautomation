@@ -5,7 +5,8 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import POST, GET_USER
@@ -29,10 +30,9 @@ class user_test(unittest.TestCase):
         assert POST("/account/users/", payload) == 201
 
     def test_03_Setting_user_groups_wheel_ftp(self):
-        payload = ["wheel","ftp"]
+        payload = ["wheel", "ftp"]
         userid = GET_USER("testuser")
         assert POST("/account/users/%s/groups/" % userid, payload) == 202
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

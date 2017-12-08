@@ -5,7 +5,8 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, GET, GET_OUTPUT
@@ -14,12 +15,13 @@ LOCATION = "Maryville, TN"
 COUNTRY = "US"
 INTDESC = True
 
+
 class lldp_test(unittest.TestCase):
 
     def test_01_Configuring_LLDP_service(self):
-        payload = { "lldp_country": COUNTRY,
-                    "lldp_intdesc": INTDESC,
-                    "lldp_location": LOCATION}
+        payload = {"lldp_country": COUNTRY,
+                   "lldp_intdesc": INTDESC,
+                   "lldp_location": LOCATION}
         assert PUT("/services/lldp/", payload) == 200
 
     def test_02_Checking_that_API_reports_LLDP_service(self):

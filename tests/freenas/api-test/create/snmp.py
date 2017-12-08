@@ -5,7 +5,8 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, GET_OUTPUT
@@ -16,6 +17,7 @@ CONTACT = "root@localhost"
 LOCATION = "Maryville, TN"
 PASSWORD = "testing1234"
 
+
 class snmp_test(unittest.TestCase):
     def test_01_Configure_SNMP(self):
         payload = {"snmp_community": COMMUNITY,
@@ -24,7 +26,7 @@ class snmp_test(unittest.TestCase):
                    "snmp_location": LOCATION,
                    "snmp_v3_password": PASSWORD,
                    "snmp_v3_password2": PASSWORD}
-        assert PUT ("/services/snmp/", payload)
+        assert PUT("/services/snmp/", payload)
 
     def test_02_Enable_SNMP_service(self):
         assert PUT("/services/services/snmp/", {"srv_enable": True}) == 200
@@ -34,7 +36,7 @@ class snmp_test(unittest.TestCase):
 
     def test_04_Validate_that_SNMP_settings_were_preserved(self):
         assert GET_OUTPUT("/services/snmp/", "snmp_community") == COMMUNITY
-        assert GET_OUTPUT("/services/snmp/","snmp_traps") == TRAPS
+        assert GET_OUTPUT("/services/snmp/", "snmp_traps") == TRAPS
         assert GET_OUTPUT("/services/snmp/", "snmp_contact") == CONTACT
         assert GET_OUTPUT("/services/snmp/", "snmp_location") == LOCATION
         assert GET_OUTPUT("/services/snmp/", "snmp_v3_password") == PASSWORD

@@ -5,13 +5,15 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
+from functions import POST, GET_OUTPUT
 
 
 class smarttest_test(unittest.TestCase):
+
     @classmethod
     def setUpClass(inst):
         inst.disk_identifiers = GET_OUTPUT("/storage/disk", "disk_identifier")
@@ -27,8 +29,8 @@ class smarttest_test(unittest.TestCase):
         assert POST("/tasks/smarttest/", payload) == 201
 
     def test_02_Check_that_API_reports_new_SMARTTest(self):
-        assert GET_OUTPUT("/tasks/smarttest/", "smarttest_disks") == self.disk_ident_1
-
+        assert GET_OUTPUT("/tasks/smarttest/",
+                          "smarttest_disks") == self.disk_ident_1
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -4,7 +4,8 @@
 # License: BSD
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, DELETE
@@ -23,7 +24,7 @@ class ntp_test(unittest.TestCase):
                    "ntp_prefer": "true",
                    "pk": "1",
                    "force": "true"}
-        assert PUT("/system/ntpserver/1/",payload) == 200
+        assert PUT("/system/ntpserver/1/", payload) == 200
 
     # Remove Other NTP Servers
     def test_02_Removing_non_AD_NTP_servers_1sur2(self):

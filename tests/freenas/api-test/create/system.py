@@ -5,10 +5,11 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, GET_OUTPUT, POST, GET
+from functions import PUT, POST, GET
 
 
 class system_test(unittest.TestCase):
@@ -30,12 +31,12 @@ class system_test(unittest.TestCase):
         assert POST("/system/tunable/", payload) == 201
 
     # Check loader tunable
-    #def test_04_Checking_system_tunable_dummynet(self):
-    #    assert GET_OUTPUT("/system/tunable/", "tun_var") == "dummynet_load"
+    # def test_04_Checking_system_tunable_dummynet(self):
+    #     assert GET_OUTPUT("/system/tunable/", "tun_var") == "dummynet_load"
 
     # Reboot system to enable tunable
-    #def test_05_Reboot_system_to_enable_tunable(self):
-    #    assert POST("/system/reboot") == 202
+    # def test_05_Reboot_system_to_enable_tunable(self):
+    #     assert POST("/system/reboot") == 202
 
 
 if __name__ == "__main__":

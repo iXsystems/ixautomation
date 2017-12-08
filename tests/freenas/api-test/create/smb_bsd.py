@@ -5,22 +5,21 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
-from auto_config import ip
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
-DATASET="smb-bsd"
-SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/" + DATASET
-MOUNTPOINT="/tmp/smb-bsd" + BRIDGEHOST
+except ImportError:
+    exit()
+
+DATASET = "smb-bsd"
+SMB_NAME = "TestShare"
+SMB_PATH = "/mnt/tank/" + DATASET
+MOUNTPOINT = "/tmp/smb-bsd" + BRIDGEHOST
 
 
 class smb_bsd_test(unittest.TestCase):
@@ -62,7 +61,7 @@ class smb_bsd_test(unittest.TestCase):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def test_03_Starting_SMB_service(self):
-         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
+        assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
     def test_04_Checking_to_see_if_SMB_service_is_running(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"

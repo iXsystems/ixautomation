@@ -5,7 +5,8 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT
@@ -26,7 +27,8 @@ class tftp_test(unittest.TestCase):
         assert PUT("/services/services/ups/", {"ups_emailnotify": True}) == 200
 
     def test_05_Disabling_email_status_update_option(self):
-        assert PUT("/services/services/ups/", {"ups_emailnotify": False}) == 200
+        assert PUT("/services/services/ups/",
+                   {"ups_emailnotify": False}) == 200
 
     def test_06_running_UPS_in_Master_Mode(self):
         assert PUT("/services/services/ups/", {"ups_mode": "master"}) == 200
@@ -38,14 +40,14 @@ class tftp_test(unittest.TestCase):
         assert PUT("/services/services/ups/", {"ups_shutdown": "batt"}) == 200
 
     def test_09_Setting_UPS_shutdown_mode_Low_Battery(self):
-        assert PUT("/services/services/ups/", {"ups_shutdown": "lowbatt"}) == 200
+        assert PUT("/services/services/ups/",
+                   {"ups_shutdown": "lowbatt"}) == 200
 
     def test_10_Disabling_UPS_Service(self):
         assert PUT("/services/services/ups/", {"srv_enable": False}) == 200
 
     def test_11_Setting_Identifier(self):
         assert PUT("/services/services/ups/", {"ups_identifier": "ups"}) == 200
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

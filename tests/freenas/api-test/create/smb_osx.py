@@ -5,24 +5,23 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
-from auto_config import ip
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
+except ImportError:
+    exit()
 
 DATASET = "smb-osx"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/smb-osx" + BRIDGEHOST
-VOL_GROUP="qa"
+VOL_GROUP = "qa"
+
 
 class smb_osx_test(unittest.TestCase):
 
@@ -57,7 +56,7 @@ class smb_osx_test(unittest.TestCase):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     def test_02_Starting_SMB_service(self):
-         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
+        assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
     def test_03_Changing_permissions_on_SMB_PATH(self):
         payload = {"mp_path": SMB_PATH,

@@ -4,7 +4,8 @@
 # License: BSD
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, GET, POST
@@ -26,11 +27,11 @@ class storage_test(unittest.TestCase):
 
     def test_04_Check_creating_dataset_01_20_share(self):
         payload = {"name": "share"}
-        assert POST("/storage/volume/tank/datasets/",payload) == 201
+        assert POST("/storage/volume/tank/datasets/", payload) == 201
 
     def test_05_Check_creating_dataset_02_20_jails(self):
         payload = {"name": "jails"}
-        assert POST("/storage/volume/tank/datasets/",payload) == 201
+        assert POST("/storage/volume/tank/datasets/", payload) == 201
 
     def test_06_Changing_permissions_on_share(self):
         payload = {"mp_path": "/mnt/tank/share",
@@ -38,7 +39,7 @@ class storage_test(unittest.TestCase):
                    "mp_mode": "777",
                    "mp_user": "root",
                    "mp_group": "wheel"}
-        assert PUT("/storage/permission/",payload) == 201
+        assert PUT("/storage/permission/", payload) == 201
 
     def test_07_Changing_permissions_on_share(self):
         payload = {"mp_path": "/mnt/tank/jails",
@@ -50,19 +51,19 @@ class storage_test(unittest.TestCase):
 
     def test_08_Creating_a_ZFS_snapshot(self):
         payload = {"dataset": "tank", "name": "test"}
-        assert POST("/storage/snapshot/",payload) == 201
+        assert POST("/storage/snapshot/", payload) == 201
 
     def test_09_Creating_dataset_for_testing_snapshot(self):
         payload = {"name": "snapcheck"}
-        assert POST("/storage/volume/tank/datasets/",payload) == 201
+        assert POST("/storage/volume/tank/datasets/", payload) == 201
 
     def test_10_Creating_a_ZVOL_1sur2(self):
         payload = {"name": "testzvol1", "volsize": "10M"}
-        assert POST("/storage/volume/tank/zvols/",payload) == 202
+        assert POST("/storage/volume/tank/zvols/", payload) == 202
 
     def test_11_Creating_a_ZVOL_2sur2(self):
         payload = {"name": "testzvol2", "volsize": "10M"}
-        assert POST("/storage/volume/tank/zvols/",payload) == 202
+        assert POST("/storage/volume/tank/zvols/", payload) == 202
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

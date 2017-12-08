@@ -5,10 +5,11 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, RC_TEST
+from functions import PUT, GET_OUTPUT, RC_TEST  # , POST
 from auto_config import ip
 
 
@@ -21,7 +22,8 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/services/services/rsync/", {"srv_enable": True}) == 200
 
     def test_03_Checking_to_see_if_rsync_service_is_enabled(self):
-        assert GET_OUTPUT("/services/services/rsync/", "srv_state") == "RUNNING"
+        assert GET_OUTPUT("/services/services/rsync/",
+                          "srv_state") == "RUNNING"
 
 #    def test_04_Creating_rsync_resource(self):
 #        payload = {"rsyncmod_name": "testmod",
@@ -30,7 +32,7 @@ class ldap_osx_test(unittest.TestCase):
 
     # Test rsync
     def test_05_Testings_rsync_access(self):
-        RC_TEST("rsync -avn %s::testmod" % ip) == True
+        RC_TEST("rsync -avn %s::testmod" % ip) is True
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
