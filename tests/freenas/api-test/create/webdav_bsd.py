@@ -30,7 +30,7 @@ class webdav_bsd_test(unittest.TestCase):
         DELETE_ALL("/sharing/webdav/", payload)
 
         PUT("/services/services/webdav/", {"srv_enable": False})
-        DELETE("/storage/volume/1/datasets/%s/", DATASET)
+        DELETE("/storage/volume/1/datasets/%s/" % DATASET)
         # rm "${TMP_FILE}" &>/dev/null
 
     def test_01_Creating_dataset_for_WebDAV_use(self):
@@ -53,13 +53,16 @@ class webdav_bsd_test(unittest.TestCase):
     def test_04_Starting_WebDAV_service(self):
         assert PUT("/services/services/webdav/", {"srv_enable": True}) == 200
 
-    def test_05_Stopping_WebDAV_service(self):
+    def test_05_Verifying_that_the_WebDAV_service_has_started(self):
+        assert GET_OUTPUT("/services/services/webdav",
+                          "srv_state") == "STARTED"
+
+    def test_06_Stopping_WebDAV_service(self):
         assert PUT("/services/services/webdav/", {"srv_enable": False}) == 200
 
-    def test_06_Verifying_that_the_WebDAV_service_has_stopped(self):
+    def test_07_Verifying_that_the_WebDAV_service_has_stopped(self):
         assert GET_OUTPUT("/services/services/webdav",
                           "srv_state") == "STOPPED"
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

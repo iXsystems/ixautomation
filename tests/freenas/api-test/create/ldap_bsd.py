@@ -5,43 +5,42 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE_ALL, DELETE
-from time import sleep
+
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
-    from config import LDAPBASEDN, LDAPBINDDN, LDAPHOSTNAME, LDAPBINDPASSWORD
+    from config import LDAPBASEDN, LDAPHOSTNAME
+except ImportError:
+    exit()
 
 
-DATASET="ldap-bsd"
-SMB_NAME="TestShare"
-SMB_PATH="/mnt/tank/" + DATASET
-MOUNTPOINT="/tmp/ldap-bsd" + BRIDGEHOST
-VOL_GROUP="qa"
+DATASET = "ldap-bsd"
+SMB_NAME = "TestShare"
+SMB_PATH = "/mnt/tank/" + DATASET
+MOUNTPOINT = "/tmp/ldap-bsd" + BRIDGEHOST
+VOL_GROUP = "qa"
 
 
 class ldap_bsd_test(unittest.TestCase):
 
     def Clean_up_any_leftover_items(self):
-        payload = { "ad_bindpw": ADPASSWORD,
-                    "ad_bjindname": ADUSERNAME,
-                    "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
-                    "ad_idmap_backend": "rid",
-                    "ad_enable":"false" }
+        payload = {"ad_bindpw": ADPASSWORD,
+                   "ad_bjindname": ADUSERNAME,
+                   "ad_domainname": BRIDGEDOMAIN,
+                   "ad_netbiosname_a": BRIDGEHOST,
+                   "ad_idmap_backend": "rid",
+                   "ad_enable": "false"}
         PUT("/directoryservice/activedirectory/1/", payload)
         payload1 = {"ldap_basedn": LDAPBASEDN,
                     "ldap_anonbind": "true",
                     "ldap_netbiosname_a": BRIDGEHOST,
                     "ldap_hostname": LDAPHOSTNAME,
                     "ldap_has_samba_schema": "true",
-                    "ldap_enable": "false" }
+                    "ldap_enable": "false"}
         PUT("/directoryservice/ldap/1/", payload1)
         payload2 = {"cfs_comment": "My Test SMB Share",
                     "cifs_path": SMB_PATH,
@@ -50,11 +49,11 @@ class ldap_bsd_test(unittest.TestCase):
                     "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload2)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
-        #bsd_test "umount -f \"${MOUNTPOINT}\" &>/dev/null; rmdir \"${MOUNTPOINT}\" &>/dev/null"
 
     # Set auxilary parameters to allow mount_smbfs to work with ldap
     def test_02_Setting_auxilary_parameters_for_mount_smbfs(self):
-        payload = {"cifs_srv_smb_options": "lanman auth = yes\nntlm auth = yes \nraw NTLMv2 auth = yes"}
+        options = "lanman auth = yes\nntlm auth = yes \nraw NTLMv2 auth = yes"
+        payload = {"cifs_srv_smb_options": options}
         assert PUT("/services/cifs/", payload) == 200
 
     def test_03_Creating_SMB_dataset(self):
@@ -62,23 +61,23 @@ class ldap_bsd_test(unittest.TestCase):
 
     # Enable LDAP
     def test_04_Enabling_LDAP_with_anonymous_bind(self):
-        payload = { "ldap_basedn": LDAPBASEDN,
-                    "ldap_anonbind": "true",
-                    "ldap_netbiosname_a": BRIDGEHOST,
-                    "ldap_hostname": LDAPHOSTNAME,
-                    "ldap_has_samba_schema": "true",
-                    "ldap_enable": "true"}
+        payload = {"ldap_basedn": LDAPBASEDN,
+                   "ldap_anonbind": "true",
+                   "ldap_netbiosname_a": BRIDGEHOST,
+                   "ldap_hostname": LDAPHOSTNAME,
+                   "ldap_has_samba_schema": "true",
+                   "ldap_enable": "true"}
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Check LDAP
     def test_05_Checking_LDAP(self):
-        assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") == True
+        assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is True
 
     def test_06_Enabling_SMB_service(self):
-        payload = { "cifs_srv_description": "Test FreeNAS Server",
-                    "cifs_srv_guest": "nobody",
-                    "cifs_hostname_lookup": False,
-                    "cifs_srv_aio_enable": False }
+        payload = {"cifs_srv_description": "Test FreeNAS Server",
+                   "cifs_srv_guest": "nobody",
+                   "cifs_hostname_lookup": False,
+                   "cifs_srv_aio_enable": False}
         assert PUT("/services/cifs/", payload) == 200
 
     # Now start the service
@@ -88,7 +87,7 @@ class ldap_bsd_test(unittest.TestCase):
     def test_08_Checking_to_see_if_SMB_service_is_enabled(self):
         GET_OUTPUT("/services/services/cifs/", "srv_state")
 
-    #def test_09_Changing_permissions_on_SMB_PATH(self):
+    # def test_09_Changing_permissions_on_SMB_PATH(self):
     #    payload = { "mp_path": SMB_PATH,
     #                "mp_acl": "unix",
     #                "mp_mode": "777",
@@ -98,11 +97,11 @@ class ldap_bsd_test(unittest.TestCase):
     #    assert PUT("/storage/permission/", payload) == 201
 
     def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
-        payload = { "cfs_comment": "My Test SMB Share",
-                    "cifs_path": SMB_PATH,
-                    "cifs_name": SMB_NAME,
-                    "cifs_guestok": True,
-                    "cifs_vfsobjects": "streams_xattr" }
+        payload = {"cfs_comment": "My Test SMB Share",
+                   "cifs_path": SMB_PATH,
+                   "cifs_name": SMB_NAME,
+                   "cifs_guestok": True,
+                   "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
     def test_11_Checking_to_see_if_SMB_service_is_enabled(self):
@@ -110,78 +109,22 @@ class ldap_bsd_test(unittest.TestCase):
 
     # BSD test to be done when when BSD_TEST is functional
 
-    #def test_11_Creating_SMB_mountpoint(self):
-    #    bsd_test "mkdir -p '${MOUNTPOINT}' && sync"
-    #    check_exit_status || return 1
-
-    #sleep 10
-
-    # The LDAPUSER user must exist in LDAP with this password
-    #echo_test_title "Store LDAP credentials for mount_smbfs."
-    #bsd_test "echo \"[TESTNAS:LDAPUSER]\" > ~/.nsmbrc && echo password=12345678 >> ~/.nsmbrc"
-    #check_exit_status || return 1
-
-    #echo_test_title "Mounting SMB"
-    #bsd_test "mount_smbfs -N -I ${BRIDGEIP} -W LDAP01 //ldapuser@testnas/${SMB_NAME} '${MOUNTPOINT}'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Verify SMB share has finished mounting"
-    #wait_for_bsd_mnt "${MOUNTPOINT}"
-    #check_exit_status || return 1
-
-    #local device_name=`dirname "${MOUNTPOINT}"`
-    #echo_test_title "Checking permissions on ${MOUNTPOINT}"
-    #bsd_test "ls -la '${device_name}' | awk '\$4 == \"${VOL_GROUP}\" && \$9 == \"${DATASET}\" ' "
-    #check_exit_status
-
-    #echo_test_title "Creating SMB file"
-    #bsd_test "touch '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Moving SMB file"
-    #bsd_test "mv '${MOUNTPOINT}/testfile' '${MOUNTPOINT}/testfile2'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Copying SMB file"
-    #bsd_test "cp '${MOUNTPOINT}/testfile2' '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Deleting SMB file 1/2"
-    #bsd_test "rm '${MOUNTPOINT}/testfile'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Deleting SMB file 2/2"
-    #bsd_test "rm '${MOUNTPOINT}/testfile2'"
-    #check_exit_status || return 1
-
-    #echo_test_title "Unmounting SMB"
-    #bsd_test "umount -f \"${MOUNTPOINT}\""
-    #check_exit_status || return 1
-
-    #echo_test_title "Verifying SMB share was unmounted"
-    #bsd_test "mount | grep -qv \"${MOUNTPOINT}\""
-    #check_exit_status
-
-    #echo_test_title "Removing SMB mountpoint"
-    #bsd_test "test -d \"${MOUNTPOINT}\" && rmdir \"${MOUNTPOINT}\" || exit 0"
-    #check_exit_status || return 1
-
     def test_24_Removing_SMB_share_on_SMB_PATH(self):
-        payload = { "cfs_comment": "My Test SMB Share",
-                    "cifs_path": SMB_PATH,
-                    "cifs_name": SMB_NAME,
-                    "cifs_guestok": "true",
-                    "cifs_vfsobjects": "streams_xattr" }
+        payload = {"cfs_comment": "My Test SMB Share",
+                   "cifs_path": SMB_PATH,
+                   "cifs_name": SMB_NAME,
+                   "cifs_guestok": "true",
+                   "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload) == 204
 
     # Disable LDAP
     def test_25_Disabling_LDAP_with_anonymous_bind(self):
-        payload = { "ldap_basedn": LDAPBASEDN,
-                    "ldap_anonbind": True,
-                    "ldap_netbiosname_a": "'${BRIDGEHOST}'",
-                    "ldap_hostname": "'${LDAPHOSTNAME}'",
-                    "ldap_has_samba_schema": True,
-                    "ldap_enable": False }
+        payload = {"ldap_basedn": LDAPBASEDN,
+                   "ldap_anonbind": True,
+                   "ldap_netbiosname_a": "'${BRIDGEHOST}'",
+                   "ldap_hostname": "'${LDAPHOSTNAME}'",
+                   "ldap_has_samba_schema": True,
+                   "ldap_enable": False}
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Now stop the SMB service
@@ -190,14 +133,14 @@ class ldap_bsd_test(unittest.TestCase):
 
     # Check LDAP
     def test_27_Verify_LDAP_is_disabled(self):
-        GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") == False
+        GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is False
 
     def test_28_Verify_SMB_service_is_disabled(self):
-        GET_OUTPUT("/services/services/cifs/", "srv_state" ) == "STOPPED"
+        GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
     def test_29_Destroying_SMB_dataset(self):
-        DELETE("/storage/volume/1/datasets/%s/" % DATASET ) == 204
+        DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 
 if __name__ == "__main__":

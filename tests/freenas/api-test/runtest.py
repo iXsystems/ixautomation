@@ -177,10 +177,10 @@ call(["py.test-3.6", "--junitxml",
       "%sups_result.xml" % results_xml,
       "create/ups.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sweb_bsd_result.xml" % results_xml,
+      "%swebdav_bsd_result.xml" % results_xml,
       "create/webdav_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sweb_osx_result.xml" % results_xml,
+      "%swebdav_osx_result.xml" % results_xml,
       "create/webdav_osx.py"])
 
 # Update test

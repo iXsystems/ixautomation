@@ -5,22 +5,22 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT
 
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import ADPASSWORD
+except ImportError:
+    exit()
 
-REALM="samdom.local"
-DOMAIN="samdom"
-DNSFORWARDER="8.8.8.8"
-FORESTLEVEL="2003"
+REALM = "samdom.local"
+DOMAIN = "samdom"
+DNSFORWARDER = "8.8.8.8"
+FORESTLEVEL = "2003"
+
 
 class domaincontroller_test(unittest.TestCase):
     def Test_01_Setting_Realm_Name(self):
@@ -31,9 +31,8 @@ class domaincontroller_test(unittest.TestCase):
         payload = {"dc_domain": DOMAIN}
         assert PUT("/services/services/domaincontroller/", payload) == 200
 
-
     def test_03_Setting_DNS_forwarder(self):
-        payload = { "dc_dns_forwarder": DNSFORWARDER}
+        payload = {"dc_dns_forwarder": DNSFORWARDER}
         assert PUT("/services/services/domaincontroller/", payload) == 200
 
     def test_04_Setting_the_Admin_Password(self):
@@ -41,7 +40,7 @@ class domaincontroller_test(unittest.TestCase):
         assert PUT("/services/services/domaincontroller/", payload) == 200
 
     def test_05_Setting_the_Forest_level(self):
-        payload =  {"dc_forest_level": FORESTLEVEL}
+        payload = {"dc_forest_level": FORESTLEVEL}
         PUT("/services/services/domaincontroller/", payload) == 200
 
 if __name__ == "__main__":

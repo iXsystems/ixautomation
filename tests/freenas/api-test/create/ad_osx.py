@@ -4,19 +4,17 @@
 # License: BSD
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import POST, GET_OUTPUT, PUT, DELETE, DELETE_ALL
 
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
-
+except ImportError:
+    exit()
 
 DATASET = "ad-osx"
 SMB_NAME = "TestShare"
@@ -24,16 +22,18 @@ SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/ad-osx" + BRIDGEHOST
 VOL_GROUP = "qa"
 
+
 class ad_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
-    def test_01_Clean_up_any_leftover_items(self):
+    @classmethod
+    def setUpClass(inst):
         payload1 = {"ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
                     "ad_netbiosname_a": BRIDGEHOST,
                     "ad_idmap_backend": "rid",
-                    "ad_enable":"false"}
+                    "ad_enable": "false"}
         PUT("/directoryservice/activedirectory/1/", payload1)
         payload2 = {"ldap_basedn": LDAPBASEDN,
                     "ldap_binddn": LDAPBINDDN,
@@ -48,41 +48,40 @@ class ad_osx_test(unittest.TestCase):
                     "cifs_path": SMB_PATH,
                     "cifs_name": SMB_NAME,
                     "cifs_guestok": "true",
-                    "cifs_vfsobjects": "streams_xattr" }
+                    "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload3)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
 
-    # Set auxilary parameters to allow mount_smbfs to work with Active Directory
-    def test_02_Creating_SMB_dataset(self):
+    # Set auxilary parameters allow mount_smbfs to work with Active Directory
+    def test_01_Creating_SMB_dataset(self):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
-    def test_03_Enabling_Active_Directory(self):
-        payload = { "ad_bindpw": ADPASSWORD,
-                    "ad_bindname": ADUSERNAME,
-                    "ad_domainname": BRIDGEDOMAIN,
-                    "ad_netbiosname_a": BRIDGEHOST,
-                    "ad_idmap_backend": "rid",
-                    "ad_enable":"true" }
-        assert PUT("/directoryservice/activedirectory/1/",payload) == 200
+    def test_02_Enabling_Active_Directory(self):
+        payload = {"ad_bindpw": ADPASSWORD,
+                   "ad_bindname": ADUSERNAME,
+                   "ad_domainname": BRIDGEDOMAIN,
+                   "ad_netbiosname_a": BRIDGEHOST,
+                   "ad_idmap_backend": "rid",
+                   "ad_enable": "true"}
+        assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
-    def test_04_Checking_Active_Directory(self):
-        assert GET_OUTPUT("/directoryservice/activedirectory/", "ad_enable") == True
+    def test_03_Checking_Active_Directory(self):
+        assert GET_OUTPUT("/directoryservice/activedirectory/",
+                          "ad_enable") is True
 
-    def test_05_Checking_to_see_if_SMB_service_is_enabled(self):
+    def test_04_Checking_to_see_if_SMB_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
-    def test_06_Enabling_SMB_service(self):
-        payload = { "cifs_srv_description": "Test FreeNAS Server",
-                    "cifs_srv_guest": "nobody",
-                    "cifs_hostname_lookup": False,
-                    "cifs_srv_aio_enable": False }
-        assert PUT("/services/cifs/", payload) ==  200
+    def test_05_Enabling_SMB_service(self):
+        payload = {"cifs_srv_description": "Test FreeNAS Server",
+                   "cifs_srv_guest": "nobody",
+                   "cifs_hostname_lookup": False,
+                   "cifs_srv_aio_enable": False}
+        assert PUT("/services/cifs/", payload) == 200
 
     # Now start the service
-    def test_07_Starting_SMB_service(self):
+    def test_06_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-

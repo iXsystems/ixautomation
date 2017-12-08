@@ -4,7 +4,8 @@
 # License: BSD
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT
@@ -20,7 +21,7 @@ class email_test(unittest.TestCase):
                    "em_security": "plain",
                    "em_smtp": "true",
                    "em_user": "william.spam@ixsystems.com"}
-        assert PUT("/system/email/",payload) == 200
+        assert PUT("/system/email/", payload) == 200
 
 
 if __name__ == "__main__":

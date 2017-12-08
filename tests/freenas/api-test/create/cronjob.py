@@ -4,7 +4,8 @@
 # License: BSD
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import POST, GET_OUTPUT
@@ -19,8 +20,7 @@ class cronjob_test(unittest.TestCase):
         assert POST("/tasks/cronjob/", payload) == 201
 
     def test_02_Checking_to_see_if_cronjob_was_created_and_enabled(self):
-        assert GET_OUTPUT("/tasks/cronjob/1/", "cron_enabled") == True
-
+        assert GET_OUTPUT("/tasks/cronjob/1/", "cron_enabled") is True
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

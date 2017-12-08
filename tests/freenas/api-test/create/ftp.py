@@ -5,7 +5,8 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, GET_OUTPUT, RC_TEST
@@ -26,8 +27,8 @@ class user_test(unittest.TestCase):
         assert GET_OUTPUT("/services/services/ftp/", "srv_state") == "RUNNING"
 
     def test_04_Fetching_file_via_FTP(self):
-        cmd = "ftp -o /tmp/ftpfile ftp://testuser:test@"+ ip + "/.cshrc"
-        RC_TEST(cmd) == True
+        cmd = "ftp -o /tmp/ftpfile ftp://testuser:test@" + ip + "/.cshrc"
+        RC_TEST(cmd) is True
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

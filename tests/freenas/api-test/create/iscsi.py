@@ -5,21 +5,21 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT
 
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BRIDGEHOST
+except ImportError:
+    exit()
 
 MOUNTPOINT = "/tmp/iscsi" + BRIDGEHOST
 DEVICE_NAME = "/tmp/freenasiscsi"
 TARGET_NAME = "iqn.1994-09.freenasqa:target0"
+
 
 class iscsi_test(unittest.TestCase):
 
@@ -30,13 +30,12 @@ class iscsi_test(unittest.TestCase):
 
     # Add iSCSI initator
     def Test_02_Add_iSCSI_initiator(self):
-        paylaod = {"id": 1,
+        payload = {"id": 1,
                    "iscsi_target_initiator_auth_network": "ALL",
                    "iscsi_target_initiator_comment": "",
                    "iscsi_target_initiator_initiators": "ALL",
-                   "iscsi_target_initiator_tag": 1 }
+                   "iscsi_target_initiator_tag": 1}
         assert POST("/services/iscsi/authorizedinitiator/", payload) == 201
-
 
     def test_03_Add_ISCSI_portal(self):
         payload = {"iscsi_target_portal_ips": ["0.0.0.0:3620"]}
@@ -48,7 +47,7 @@ class iscsi_test(unittest.TestCase):
         assert POST("/services/iscsi/target/", payload) == 201
 
     # Add Target to groups
-    #def test_05_Add_target_to_groups(self):
+    # def test_05_Add_target_to_groups(self):
     #    payload = {"iscsi_target": "1",
     #               "iscsi_target_authgroup": None,
     #               "iscsi_target_portalgroup": 1,
@@ -72,7 +71,7 @@ class iscsi_test(unittest.TestCase):
         payload = {"id": 1,
                    "iscsi_extent": 1,
                    "iscsi_lunid": None,
-                   "iscsi_target": 1 }
+                   "iscsi_target": 1}
         assert POST("/services/iscsi/targettoextent/", payload) == 201
 
     # Enable the iSCSI service
@@ -81,16 +80,19 @@ class iscsi_test(unittest.TestCase):
         assert PUT("/services/services/iscsitarget/", payload) == 200
 
     def test_09_Verify_the_iSCSI_service_is_enabled(self):
-        assert GET_OUTPUT("/services/services/iscsitarget/", "srv_state") == "RUNNING"
+        assert GET_OUTPUT("/services/services/iscsitarget/",
+                          "srv_state") == "RUNNING"
 
     # when BSD_TEST is functional test using it will need to be added
 
     # Disable the iSCSI service
     def test_10_Disable_iSCSI_service(self):
-        assert PUT("/services/services/iscsitarget/", {"srv_enable": "false"}) == 200
+        payload = {"srv_enable": "false"}
+        assert PUT("/services/services/iscsitarget/", payload) == 200
 
     def test_11_Verify_the_iSCSI_service_is_disabled(self):
-        assert GET_OUTPUT("/services/services/iscsitarget/", "srv_state") == "STOPPED"
+        assert GET_OUTPUT("/services/services/iscsitarget/",
+                          "srv_state") == "STOPPED"
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
