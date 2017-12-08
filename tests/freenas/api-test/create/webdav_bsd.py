@@ -55,7 +55,7 @@ class webdav_bsd_test(unittest.TestCase):
 
     def test_05_Verifying_that_the_WebDAV_service_has_started(self):
         assert GET_OUTPUT("/services/services/webdav",
-                          "srv_state") == "STARTED"
+                          "srv_state") == "RUNNING"
 
     def test_06_Stopping_WebDAV_service(self):
         assert PUT("/services/services/webdav/", {"srv_enable": False}) == 200
