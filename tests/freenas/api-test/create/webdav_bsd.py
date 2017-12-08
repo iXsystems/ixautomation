@@ -5,25 +5,18 @@
 # Location for tests into REST API of FreeNAS
 
 import unittest
-import sys, os
+import sys
+import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
-from auto_config import ip
-try:
-    import config
-except ImportError:
-    pass
-else:
-    from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
-    from config import LDAPBASEDN, LDAPBINDDN, LDAPBINDPASSWORD, LDAPHOSTNAME
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
 
-DATASET="webdavshare"
-DATASET_PATH="/mnt/tank/%s/" % DATASET
-TMP_FILE="/tmp/testfile.txt"
-SHARE_NAME="webdavshare"
-SHARE_USER="webdav"
-SHARE_PASS="davtest"
+DATASET = "webdavshare"
+DATASET_PATH = "/mnt/tank/%s/" % DATASET
+TMP_FILE = "/tmp/testfile.txt"
+SHARE_NAME = "webdavshare"
+SHARE_USER = "webdav"
+SHARE_PASS = "davtest"
 
 
 class webdav_bsd_test(unittest.TestCase):
@@ -31,9 +24,9 @@ class webdav_bsd_test(unittest.TestCase):
     # Clean up any leftover items from previous failed test runs
     @classmethod
     def setUpClass(inst):
-        payload1 = {"webdav_name": SHARE_NAME,
-                    "webdav_comment": "Auto-created by ixbuild tests",
-                    "webdav_path": DATASET_PATH}
+        payload = {"webdav_name": SHARE_NAME,
+                   "webdav_comment": "Auto-created by ixbuild tests",
+                   "webdav_path": DATASET_PATH}
         DELETE_ALL("/sharing/webdav/", payload)
 
         PUT("/services/services/webdav/", {"srv_enable": False})
@@ -64,9 +57,9 @@ class webdav_bsd_test(unittest.TestCase):
         assert PUT("/services/services/webdav/", {"srv_enable": False}) == 200
 
     def test_06_Verifying_that_the_WebDAV_service_has_stopped(self):
-        assert GET_OUTPUT("/services/services/webdav", "srv_state") == "STOPPED"
+        assert GET_OUTPUT("/services/services/webdav",
+                          "srv_state") == "STOPPED"
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-

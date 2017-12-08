@@ -8,17 +8,13 @@ from auto_config import freenas_url, password, user, ip
 import json
 import os
 from subprocess import run, Popen, PIPE
-import logging
 import re
 
 try:
-    import config
-except ImportError:
-    pass
-else:
     from config import BSD_HOST, BSD_USERNAME, BSD_PASSWORD
-    from config import OSX_HOST, OSX_PASSWORD, OSX_PASSWORD
-
+    from config import OSX_HOST, OSX_USERNAME, OSX_PASSWORD
+except ImportError:
+    exit()
 
 global header
 header = {'Content-Type': 'application/json', 'Vary': 'accept'}
@@ -40,7 +36,8 @@ def GET_OUTPUT(testpath, inputs):
 
 def GET_USER(username):
     for uid in range(1, 1000):
-        if GET_OUTPUT("/account/users/%s/" % uid, "bsdusr_username") == username:
+        if GET_OUTPUT("/account/users/%s/" % uid,
+                      "bsdusr_username") == username:
             userid = uid
             break
     return userid
@@ -60,18 +57,19 @@ def PUT(testpath, payload):
 
 def DELETE(testpath):
     deleteit = requests.delete(freenas_url + testpath, headers=header,
-                         auth=authentification)
+                               auth=authentification)
     return deleteit.status_code
 
 
 def DELETE_ALL(testpath, payload):
     deleteitall = requests.delete(freenas_url + testpath, headers=header,
-                         auth=authentification, data=json.dumps(payload))
+                                  auth=authentification,
+                                  data=json.dumps(payload))
     return deleteitall.status_code
 
 
 def SSH_TEST(command):
-    cmd ="sshpass -p %s " % password
+    cmd = "sshpass -p %s " % password
     cmd += "ssh -o StrictHostKeyChecking=no "
     cmd += "-o UserKnownHostsFile=/dev/null "
     cmd += "-o VerifyHostKeyDNS=no "
@@ -91,7 +89,7 @@ def BSD_TEST(command):
     except NameError:
         return False
     else:
-        cmd ="sshpass -p %s " % BSD_PASSWORD
+        cmd = "sshpass -p %s " % BSD_PASSWORD
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
@@ -111,7 +109,7 @@ def OSX_TEST(command):
     except NameError:
         return False
     else:
-        cmd ="sshpass -p %s " % OSX_PASSWORD
+        cmd = "sshpass -p %s " % OSX_PASSWORD
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
@@ -137,21 +135,21 @@ def return_output(command):
 
 
 def start_ssh_agent():
-    process = run(['ssh-agent','-s'], stdout=PIPE, universal_newlines=True)
-    OUTPUT_PATTERN = re.compile('SSH_AUTH_SOCK=(?P<socket>[^;]+).*SSH_AGENT_PID=(?P<pid>\d+)',
-                                re.MULTILINE | re.DOTALL)
+    process = run(['ssh-agent', '-s'], stdout=PIPE, universal_newlines=True)
+    torecompil = 'SSH_AUTH_SOCK=(?P<socket>[^;]+).*SSH_AGENT_PID=(?P<pid>\d+)'
+    OUTPUT_PATTERN = re.compile(torecompil, re.MULTILINE | re.DOTALL)
     match = OUTPUT_PATTERN.search(process.stdout)
     if match is None:
         return False
     else:
         agentData = match.groupdict()
-        os.environ[ 'SSH_AUTH_SOCK' ] = agentData['socket']
-        os.environ[ 'SSH_AGENT_PID' ] = agentData['pid']
+        os.environ['SSH_AUTH_SOCK'] = agentData['socket']
+        os.environ['SSH_AGENT_PID'] = agentData['pid']
         return True
 
 
 def is_agent_setup():
-    return os.environ.get( 'SSH_AUTH_SOCK' ) is not None
+    return os.environ.get('SSH_AUTH_SOCK') is not None
 
 
 def setup_ssh_agent():
@@ -183,4 +181,3 @@ def add_ssh_key(keyPath):
         return False
     else:
         return True
-
