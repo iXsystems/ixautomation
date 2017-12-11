@@ -31,7 +31,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     iso_list = os.listdir(iso_dir)
     iso_list.remove(".keepme")
     iso_cnt = len(iso_list)
-    # Our to-be-determined file name of the ISO to test; must be inside $iso_dir
+    # Our to-be-determined file name of the ISO to test; must be inside iso_dir
     iso_name = ""
     # If there's only one ISO in the $iso_dir, assume it's for testing.
     if iso_cnt == 1:
@@ -82,11 +82,11 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     sleep(1)
     vm_output = "/tmp/%sconsole.log" % VM
     # Run our expect/tcl script to automate the installation dialog
-    expectcnd = 'expect %s/tests/%s/bhyve-installer.exp "%s" "%s"' % (workspace,
-                                                                      systype,
-                                                                      VM,
-                                                                      vm_output)
-    run(expectcnd, shell=True)
+    expctcmd = 'expect %s/tests/%s/bhyve-installer.exp "%s" "%s"' % (workspace,
+                                                                     systype,
+                                                                     VM,
+                                                                     vm_output)
+    run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
     print("Success: Shutting down the installation VM..")

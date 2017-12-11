@@ -16,15 +16,24 @@ PROGRAM_VERSION = __VERSION__
 
 data_files = [
     # ('{prefix}/bin'.format(prefix=sys.prefix), ['bin/ixautomation']),
-    ('{prefix}/etc/init.d'.format(prefix=sys.prefix), ['etc/init.d/ixautomation']),
-    ('{prefix}/etc'.format(prefix=sys.prefix), ['etc/ixautomation.conf.dist']),
-    ('{prefix}/etc/rc.d'.format(prefix=sys.prefix), ['etc/rc.d/ixautomation']),
-    ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix), ['etc/sudoers.d/ixautomation']),
-    ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix), ['ixautomation/vms/.config/system.conf']),
-    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix), ['ixautomation/vms/.templates/freenas.conf']),
-    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix), ['ixautomation/vms/.templates/trueos.conf']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions_vm.py']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix), ['lib/ixautomation/functions.py']),
+    ('{prefix}/etc/init.d'.format(prefix=sys.prefix),
+     ['etc/init.d/ixautomation']),
+    ('{prefix}/etc'.format(prefix=sys.prefix),
+     ['etc/ixautomation.conf.dist']),
+    ('{prefix}/etc/rc.d'.format(prefix=sys.prefix),
+     ['etc/rc.d/ixautomation']),
+    ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix),
+     ['etc/sudoers.d/ixautomation']),
+    ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix),
+     ['ixautomation/vms/.config/system.conf']),
+    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
+     ['ixautomation/vms/.templates/freenas.conf']),
+    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
+     ['ixautomation/vms/.templates/trueos.conf']),
+    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
+     ['lib/ixautomation/functions_vm.py']),
+    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
+     ['lib/ixautomation/functions.py']),
 ]
 
 setup(
