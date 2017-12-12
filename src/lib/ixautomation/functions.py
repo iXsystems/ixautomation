@@ -61,17 +61,21 @@ def jenkins_vm_tests(workspace, systype, test):
     exit_clean(MASTERWRKDIR)
 
 
-def jenkins_start_vm():
-    create_workdir()
+def jenkins_start_vm(workspace, systype):
+    create_workdir(workspace, systype)
+    signal.signal(signal.SIGINT, exit_fail)
+    signal.signal(signal.SIGTERM, exit_fail)
     vm_setup()
-    vm_select_iso()
-    vm_install()
-    vm_boot()
+    vm_select_iso(MASTERWRKDIR, systype, workspace)
+    vm_install(MASTERWRKDIR, systype, workspace)
+    vm_boot(MASTERWRKDIR, systype, workspace)
 
 
 def jenkins_vm_destroy_all():
     vm_stop_all()
     vm_destroy_all()
+    sys.exit(0)
+    return 0
 
 
 def jenkins_api_tests(workspace, systype, ip, test):
