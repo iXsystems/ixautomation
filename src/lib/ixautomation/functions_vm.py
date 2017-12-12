@@ -133,5 +133,9 @@ def vm_stop_all():
 
 
 def vm_destroy_all():
-    vm_dir = ""
+    # Remove all vm directory only
+    vm_dir = "/usr/local/ixautomation/vms/*"
     run("rm -rf " + vm_dir, shell=True)
+    # Remove all iso
+    iso_dir = "/usr/local/ixautomation/vms/.iso/*"
+    run("rm -rf " + iso_dir, shell=True)
