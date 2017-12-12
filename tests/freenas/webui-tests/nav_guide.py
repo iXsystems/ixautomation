@@ -24,23 +24,22 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'XPATH1' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
+xpaths = { 'navGuide' : "//*[@id='nav-14']/div/a[1]",
           'XPATH2' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
          'XPATH' : "//*[@id='3']/form-select/div/md-select/div"
           }
 
 
-class create_nameofthetest(unittest.TestCase):
+class view_guide_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.implicitly_wait(30)
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_nameofthe_testcase(self):
+    def test_01_nav_guide(self):
         #Click an element indirectly
-        a = driver.find_element_by_xpath("XPATH1")
-        a.click()
+        driver.find_element_by_xpath("navGuide").click()
         #allowing page to load by giving explicit time(in seconds)
         time.sleep(1)
         #Click an element directly
@@ -88,6 +87,27 @@ class create_nameofthetest(unittest.TestCase):
         else:
             #otheriwse just print status
             print ("the status is--: " + status_data)
+
+
+    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
+    def test_01_nameofthe_testcase(self):
+        #Click an element indirectly
+        a = driver.find_element_by_xpath("XPATH1")
+        a.click()
+        #allowing page to load by giving explicit time(in seconds)
+        time.sleep(1)
+        #Click an element directly
+        driver.find_element_by_xpath("XPATH2").click()
+        #cancelling the tour
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
+        #Checking and executing if the condition is true
+        if self.is_element_present(By.XPATH,"XPATH"):
+            driver.find_element_by_xpath("XPATH").click()
+
+        #scroll down to find an element
+        driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        #give some sleep time
 
 
     #method to test if an element is present
@@ -139,8 +159,8 @@ class create_nameofthetest(unittest.TestCase):
         #if it is the last module
         #driver.close()
 
-def run_create_nameofthetest(webdriver):
+def run_view_guide_test(webdriver):
     global driver
     driver = webdriver
-    suite = unittest.TestLoader().loadTestsFromTestCase(create_nameofthetest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(view_guide_test)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)
