@@ -14,6 +14,7 @@ from serv_webdav import run_configure_webdav_test
 from sys_update import run_check_update_test
 from acc_delete import run_delete_test
 from theme import run_change_theme_test
+from guide import run_view_guide_test
 from logout import run_logout_test
 from os import path
 from selenium import webdriver

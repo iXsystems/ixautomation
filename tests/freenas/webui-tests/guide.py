@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-
-# Author: Eric Turgeon
+# Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 1
+#Test case count: 2
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -15,6 +13,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
+
 import time
 import unittest
 import xmlrunner
@@ -24,42 +24,47 @@ try:
 except ImportError:
     import unittest
 
+xpaths = { 'navGuide' : "//*[@id='nav-15']/div/a[1]",
+          'XPATH2' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
+         'XPATH' : "//*[@id='3']/form-select/div/md-select/div"
+          }
 
-class guide_test(unittest.TestCase):
+
+class view_guide_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
-        #driver.implicitly_wait(30)
+        driver.implicitly_wait(30)
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_1_next_guide(self):
-        #Click on the guide button
-        driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/topbar/md-toolbar/div/md-toolbar-row/button[4]").click()
+    def test_01_nav_guide(self):
+        #Click an element indirectly
+        driver.find_element_by_xpath("navGuide").click()
+        #allowing page to load by giving explicit time(in seconds)
         time.sleep(1)
-        #Click on Next the first guide
-        driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[2]/button[1]").click()
-        time.sleep(1)
-        #Click on Next the second guide
-        driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[2]/button[2]").click()
-        time.sleep(1)
-        #Click on Next the third guide
-        driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[2]/button[2]").click()
-        time.sleep(1)
-        #Click on Next the fourth guide
-        driver.find_element_by_xpath("/html/body/div[4]/div[1]/div[2]/button[2]").click()
-        time.sleep(1)
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
+        #get the weather data
+        page_data=ui_element.text
+        print ("the Page now is: " + page_data)
+        #assert response
+        self.assertTrue("Guide" in page_data)
 
-        #self.assertTrue(self.is_element_present(By.XPATH, "//input[@id='md-input-1']"),
-                        #"Logout failed")
-
-    # Next step-- To check if the new user is present in the list via automation
+    def test_02_check_version(self):
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/div/section/div/div/div[1]/ul/li[2]")
+        #get the weather data
+        page_data=ui_element.text
+        print ("The version of FreeNAS guide is:  " + page_data)
+        #assert response to check version of freenas guide
+        self.assertTrue("FreeNAS" in page_data)
+        time.sleep(5)
 
 
     #method to test if an element is present
     def is_element_present(self, how, what):
         """
-        Helper met:hod to confirm the presence of an element on page
+        Helper method to confirm the presence of an element on page
         :params how: By locator type
         :params what: locator value
         """
@@ -67,12 +72,16 @@ class guide_test(unittest.TestCase):
         except NoSuchElementException: return False
         return True
 
+
     @classmethod
     def tearDownClass(inst):
+        #if not the last module
         pass
+        #if it is the last module
+        #driver.close()
 
-def run_guide_test(webdriver):
+def run_view_guide_test(webdriver):
     global driver
     driver = webdriver
-    suite = unittest.TestLoader().loadTestsFromTestCase(guide_test)
+    suite = unittest.TestLoader().loadTestsFromTestCase(view_guide_test)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)
