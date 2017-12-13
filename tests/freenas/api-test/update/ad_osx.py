@@ -17,14 +17,14 @@ try:
 except ImportError:
     exit()
 
-DATASET = "ad-bsd"
+DATASET = "ad-osx"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/ad-bsd" + BRIDGEHOST
 VOL_GROUP = "qa"
 
 
-class ad_bsd_test(unittest.TestCase):
+class ad_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
     @classmethod
