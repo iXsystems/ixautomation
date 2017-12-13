@@ -85,10 +85,10 @@ class check_update_test(unittest.TestCase):
             print ("There is an unexpected issue")
 
         #assert response
-        time.sleep(10)
+        time.sleep(5)
         #Close the System Tab
         driver.find_element_by_xpath(xpaths['navSystem']).click()
-
+        time.sleep(5)
 
     #method to test if an element is present
     def is_element_present(self, how, what):
