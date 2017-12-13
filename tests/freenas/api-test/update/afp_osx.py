@@ -68,7 +68,7 @@ class afp_osx_test(unittest.TestCase):
         assert PUT("/services/afp/", {"afp_srv_guest": False}) == 200
 
     # Test delete AFP dataset
-    def test_08_Verify_AFP_dataset_can_be_destroyed(self):
+    def test_09_Verify_AFP_dataset_can_be_destroyed(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
