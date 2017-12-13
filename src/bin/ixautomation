@@ -7,6 +7,7 @@ import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
+from functions import jenkins_vm_destroy_all, jenkins_start_vm
 sys.stdout.flush()
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -39,10 +40,14 @@ Available Commands:
         vm-tests          - Runs a (freenas, or trueos) in a VM using vm-bhyve
         api-tests         - Runs Python API tests (freenas or trueos)
         webui-tests       - Runs FreeNAS web UI tests using webdriver
+        start-vm          - Start a vm only for FreeNAS or TrueOS
 
---systype                 - Use by run to see what type of system we need to run
-        freenas           - Give FreeNAS to run
-        trueos            - Give TrueOS to run
+--systype                 - Use by run to see what system we need to run
+        freenas           - FreeNAS to be run
+        trueos            - TrueOS to be run
+
+--destroy-all-vm          - Stop all vm running, remove vm directory and iso
+
 """ % argument[0]
 
 # if have no argumment stop
@@ -51,9 +56,9 @@ if len(argument) == 1:
     exit()
 
 # list of argument that chould be use.
-optionlist = ["run=", "systype="]
+optionlist = ["run=", "systype=", "destroy-all-vm"]
 systypelist = ["freenas", "trueos"]
-runlist = ["vm-tests", "api-tests", "webui-tests"]
+runlist = ["vm-tests", "api-tests", "webui-tests", "start-vm"]
 # look if all the argument are there.
 
 try:
@@ -69,6 +74,9 @@ if "--systype" not in myopts and "--run" in myopts:
     sys.exit(1)
 
 for output, arg in myopts:
+    if output == "--destroy-all-vm":
+        jenkins_vm_destroy_all()
+        sys.exit(0)
     if output == '--run':
         run = arg
     elif output == '--systype':
@@ -90,3 +98,5 @@ elif run == "api-tests":
     jenkins_vm_tests(workspace, systype, True)
 elif run == "webui-tests":
     jenkins_freenas_webui_tests(workspace, systype)
+elif run == "start-vm":
+    jenkins_start_vm(workspace, systype)
