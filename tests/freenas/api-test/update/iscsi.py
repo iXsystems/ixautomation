@@ -21,7 +21,7 @@ DEVICE_NAME_PATH = "/tmp/freenasiscsi"
 TARGET_NAME = "iqn.1994-09.freenasqa:target0"
 
 
-class ad_bsd_test(unittest.TestCase):
+class iscsi_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
     @classmethod
@@ -33,16 +33,16 @@ class ad_bsd_test(unittest.TestCase):
         payload = {"srv_enable": True}
         assert PUT("/services/services/iscsitarget/", payload) == 200
 
-    def test_01_Verify_the_iSCSI_service_is_enabled(self):
+    def test_02_Verify_the_iSCSI_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/iscsitarget/",
                           "srv_state") == "RUNNING"
 
     # Disable the iSCSI service
-    def test_01_Disable_iSCSI_service(self):
+    def test_03_Disable_iSCSI_service(self):
         payload = {"srv_enable": False}
         assert PUT("/services/services/iscsitarget/", payload) == 200
 
-    def test_01_Verify_the_iSCSI_service_is_Sdisabled(self):
+    def test_04_Verify_the_iSCSI_service_is_Sdisabled(self):
         assert GET_OUTPUT("/services/services/iscsitarget/",
                           "srv_state") == "STOPPED"
 

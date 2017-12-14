@@ -18,15 +18,15 @@ try:
 except ImportError:
     exit()
 
-DATASET = "ldap-bsd"
+DATASET = "ldap-osx"
 SMB_NAME = "TestShare"
-SMB_PATH = "/mnt/tank/" + DATASET
-MOUNTPOINT = "/tmp/ldap-bsd" + BRIDGEHOST
-LDAP_USER = 'ldapuser'
-VOL_GROUP = "qa"
+SMB_PATH = "/mnt/tank/${DATASET}"
+MOUNTPOINT = "/tmp/ldap-osx${BRIDGEHOST}"
+LDAP_USER = "ldapuser"
+LDAP_PASS = "12345678"
 
 
-class ldap_bsd_test(unittest.TestCase):
+class ldap_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
     @classmethod
@@ -60,7 +60,7 @@ class ldap_bsd_test(unittest.TestCase):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     # Enable LDAP
-    def test_02_Enabling_LDAPd(self):
+    def test_02_Enabling_LDAP(self):
         payload = {"ldap_basedn": LDAPBASEDN2,
                    "ldap_binddn": LDAPBINDDN2,
                    "ldap_bindpw": LDAPBINDPASSWORD2,
@@ -71,7 +71,7 @@ class ldap_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Check LDAP
-    def test_03_Checking_LDAPd(self):
+    def test_03_Checking_LDAP(self):
         assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is True
 
     def test_04_Enabling_SMB_service(self):
@@ -115,7 +115,7 @@ class ldap_bsd_test(unittest.TestCase):
         assert DELETE_ALL("/sharing/cifs/", payload) == 204
 
     # Disable LDAP
-    def test_10_Disabling_LDAPd(self):
+    def test_10_Disabling_LDAP(self):
         payload = {"ldap_basedn": LDAPBASEDN2,
                    "ldap_binddn": LDAPBINDDN2,
                    "ldap_bindpw": LDAPBINDPASSWORD2,

@@ -23,7 +23,7 @@ class ftp_test(unittest.TestCase):
     def test_03_Starting_ftp_service(self):
         assert PUT("/services/services/ftp/", {"srv_enable": True}) == 200
 
-    def test_05_Checking_to_see_if_FTP_service_is_enabled(self):
+    def test_04_Checking_to_see_if_FTP_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/ftp/", "srv_state") == "RUNNING"
 
 if __name__ == "__main__":
