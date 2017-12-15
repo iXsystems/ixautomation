@@ -184,3 +184,10 @@ call(["py.test-3.6", "--junitxml",
       "create/webdav_osx.py"])
 
 # Update test
+
+call(["py.test-3.6", "--junitxml",
+      "%supdate_ad_bsd_result.xml" % results_xml,
+      "update/ad_bsd.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate/ad_osx_result.xml" % results_xml,
+      "update/ad_osx.py"])
