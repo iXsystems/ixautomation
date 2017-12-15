@@ -39,7 +39,7 @@ class view_guide_test(unittest.TestCase):
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_guide(self):
         #Click an element indirectly
-        driver.find_element_by_xpath("navGuide").click()
+        driver.find_element_by_xpath(xpaths['navGuide']).click()
         #allowing page to load by giving explicit time(in seconds)
         time.sleep(1)
         #get the ui element
@@ -51,6 +51,10 @@ class view_guide_test(unittest.TestCase):
         self.assertTrue("Guide" in page_data)
 
     def test_02_check_version(self):
+        #cancelling the tour
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
+
         #get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/div/section/div/div/div[1]/ul/li[2]")
         #get the weather data
@@ -58,7 +62,7 @@ class view_guide_test(unittest.TestCase):
         print ("The version of FreeNAS guide is:  " + page_data)
         #assert response to check version of freenas guide
         self.assertTrue("FreeNAS" in page_data)
-        time.sleep(5)
+        time.sleep(10)
 
 
     #method to test if an element is present
