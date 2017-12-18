@@ -206,9 +206,9 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate_ftp_result.xml" % results_xml,
       "update/ftp.py"])
-call(["py.test-3.6", "--junitxml",
-      "%supdate_group_result.xml" % results_xml,
-      "update/group.py"])
+#call(["py.test-3.6", "--junitxml",
+#      "%supdate_group_result.xml" % results_xml,
+#      "update/group.py"])
 call(["py.test-3.6", "--junitxml",
       "%supdate_iscsi_result.xml" % results_xml,
       "update/iscsi.py"])
