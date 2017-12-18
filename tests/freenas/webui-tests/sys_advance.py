@@ -30,7 +30,7 @@ xpaths = { 'XPATH1' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]
           }
 
 
-class create_nameofthetest(unittest.TestCase):
+class conf_system_advance(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.implicitly_wait(30)
