@@ -27,7 +27,7 @@ class cronjob_test(unittest.TestCase):
         assert PUT("/tasks/cronjob/%s/" % CRONJOB_ID, payload) == 200
 
     # Check that cronjob is disabled
-    def test_02_Checking_that_API_reports_the_cronjob_as_updated(self):
+    def test_03_Checking_that_API_reports_the_cronjob_as_updated(self):
         assert GET_OUTPUT("/tasks/cronjob/%s/" % CRONJOB_ID,
                           "cron_enabled") is False
 
