@@ -189,7 +189,7 @@ call(["py.test-3.6", "--junitxml",
       "%supdate_ad_bsd_result.xml" % results_xml,
       "update/ad_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%supdate/ad_osx_result.xml" % results_xml,
+      "%supdate_ad_osx_result.xml" % results_xml,
       "update/ad_osx.py"])
 call(["py.test-3.6", "--junitxml",
       "%supdate_apf_osx_result.xml" % results_xml,
@@ -200,5 +200,23 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate_apf_bsd_result.xml" % results_xml,
       "update/bootenv.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_cronjob_result.xml" % results_xml,
+      "update/cronjob.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_ftp_result.xml" % results_xml,
+      "update/ftp.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_group_result.xml" % results_xml,
+      "update/group.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_iscsi_result.xml" % results_xml,
+      "update/iscsi.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_ldap_bsd_result.xml" % results_xml,
+      "update/ldap_bsd.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_ldap_osx_result.xml" % results_xml,
+      "update/ldap_osx.py"])
 
 
