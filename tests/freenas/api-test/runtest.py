@@ -191,3 +191,14 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate/ad_osx_result.xml" % results_xml,
       "update/ad_osx.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_apf_osx_result.xml" % results_xml,
+      "update/afp_osx.py"])
+# call(["py.test-3.6", "--junitxml",
+#       "%supdate_alerts_result.xml" % results_xml,
+#       "update/alerts.py]"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_apf_bsd_result.xml" % results_xml,
+      "update/bootenv.py"])
+
+
