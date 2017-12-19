@@ -87,100 +87,101 @@ cfg_file.close()
 # Create test
 
 call(["py.test-3.6", "--junitxml",
-      "%snetwork_result.xml" % results_xml,
+      "%screate_network_result.xml" % results_xml,
       "create/network.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sssh_result.xml" % results_xml,
+      "%screate_ssh_result.xml" % results_xml,
       "create/ssh.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sstorage_result.xml" % results_xml,
+      "%screate_storage_result.xml" % results_xml,
       "create/storage.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sntp_result.xml" % results_xml,
+      "%screate_ntp_result.xml" % results_xml,
       "create/ntp.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sad_bsd_result.xml" % results_xml,
+      "%screate_ad_bsd_result.xml" % results_xml,
       "create/ad_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sad_osx_result.xml" % results_xml,
+      "%screate_ad_osx_result.xml" % results_xml,
       "create/ad_osx.py"])
 call(["py.test-3.6", "--junitxml",
-      "%safp_osx_result.xml" % results_xml,
+      "%screate_afp_osx_result.xml" % results_xml,
       "create/afp_osx.py"])
 # call(["py.test-3.6", "--junitxml",
-#        "%salerts_result.xml" % results_xml,
+#        "%screate_alerts_result.xml" % results_xml,
 #        "create/alerts.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sbootenv_result.xml" % results_xml,
+      "%screate_bootenv_result.xml" % results_xml,
       "create/bootenv.py"])
 call(["py.test-3.6", "--junitxml",
-      "%scronjob_result.xml" % results_xml,
+      "%screate_cronjob_result.xml" % results_xml,
       "create/cronjob.py"])
 # call(["py.test-3.6", "--junitxml",
-#       "%sdebug_result.xml" % results_xml,
+#       "%screate_debug_result.xml" % results_xml,
 #       "create/debug.py"])
 call(["py.test-3.6", "--junitxml",
-      "%semails_result.xml" % results_xml,
+      "%screate_emails_result.xml" % results_xml,
       "create/emails.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sdomaincontroller_result.xml" % results_xml,
+      "%screate_domaincontroller_result.xml" % results_xml,
       "create/domaincontroller.py"])
-call(["py.test-3.6", "--junitxml", "%suser_result.xml" % results_xml,
+call(["py.test-3.6", "--junitxml",
+      "%screate_user_result.xml" % results_xml,
       "create/user.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sftp_result.xml" % results_xml,
+      "%screate_ftp_result.xml" % results_xml,
       "create/ftp.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sgroup_result.xml" % results_xml,
+      "%screate_group_result.xml" % results_xml,
       "create/group.py"])
 call(["py.test-3.6", "--junitxml",
-      "%siscsi_result.xml" % results_xml,
+      "%screate_iscsi_result.xml" % results_xml,
       "create/iscsi.py"])
 # jails API Broken
 # call(["py.test-3.6", "--junitxml",
-#        "%sjails_result.xml" % results_xml,
+#        "%screate_jails_result.xml" % results_xml,
 #        "create/jails.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sldap_bsd_result.xml" % results_xml,
+      "%screate_ldap_bsd_result.xml" % results_xml,
       "create/ldap_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sldap_osx_result.xml" % results_xml,
+      "%screate_ldap_osx_result.xml" % results_xml,
       "create/ldap_osx.py"])
 call(["py.test-3.6", "--junitxml",
-      "%slldp_result.xml" % results_xml,
+      "%screate_lldp_result.xml" % results_xml,
       "create/lldp.py"])
 call(["py.test-3.6", "--junitxml",
-      "%snfs_result.xml" % results_xml,
+      "%screate_nfs_result.xml" % results_xml,
       "create/nfs.py"])
 call(["py.test-3.6", "--junitxml",
-      "%rsync_result.xml" % results_xml,
+      "%screate_rsync_result.xml" % results_xml,
       "create/rsync.py"])
 # call(["py.test-3.6", "--junitxml",
-#        "%smarttest_result.xml" % results_xml,
+#        "%screate_marttest_result.xml" % results_xml,
 #        "create/smarttest.py"])
 call(["py.test-3.6", "--junitxml",
-      "%ssmb_bsd_result.xml" % results_xml,
+      "%screate_smb_bsd_result.xml" % results_xml,
       "create/smb_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%ssmb_osx_result.xml" % results_xml,
+      "%screate_smb_osx_result.xml" % results_xml,
       "create/smb_osx.py"])
 call(["py.test-3.6", "--junitxml",
-      "%ssnmp_result.xml" % results_xml,
+      "%screate_snmp_result.xml" % results_xml,
       "create/snmp.py"])
 call(["py.test-3.6", "--junitxml",
-      "%ssystem_result.xml" % results_xml,
+      "%screate_system_result.xml" % results_xml,
       "create/system.py"])
 call(["py.test-3.6", "--junitxml",
-      "%stftp_result.xml" % results_xml,
+      "%screate_tftp_result.xml" % results_xml,
       "create/tftp.py"])
 call(["py.test-3.6", "--junitxml",
-      "%sups_result.xml" % results_xml,
+      "%screate_ups_result.xml" % results_xml,
       "create/ups.py"])
 call(["py.test-3.6", "--junitxml",
-      "%swebdav_bsd_result.xml" % results_xml,
+      "%screate_webdav_bsd_result.xml" % results_xml,
       "create/webdav_bsd.py"])
 call(["py.test-3.6", "--junitxml",
-      "%swebdav_osx_result.xml" % results_xml,
+      "%screate_webdav_osx_result.xml" % results_xml,
       "create/webdav_osx.py"])
 
 # Update test
