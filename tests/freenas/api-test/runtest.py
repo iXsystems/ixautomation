@@ -218,5 +218,16 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate_ldap_osx_result.xml" % results_xml,
       "update/ldap_osx.py"])
-
+call(["py.test-3.6", "--junitxml",
+      "%supdate_nfs_result.xml" % results_xml,
+      "update/nfs.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_rsync_result.xml" % results_xml,
+      "update/rsync.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_smb_bsd_result.xml" % results_xml,
+      "update/smb_bsd.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_smb_osx_result.xml" % results_xml,
+      "update/smb_osx.py"])
 
