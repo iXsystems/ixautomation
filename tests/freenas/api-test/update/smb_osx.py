@@ -43,7 +43,7 @@ class smb_osx_test(unittest.TestCase):
                     "ldap_has_samba_schema": True,
                     "ldap_enable": False}
         PUT("/directoryservice/ldap/1/", payload2)
-        PUT("/services/services/cifs/" '{ "srv_enable": false }')
+        PUT("/services/services/cifs/", {"srv_enable": False})
         payload3 = {"cfs_comment": "My Test SMB Share",
                     "cifs_path": SMB_PATH,
                     "cifs_name": SMB_NAME,
