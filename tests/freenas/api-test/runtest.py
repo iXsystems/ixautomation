@@ -230,4 +230,6 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate_smb_osx_result.xml" % results_xml,
       "update/smb_osx.py"])
-
+call(["py.test-3.6", "--junitxml",
+      "%supdate_storage_result.xml" % results_xml,
+      "update/storage.py"])
