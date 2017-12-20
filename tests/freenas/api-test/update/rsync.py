@@ -9,14 +9,14 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, GET_OUTPUT
+from functions import GET_OUTPUT  # , PUT
 
 
 class nfs_test(unittest.TestCase):
 
-    def test_01_Updating_rsync_resource(self):
-        payload = {"rsyncmod_user": "testuser"}
-        assert PUT("/services/rsyncmod/1/", payload) == 200
+    # def test_01_Updating_rsync_resource(self):
+    #     payload = {"rsyncmod_user": "testuser"}
+    #     assert PUT("/services/rsyncmod/1/", payload) == 200
 
     def test_02_Checking_to_see_if_rsync_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/rsync/",

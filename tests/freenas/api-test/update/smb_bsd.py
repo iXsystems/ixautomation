@@ -82,7 +82,8 @@ class smb_bsd_test(unittest.TestCase):
     def test_07_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
-                   "cifs_name": SMB_NAME, "cifs_guestok": True,
+                   "cifs_name": SMB_NAME,
+                   "cifs_guestok": True,
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
