@@ -30,14 +30,14 @@ xpaths = { 'XPATH1' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]
           }
 
 
-class conf_system_advance(unittest.TestCase):
+class conf_system_advanced(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.implicitly_wait(30)
         pass
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_nameofthe_testcase(self):
+    def test_01_nav_system_advanced(self):
         #Click an element indirectly
         a = driver.find_element_by_xpath("XPATH1")
         a.click()
@@ -139,8 +139,8 @@ class conf_system_advance(unittest.TestCase):
         #if it is the last module
         #driver.close()
 
-def run_create_nameofthetest(webdriver):
+def run_conf_system_advanced(webdriver):
     global driver
     driver = webdriver
-    suite = unittest.TestLoader().loadTestsFromTestCase(create_nameofthetest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(conf_system_advanced)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)
