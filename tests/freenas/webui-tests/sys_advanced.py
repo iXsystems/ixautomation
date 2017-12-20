@@ -45,7 +45,7 @@ class conf_system_advanced(unittest.TestCase):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
 
         #get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]$
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/li[2]/a")
         #get the weather data
         page_data=ui_element.text
         print ("the Page now is: " + page_data)
