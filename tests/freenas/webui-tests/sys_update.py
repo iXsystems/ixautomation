@@ -87,7 +87,7 @@ class check_update_test(unittest.TestCase):
         #assert response
         time.sleep(5)
         #Close the System Tab
-        driver.find_element_by_xpath(xpaths['navSystem']).click()
+#        driver.find_element_by_xpath(xpaths['navSystem']).click()
         time.sleep(5)
 
     #method to test if an element is present
