@@ -24,70 +24,40 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'XPATH1' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
-          'XPATH2' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
-         'XPATH' : "//*[@id='3']/form-select/div/md-select/div"
-          }
+xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
+           'navSystem' : "//*[@id='nav-2']/div/a[1]",
+          'submenuAdvanced' : "//*[@id='2-3']",
+         'buttonChecknow' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-update/md-card/div/div[3]/div/button[1]"
+        }
 
-
-class conf_system_advance(unittest.TestCase):
+class conf_system_advanced(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.implicitly_wait(30)
         pass
-
+    
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
-    def test_01_nameofthe_testcase(self):
-        #Click an element indirectly
-        a = driver.find_element_by_xpath("XPATH1")
-        a.click()
-        #allowing page to load by giving explicit time(in seconds)
-        time.sleep(1)
-        #Click an element directly
-        driver.find_element_by_xpath("XPATH2").click()
+    def test_01_nav_system_advanced(self):
+        driver.find_element_by_xpath(xpaths['submenuUpdate']).click()
+
         #cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
-        #Checking and executing if the condition is true
-        if self.is_element_present(By.XPATH,"XPATH"):
-            driver.find_element_by_xpath("XPATH").click()
 
-        #scroll down to find an element
-        driver.find_element_by_tag_name('html').send_keys(Keys.END)
-        #give some sleep time
-
-        #Perform HOVER
-        hover_element = driver.find_element_by_xpath("XPATH OF THE HOVER ELEMENT")
-        hover = ActionChains(driver).move_to_element(hover_element)
-        hover.perform()
-        time.sleep(1)
-
-        #Enter in a textbox using an external variable
-        driver.find_element_by_xpath("XPATH OF THE TEXTBOX").send_keys(EXTERNAL_VARIABLE)
-        #Enter in a textbox without a variable
-        driver.find_element_by_xpath("XPATH OF THE TEXTBOX").send_keys("STRING TO BE ENTERED")
-        #check if an element is found, if not display an ERROR
-        self.assertTrue(self.is_element_present(By.XPATH, "XPATH OF THE ELEMENT TO BE FOUND"), "ERROR")
-
-
-        #get the ui element content
-        ui_element_page=driver.find_element_by_xpath("XPATH OF THE UI ELEMENT")
-        #get the text of element data  into page_data
-        page_data=ui_element_page.text
+        #get the ui element
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/li[2]/a")
+        #get the weather data
+        page_data=ui_element.text
         print ("the Page now is: " + page_data)
-        #assert response to check if "Certain_String" is in the page_data 
-        self.assertTrue("Certain_String" in page_data)
-        #similarly if status_data = page_data
-        #conditional execution(eg-toggle service on/off based on current status)
-        print "current status is: " + status_data
-        if status_data == "stopped": 
-            #Click on the toggle button if the current status = stopped and print changing status
-            driver.find_element_by_xpath("XPATH OF THE STATUS TEXT").click()
-            time.sleep(1)
-            print ("the status has now changed to running")
-        else:
-            #otheriwse just print status
-            print ("the status is--: " + status_data)
+        #assert response
+        self.assertTrue("Update" in page_data)
+
+    def test_02_close_system_tab(self):
+        #Close the System Tab
+        driver.find_element_by_xpath(xpaths['navSystem']).click()
+        time.sleep(5)
+
+
 
 
     #method to test if an element is present
@@ -101,7 +71,7 @@ class conf_system_advance(unittest.TestCase):
         except NoSuchElementException: return False
         return True
 
-   def delete(self, name):
+    def delete(self, name):
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
         #click on the item per page option
@@ -139,8 +109,8 @@ class conf_system_advance(unittest.TestCase):
         #if it is the last module
         #driver.close()
 
-def run_create_nameofthetest(webdriver):
+def run_conf_system_advanced(webdriver):
     global driver
     driver = webdriver
-    suite = unittest.TestLoader().loadTestsFromTestCase(create_nameofthetest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(conf_system_advanced)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)
