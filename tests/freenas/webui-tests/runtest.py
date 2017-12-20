@@ -3,8 +3,8 @@
 from subprocess import call
 from os import path
 #when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
-from driver import webDriver
-#from driverU import webDriver
+#from driver import webDriver
+from driverU import webDriver
 ## Importing test
 #from autoflush import autoflush
 from login import run_login_test
@@ -15,6 +15,7 @@ from serv_ssh import run_configure_ssh_test
 from serv_afp import run_configure_afp_test
 from serv_webdav import run_configure_webdav_test
 from sys_update import run_check_update_test
+from sys_advanced import run_conf_system_advanced
 from guide import  run_view_guide_test
 from acc_delete import run_delete_test
 from theme import run_change_theme_test
@@ -32,6 +33,7 @@ run_login_test(runDriver)
 run_create_user_test(runDriver)
 run_create_group_test(runDriver)
 run_check_update_test(runDriver)
+run_conf_system_advanced(runDriver)
 run_view_guide_test(runDriver)
 run_configure_ssh_test(runDriver)
 run_configure_afp_test(runDriver)
@@ -83,6 +85,9 @@ if path.exists('serv_webdav.pyc'):
 
 if path.exists('sys_update.pyc'):
     call(["rm", "sys_update.pyc"])
+
+if path.exists('sys_advanced.pyc'):
+    call(["rm", "sys_advanced.pyc"])
 
 if path.exists('acc_delete.pyc'):
     call(["rm", "acc_delete.pyc"])
