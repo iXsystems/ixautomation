@@ -35,7 +35,7 @@ class conf_system_advanced(unittest.TestCase):
     def setUpClass(inst):
         driver.implicitly_wait(30)
         pass
-
+    
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_system_advanced(self):
         driver.find_element_by_xpath(xpaths['submenuUpdate']).click()
@@ -71,7 +71,7 @@ class conf_system_advanced(unittest.TestCase):
         except NoSuchElementException: return False
         return True
 
-   def delete(self, name):
+    def delete(self, name):
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
         #click on the item per page option
