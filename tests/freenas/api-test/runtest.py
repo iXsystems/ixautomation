@@ -157,7 +157,7 @@ call(["py.test-3.6", "--junitxml",
       "%screate_rsync_result.xml" % results_xml,
       "create/rsync.py"])
 # call(["py.test-3.6", "--junitxml",
-#        "%screate_marttest_result.xml" % results_xml,
+#        "%screate_smarttest_result.xml" % results_xml,
 #        "create/smarttest.py"])
 call(["py.test-3.6", "--junitxml",
       "%screate_smb_bsd_result.xml" % results_xml,
@@ -187,6 +187,9 @@ call(["py.test-3.6", "--junitxml",
 # Update test
 
 call(["py.test-3.6", "--junitxml",
+      "%supdate_storage_result.xml" % results_xml,
+      "update/storage.py"])
+call(["py.test-3.6", "--junitxml",
       "%supdate_ad_bsd_result.xml" % results_xml,
       "update/ad_bsd.py"])
 call(["py.test-3.6", "--junitxml",
@@ -204,6 +207,9 @@ call(["py.test-3.6", "--junitxml",
 call(["py.test-3.6", "--junitxml",
       "%supdate_cronjob_result.xml" % results_xml,
       "update/cronjob.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_user_result.xml" % results_xml,
+      "update/user.py"])
 call(["py.test-3.6", "--junitxml",
       "%supdate_ftp_result.xml" % results_xml,
       "update/ftp.py"])
@@ -232,6 +238,10 @@ call(["py.test-3.6", "--junitxml",
       "%supdate_smb_osx_result.xml" % results_xml,
       "update/smb_osx.py"])
 call(["py.test-3.6", "--junitxml",
-      "%supdate_storage_result.xml" % results_xml,
-      "update/storage.py"])
+      "%supdate_webdav_bsd_result.xml" % results_xml,
+      "update/webdav_bsd.py"])
+call(["py.test-3.6", "--junitxml",
+      "%supdate_webdav_osx_result.xml" % results_xml,
+      "update/webdav_osx.py"])
 
+# Delete test
