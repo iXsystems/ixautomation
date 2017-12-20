@@ -22,10 +22,10 @@ TMP_FILE = "/tmp/testfile.txt"
 SHARE_NAME = "webdavshare"
 SHARE_USER = "webdav"
 SHARE_PASS = "davtest2"
-MOUNTPOINT = "/tmp/webdav-bsd" + BRIDGEHOST
+MOUNTPOINT = "/tmp/webdav-osx" + BRIDGEHOST
 
 
-class webdav_bsd_test(unittest.TestCase):
+class webdav_osx_test(unittest.TestCase):
 
     # Clean up any leftover items from previous failed test runs
     @classmethod

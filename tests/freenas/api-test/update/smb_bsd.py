@@ -79,13 +79,13 @@ class smb_bsd_test(unittest.TestCase):
                    "mp_group": "wheel"}
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_07_Creating_a_SMB_share_on_SMB_PATH(self):
-        payload = {"cfs_comment": "My Test SMB Share",
-                   "cifs_path": SMB_PATH,
-                   "cifs_name": SMB_NAME,
-                   "cifs_guestok": True,
-                   "cifs_vfsobjects": "streams_xattr"}
-        assert POST("/sharing/cifs/", payload) == 201
+    # def test_07_Creating_a_SMB_share_on_SMB_PATH(self):
+        # payload = {"cfs_comment": "My Test SMB Share",
+        #            "cifs_path": SMB_PATH,
+        #            "cifs_name": SMB_NAME,
+        #            "cifs_guestok": True,
+        #            "cifs_vfsobjects": "streams_xattr"}
+        # assert POST("/sharing/cifs/", payload) == 201
 
     def test_08_Removing_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
