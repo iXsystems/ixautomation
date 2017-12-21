@@ -28,7 +28,7 @@ class nfs_test(unittest.TestCase):
                    "bsdusr_home": "/mnt/tank/testuser",
                    "bsdusr_mode": "755",
                    "bsdusr_shell": "/bin/csh"}
-        assert PUT("/account/users/1/" % self.userid, payload) == 200
+        assert PUT("/account/users/%s/" % self.userid, payload) == 200
 
     # Update password for testuser
     def test_02_Updating_password_for_testuser(self):
