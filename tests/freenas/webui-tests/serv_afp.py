@@ -24,8 +24,8 @@ except ImportError:
     import unittest
 
 xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
-           'turnoffConfirm' : "/html/body/div[3]/div[2]/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
-          'status' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/md-list/md-list-item[1]/div/p/em"
+           'turnoffConfirm' : "/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
+          'status' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/div[2]/div[1]/md-chip"
         }
 
 class configure_afp_test(unittest.TestCase):
@@ -61,7 +61,7 @@ class configure_afp_test(unittest.TestCase):
         print ("current status is: " + status_data)
         if status_data == "stopped": 
             #Click on the afp toggle button
-            driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/md-toolbar/div/md-toolbar-row/md-slide-toggle/label/div").click()
+            driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/div[2]/div[1]/button").click()
             time.sleep(1)
             print ("status has now changed to running")
         else:
