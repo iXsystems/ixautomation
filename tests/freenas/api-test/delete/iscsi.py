@@ -33,7 +33,7 @@ class iscsi_test(unittest.TestCase):
         assert DELETE("/services/iscsi/target/1/") == 204
 
     # Remove iSCSI extent
-    def test_01_Delete_iSCSI_extent(self):
+    def test_02_Delete_iSCSI_extent(self):
         assert DELETE("/services/iscsi/extent/1/") == 204
 
 if __name__ == "__main__":
