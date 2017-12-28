@@ -11,15 +11,6 @@ apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import DELETE
 
-try:
-    from config import BRIDGEHOST
-except ImportError:
-    exit()
-
-MOUNTPOINT = "/tmp/iscsi" + BRIDGEHOST
-DEVICE_NAME_PATH = "/tmp/iscsi_dev_name"
-TARGET_NAME = "iqn.freenas:target0"
-
 
 class storage_test(unittest.TestCase):
 
