@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 3
+#Test case count: 4
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -94,6 +94,29 @@ class create_group_test(unittest.TestCase):
         driver.find_element_by_xpath("//*[@id='2']/form-checkbox/div/md-checkbox/label/div").click()
         #Click on save new Group button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
+        #check if there is a generic error when making a duplicate group, and print the error
+        self.error_check()
+        time.sleep(20)
+
+    def test_04_create_duplicategroup(self):
+        print (" creating a duplicate group")
+        #Click Group submenu
+        driver.find_element_by_xpath(xpaths['submenuGroup']).click()
+        #scroll down to find hover tab
+        driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        time.sleep(2)
+        #Perform hover to show menu
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
+        hover = ActionChains(driver).move_to_element(hover_element)
+        hover.perform()
+        time.sleep(1)
+        #Click create new group option
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
+        #Enter New Groupname
+        time.sleep(1)
+        driver.find_element_by_xpath(xpaths['newGroupName']).send_keys(newgroupname)
+        #Click on save new Group button
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card$
         #check if there is a generic error when making a duplicate group, and print the error
         self.error_check()
         time.sleep(20)

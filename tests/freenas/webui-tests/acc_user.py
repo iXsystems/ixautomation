@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 4
+#Test case count: 5
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -160,7 +160,39 @@ class create_user_test(unittest.TestCase):
         #check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
         #check if the the user list is loaded after addding a new user
+
+    def test_05_create_duplicateuser(self):
+        print (" creating a duplicate user")
+        #Click User submenu
+        driver.find_element_by_xpath(xpaths['submenuUser']).click()
+        #cancelling the tour
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
+
+        #scroll down to find hover tab
+        driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        time.sleep(2)
+        #Perform hover to show menu
+        hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
+        hover = ActionChains(driver).move_to_element(hover_element)
+        hover.perform()
+        time.sleep(1)
+        #Click create new user option
+        driver.find_element_by_xpath(xpaths['fabAction']).click()
+        #Enter New Username
+        driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusername)
+        #Enter User Full name
+        driver.find_element_by_xpath(xpaths['newUserName']).send_keys(newuserfname)
+        #Enter Password
+        driver.find_element_by_xpath(xpaths['newUserPass']).send_keys(newuserpassword)
+        #Enter Password Conf
+        driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
+        #Click on create new User button
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/$
+        #check if there is a generic error when making a duplicate user, and print the error
+        self.error_check()
         time.sleep(20)
+
 
     # Next step-- To check if the new user is present in the list via automation
 
