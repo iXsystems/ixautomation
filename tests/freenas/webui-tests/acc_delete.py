@@ -149,12 +149,12 @@ class delete_test(unittest.TestCase):
         #click select the highest number i.e 100
 
         for y in range(0, 10):
-            if self.is_element_present(By.XPATH, "/html/body/div[" + y + "]/div[2]/div/div/md-option[4]"):
-                search=driver.find_element_by_xpath("/html/body/div[" + y + "]/div[2]/div/div/md-option[4]")
+            if self.is_element_present(By.XPATH, "/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]"):
+                search=driver.find_element_by_xpath("/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]")
                 #get element data
                 search_data=search.text
                 if search_data == "100":
-                    driver.find_element_by_xpath("/html/body/div[" + y + "]/div[2]/div/div/md-option[4]").click()
+                    driver.find_element_by_xpath("/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]").click()
                     break
 
 #        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
