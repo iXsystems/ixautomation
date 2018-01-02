@@ -38,7 +38,7 @@ class conf_system_advanced(unittest.TestCase):
     
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_system_advanced(self):
-        driver.find_element_by_xpath(xpaths['submenuUpdate']).click()
+        driver.find_element_by_xpath(xpaths['submenuAdvanced']).click()
 
         #cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
