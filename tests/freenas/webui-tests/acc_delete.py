@@ -145,6 +145,7 @@ class delete_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['submenu' + path]).click()
         #click on the item per page option
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
+        time.sleep(1)
         #click select the highest number i.e 100
         driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
         #wait till the list is loaded

@@ -116,7 +116,7 @@ class create_group_test(unittest.TestCase):
         time.sleep(1)
         driver.find_element_by_xpath(xpaths['newGroupName']).send_keys(newgroupname)
         #Click on save new Group button
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card$
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #check if there is a generic error when making a duplicate group, and print the error
         self.error_check()
         time.sleep(20)

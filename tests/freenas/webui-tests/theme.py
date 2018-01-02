@@ -25,13 +25,13 @@ except ImportError:
     import unittest
 
 xpaths = { 'themeBar' : "//*[@id='schemeToggle']/span/md-icon",
-          'theme1' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[1]/figure/span",
-          'theme2' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[2]/figure/span",
-          'theme3' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[3]/figure/span",
-          'theme4' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[4]/figure/span",
-          'theme5' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[5]/figure/span",
-          'theme6' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[6]/figure/span",
-          'theme7' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[7]/figure/span", 
+          'theme1' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[1]/figure",
+          'theme2' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[2]/figure",
+          'theme3' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[3]/figure",
+          'theme4' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[4]/figure",
+          'theme5' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[5]/figure",
+          'theme6' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[6]/figure",
+          'theme7' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[7]/figure" 
           }
 
 

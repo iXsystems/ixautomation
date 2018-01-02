@@ -188,7 +188,7 @@ class create_user_test(unittest.TestCase):
         #Enter Password Conf
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
         #Click on create new User button
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/$
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
         time.sleep(20)
