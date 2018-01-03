@@ -245,3 +245,25 @@ call(["py.test-3.6", "--junitxml",
       "update/webdav_osx.py"])
 
 # Delete test
+
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_apf_bsd_result.xml" % results_xml,
+      "delete/bootenv.py"])
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_cronjob_result.xml" % results_xml,
+      "delete/cronjob.py"])
+# call(["py.test-3.6", "--junitxml",
+#      "%sdelete_group_result.xml" % results_xml,
+#      "delete/group.py"])
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_iscsi_result.xml" % results_xml,
+      "delete/iscsi.py"])
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_rsync_result.xml" % results_xml,
+      "delete/rsync.py"])
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_storage_result.xml" % results_xml,
+      "delete/storage.py"])
+call(["py.test-3.6", "--junitxml",
+      "%sdelete_user_result.xml" % results_xml,
+      "delete/user.py"])
