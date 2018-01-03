@@ -82,7 +82,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     sleep(1)
     vm_output = "/tmp/%sconsole.log" % VM
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = 'expect %s/tests/%s/bhyve-installer.exp "%s" "%s"' % (workspace,
+    expctcmd = 'expect %s/tests/%s/install-tests/install.exp "%s" "%s"' % (workspace,
                                                                      systype,
                                                                      VM,
                                                                      vm_output)
@@ -99,7 +99,7 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
     sleep(1)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = "/tmp/%sconsole.log" % VM
-    expectcnd = 'expect %s/tests/%s/bhyve-bootup.exp "%s" "%s"' % (workspace,
+    expectcnd = 'expect %s/tests/%s/install-tests/boot.exp "%s" "%s"' % (workspace,
                                                                    systype, VM,
                                                                    vm_output)
     run(expectcnd, shell=True)
