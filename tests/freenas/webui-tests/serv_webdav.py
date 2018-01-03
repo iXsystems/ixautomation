@@ -73,7 +73,7 @@ class configure_webdav_test(unittest.TestCase):
         print (" configuring webdav service")
         time.sleep(1)
         #click on configure button
-        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/div[2]/div[1]/button").click()
+        driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/div[2]/div[3]/button").click()
         #Enter password newuserpassword
         driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").clear()
         driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").send_keys(newuserpassword)
