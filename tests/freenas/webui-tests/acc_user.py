@@ -117,7 +117,16 @@ class create_user_test(unittest.TestCase):
         #click on primary group dropdownlist
         driver.find_element_by_xpath(xpaths['primaryGroupdropdown']).click()
         #select the desired group wheel in this case (this locating technique is temporary and brittle, soon will be updated)
-        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[3]").click()
+
+        for i in range(0,10):
+            if self.is_element_present(By.XPATH, "/html/body/div[3]/div[2]/div/div/md-option[" + str(i) + "]"):
+                dropdown_el = driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[" + str(i) + "]")
+                dropdown_text = dropdown_el.text
+                if dropdown_text == "rishabh":
+                    dropdown_el.click()
+                    break
+                
+#        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[3]").click()
         #Enter User Full name
         driver.find_element_by_xpath(xpaths['newUserName']).send_keys(newuserfnameuncheck)
         #Enter Password
