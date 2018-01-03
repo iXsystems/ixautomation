@@ -53,23 +53,7 @@ class configure_afp_test(unittest.TestCase):
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-
-        #get the ui element
-        ui_element_status=driver.find_element_by_xpath(xpaths['status'])
-        #get the status data
-        status_data=ui_element_status.text
-        print ("current status is: " + status_data)
-        if status_data == "stopped": 
-            #Click on the afp toggle button
-            driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[1]/md-card/div[2]/div[1]/button").click()
-            time.sleep(1)
-            print ("status has now changed to running")
-        else:
-            print ("the status is--: " + status_data)
-        #re-confirming if the turning off the service
-        if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
-            driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
-
+        self.status_change("1", "start")
         time.sleep(10)
 
     #method to test if an element is present
@@ -82,6 +66,33 @@ class configure_afp_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def status_change(self, which, to):
+        print ("executing the status change function with input " + which + " + " + to)
+        #get the ui element
+        ui_element_status=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/md-chip")
+        #get the status data
+        status_data=ui_element_status.text
+        print ("current status is: " + status_data)
+        if to == "start":        
+            if status_data == "STOPPED": 
+                #Click on the afp toggle button
+                driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/button").click()
+                time.sleep(1)
+                print ("status has now changed to running")
+            else:
+                print ("the status is already " + status_data)
+        elif to == "stop":
+            if status_data == "RUNNING":
+                #Click on the afp toggle button
+                driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/button").click()
+                time.sleep(1)
+                #re-confirming if the turning off the service
+                if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
+                    driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
+            else: 
+                print ("the status is already" + status_data)
+
 
     @classmethod
     def tearDownClass(inst):
