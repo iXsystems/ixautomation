@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 3
+#Test case count: 4
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -71,21 +71,7 @@ class configure_ssh_test(unittest.TestCase):
         #scroll down
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #get the ui element
-        ui_element_status=driver.find_element_by_xpath(xpaths['status'])
-        #get the weather data
-        status_data=ui_element_status.text
-        print ("current status is: " + status_data)
-        if status_data == "stopped": 
-            #Click on the ssh toggle button
-            driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/div[2]/div[1]/button").click()
-            time.sleep(1)
-            print ("status has now changed to running")
-        else:
-            print ("current status is--: " + status_data)
-        #re-confirming if the turning off the service
-        if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
-            driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
+        self.status_change("14", "start")
 
     def test_03_configure_ssh(self):
         print (" configuring ssh service with root access")
@@ -96,8 +82,19 @@ class configure_ssh_test(unittest.TestCase):
         driver.find_element_by_xpath("//*[@id='2']/form-checkbox/div/md-checkbox/label/div").click()
         #click on save button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/ssh-edit/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        time.sleep(10)
 
+
+    def test_04_turnoff_ssh(self):
+        #click Service Menu
+        driver.find_element_by_xpath(xpaths['navService']).click()
+        #allowing the button to load
+        time.sleep(1)
+        print (" turning off the ssh service")
+        #scroll down
+        driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        time.sleep(2)
+        self.status_change("14", "stop")
+        time.sleep(10)
 
         # Next step-- To check if the new user is present in the list via automation
 
@@ -112,6 +109,33 @@ class configure_ssh_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def status_change(self, which, to):
+        print ("executing the status change function with input " + which + " + " + to)
+        #get the ui element
+        ui_element_status=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/md-chip")
+        #get the status data
+        status_data=ui_element_status.text
+        print ("current status is: " + status_data)
+        if to == "start":        
+            if status_data == "STOPPED": 
+                #Click on the afp toggle button
+                driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/button").click()
+                time.sleep(1)
+                print ("status has now changed to running")
+            else:
+                print ("the status is already " + status_data)
+        elif to == "stop":
+            if status_data == "RUNNING":
+                #Click on the afp toggle button
+                driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[" + str(which) + "]/md-card/div[2]/div[1]/button").click()
+                time.sleep(1)
+                #re-confirming if the turning off the service
+                if self.is_element_present(By.XPATH,xpaths['turnoffConfirm']):
+                    driver.find_element_by_xpath(xpaths['turnoffConfirm']).click()
+            else: 
+                print ("the status is already" + status_data)
+
 
     @classmethod
     def tearDownClass(inst):

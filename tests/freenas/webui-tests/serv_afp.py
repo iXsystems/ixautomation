@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 1
+#Test case count: 2
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -54,7 +54,17 @@ class configure_afp_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         self.status_change("1", "start")
+
+    def test_02_turnoff_afp (self):
+        print (" turning off the afp service")
+        #Click Service Menu
+        driver.find_element_by_xpath(xpaths['navService']).click()
+        #scroll down
+        driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        time.sleep(2)
+        self.status_change("1", "stop")
         time.sleep(10)
+
 
     #method to test if an element is present
     def is_element_present(self, how, what):
