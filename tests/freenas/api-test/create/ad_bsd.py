@@ -10,7 +10,8 @@ import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
-from functions import BSD_TEST
+from functions import BSD_TEST, return_output
+from auto_config import ip
 
 
 try:
@@ -53,8 +54,8 @@ class ad_bsd_test(unittest.TestCase):
                     "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload3) == 204
         DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
-        # BSD_TEST("umount -f " + MOUNTPOINT)
-        # BSD_TEST("rmdir " + MOUNTPOINT)
+        BSD_TEST("umount -f " + MOUNTPOINT)
+        BSD_TEST("rmdir " + MOUNTPOINT)
 
     def test_01_creating_smb_dataset(self):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
@@ -89,7 +90,7 @@ class ad_bsd_test(unittest.TestCase):
     def test_07_creating_smb_mountpoint(self):
         assert BSD_TEST("mkdir -p '%s' && sync" % MOUNTPOINT) is True
 
-    # def test_09_Changing_permissions_on_SMB_PATH(self):
+    # def test_08_Changing_permissions_on_SMB_PATH(self):
     #    payload = { "mp_path": SMB_PATH,
     #                "mp_acl": "unix",
     #                "mp_mode": "777",
@@ -98,7 +99,7 @@ class ad_bsd_test(unittest.TestCase):
     #                "mp_recursive": True }
     #    assert PUT("/storage/permission/", payload) == 201
 
-    def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_09_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -106,8 +107,47 @@ class ad_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
+    # The ADUSER user must exist in AD with this password
+    def test_10_Store_AD_credentials_in_a_file_for_mount_smbfs(self):
+        cmd = 'echo "[TESTNAS:ADUSER]" > ~/.nsmbrc && '
+        cmd += 'echo "password=12345678" >> ~/.nsmbrc'
+        assert BSD_TEST(cmd) is True
+
+    def test_11_Mounting_SMB(self):
+        cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
+        cmd = '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_12_Checking_permissions_on_MOUNTPOINT(self):
+        device_name = return_output('dirname "%s"' % MOUNTPOINT)
+        cmd = "ls -la %s | " % device_name
+        cmd += "awk \'\$4 == \"%s\" && \$9 == \"%s\"\'" % (VOL_GROUP, DATASET)
+        BSD_TEST(cmd)
+
+    def test_13_Creating_SMB_file(self):
+        BSD_TEST('touch "%s/testfile"' % MOUNTPOINT)
+
+    def test_14_Moving_SMB_file(self):
+        BSD_TEST('mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT))
+
+    def test_15_Copying_SMB_file(self):
+        BSD_TEST('cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT))
+
+    def test_16_Deleting_SMB_file_1_2(self):
+        BSD_TEST('rm "%s/testfile"' % MOUNTPOINT)
+
+    def test_17_Deleting_SMB_file_2_2(self):
+        BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT)
+
+    def test_18_Unmounting_SMB(self):
+        BSD_TEST('umount "%s"' % MOUNTPOINT)
+
+    def test_19_Removing_SMB_mountpoint(self):
+        cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
+        BSD_TEST(cmd)
+
     # Disable Active Directory Directory
-    def test_22_disabling_active_directory(self):
+    def test_20_disabling_active_directory(self):
         payload = {"ad_bindpw": ADPASSWORD,
                    "ad_bindname": ADUSERNAME,
                    "ad_domainname": BRIDGEDOMAIN,
@@ -117,15 +157,15 @@ class ad_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     # Check Active Directory
-    def test_23_Verify_Active_Directory_is_disabled(self):
+    def test_21_Verify_Active_Directory_is_disabled(self):
         assert GET_OUTPUT("/directoryservice/activedirectory/",
                           "ad_enable") is False
 
-    def test_24_Verify_SMB_service_is_disabled(self):
+    def test_22_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_25_Destroying_SMB_dataset(self):
+    def test_23_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
