@@ -73,7 +73,7 @@ def SSH_TEST(command):
     cmd += "ssh -o StrictHostKeyChecking=no "
     cmd += "-o UserKnownHostsFile=/dev/null "
     cmd += "-o VerifyHostKeyDNS=no "
-    cmd += "%s@%s %s" % (user, ip, command)
+    cmd += "%s@%s '%s'" % (user, ip, command)
     process = run(cmd, shell=True)
     if process.returncode != 0:
         return False
@@ -93,7 +93,7 @@ def BSD_TEST(command):
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
-        cmd += "%s@%s %s" % (BSD_USERNAME, BSD_HOST, command)
+        cmd += "%s@%s '%s'" % (BSD_USERNAME, BSD_HOST, command)
         process = run(cmd, shell=True)
         if process.returncode != 0:
             return False
@@ -113,7 +113,7 @@ def OSX_TEST(command):
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
-        cmd += "%s@%s %s" % (OSX_USERNAME, OSX_HOST, command)
+        cmd += "%s@%s '%s'" % (OSX_USERNAME, OSX_HOST, command)
         process = run(cmd, shell=True)
         if process.returncode != 0:
             return False
