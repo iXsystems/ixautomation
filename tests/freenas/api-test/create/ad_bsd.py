@@ -88,7 +88,7 @@ class ad_bsd_test(unittest.TestCase):
         assert PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
 
     def test_07_creating_smb_mountpoint(self):
-        assert BSD_TEST("mkdir -p '%s' && sync" % MOUNTPOINT) is True
+        assert BSD_TEST('mkdir -p "%s" && sync' % MOUNTPOINT) is True
 
     # def test_08_Changing_permissions_on_SMB_PATH(self):
     #    payload = { "mp_path": SMB_PATH,
@@ -120,8 +120,8 @@ class ad_bsd_test(unittest.TestCase):
 
     def test_12_Checking_permissions_on_MOUNTPOINT(self):
         device_name = return_output('dirname "%s"' % MOUNTPOINT)
-        cmd = "ls -la %s | " % device_name
-        cmd += "awk \'\$4 == \"%s\" && \$9 == \"%s\"\'" % (VOL_GROUP, DATASET)
+        cmd = 'ls -la %s | ' % device_name
+        cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
         assert BSD_TEST(cmd) is True
 
     def test_13_Creating_SMB_file(self):
