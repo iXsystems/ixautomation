@@ -65,7 +65,7 @@ class afp_osx_test(unittest.TestCase):
 
     # Mount share on OSX system and create a test file
     def test_07_Create_mount_point_for_AFP_on_OSX_system(self):
-        assert OSX_TEST('mkdir -p "${MOUNTPOINT}"') is True
+        assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_08_Mount_AFP_share_on_OSX_system(self):
         cmd = 'mount -t afp "afp://%s/%s" "%s"' % (ip, AFP_NAME, MOUNTPOINT)

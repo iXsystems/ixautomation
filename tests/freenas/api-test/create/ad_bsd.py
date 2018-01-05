@@ -24,7 +24,7 @@ DATASET = "ad-bsd"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/ad-bsd" + BRIDGEHOST
-VOL_GROUP = "qa"
+VOL_GROUP = "wheel"
 
 
 class ad_bsd_test(unittest.TestCase):
@@ -118,11 +118,11 @@ class ad_bsd_test(unittest.TestCase):
         cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
-    def test_12_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output('dirname "%s"' % MOUNTPOINT)
-        cmd = 'ls -la %s | ' % device_name
-        cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
-        assert BSD_TEST(cmd) is True
+    # def test_12_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'ls -la %s | ' % device_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert BSD_TEST(cmd) is True
 
     def test_13_Creating_SMB_file(self):
         assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
