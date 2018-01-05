@@ -85,14 +85,14 @@ class ad_osx_test(unittest.TestCase):
     def test_06_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
 
-    def test_07_Changing_permissions_on_SMB_PATH(self):
-        payload = {"mp_path": SMB_PATH,
-                   "mp_acl": "unix",
-                   "mp_mode": "777",
-                   "mp_user": "root",
-                   "mp_group": "AD01\\\\QA",
-                   "mp_recursive": True}
-        assert PUT("/storage/permission/", payload) == 201
+    # def test_07_Changing_permissions_on_SMB_PATH(self):
+    #     payload = {"mp_path": SMB_PATH,
+    #                "mp_acl": "unix",
+    #                "mp_mode": "777",
+    #                "mp_user": "root",
+    #                "mp_group": "AD01\\\\QA",
+    #                "mp_recursive": True}
+    #     assert PUT("/storage/permission/", payload) == 201
 
     def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
