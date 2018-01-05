@@ -87,16 +87,16 @@ class ad_bsd_test(unittest.TestCase):
     def test_06_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": "true"}) == 200
 
-    def test_08_Changing_permissions_on_SMB_PATH(self):
+    def test_07_Changing_permissions_on_SMB_PATH(self):
         payload = {"mp_path": SMB_PATH,
                    "mp_acl": "unix",
                    "mp_mode": "777",
                    "mp_user": "root",
-                   "mp_group": "qa",
+                   "mp_group": "wheel",
                    "mp_recursive": True}
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_09_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -104,7 +104,7 @@ class ad_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    def test_07_creating_smb_mountpoint(self):
+    def test_09_creating_smb_mountpoint(self):
         assert BSD_TEST('mkdir -p "%s" && sync' % MOUNTPOINT) is True
 
     # The ADUSER user must exist in AD with this password

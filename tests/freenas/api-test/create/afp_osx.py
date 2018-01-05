@@ -52,8 +52,9 @@ class afp_osx_test(unittest.TestCase):
 
     def test_05_Changing_permissions_on_AFP_PATH(self):
         payload = {"mp_path": AFP_PATH,
-                   "mp_acl": "unix", "mp_mode":
-                   "777", "mp_user": "root",
+                   "mp_acl": "unix",
+                   "mp_mode": "777",
+                   "mp_user": "root",
                    "mp_group": "wheel"}
         assert PUT("/storage/permission/", payload) == 201
 

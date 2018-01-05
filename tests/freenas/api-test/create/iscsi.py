@@ -54,7 +54,6 @@ class iscsi_test(unittest.TestCase):
     #               "iscsi_target_initiatorgroup": "1",
     #               "iscsi_target_authtype": "None",
     #               "iscsi_target_initialdigest": "Auto"}
-
     #    assert POST("/services/iscsi/targetgroup/", payload) == 201
 
     # Add iSCSI extent

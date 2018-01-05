@@ -90,7 +90,7 @@ class ad_osx_test(unittest.TestCase):
                    "mp_acl": "unix",
                    "mp_mode": "777",
                    "mp_user": "root",
-                   "mp_group": "qa",
+                   "mp_group": "wheel",
                    "mp_recursive": True}
         assert PUT("/storage/permission/", payload) == 201
 

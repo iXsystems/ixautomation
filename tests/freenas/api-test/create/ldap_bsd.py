@@ -87,14 +87,14 @@ class ldap_bsd_test(unittest.TestCase):
     def test_08_Checking_to_see_if_SMB_service_is_enabled(self):
         GET_OUTPUT("/services/services/cifs/", "srv_state")
 
-    # def test_09_Changing_permissions_on_SMB_PATH(self):
-    #    payload = { "mp_path": SMB_PATH,
-    #                "mp_acl": "unix",
-    #                "mp_mode": "777",
-    #                "mp_user": "root",
-    #                "mp_group": "qa",
-    #                "mp_recursive": True }
-    #    assert PUT("/storage/permission/", payload) == 201
+    def test_09_Changing_permissions_on_SMB_PATH(self):
+        payload = {"mp_path": SMB_PATH,
+                   "mp_acl": "unix",
+                   "mp_mode": "777",
+                   "mp_user": "root",
+                   "mp_group": "wheel",
+                   "mp_recursive": True}
+        assert PUT("/storage/permission/", payload) == 201
 
     def test_10_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
