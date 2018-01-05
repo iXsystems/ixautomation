@@ -115,7 +115,7 @@ class ad_bsd_test(unittest.TestCase):
 
     def test_11_Mounting_SMB(self):
         cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
-        cmd = '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
+        cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
     def test_12_Checking_permissions_on_MOUNTPOINT(self):
