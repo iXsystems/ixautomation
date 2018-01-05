@@ -9,7 +9,8 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
+from functions import return_output
 from auto_config import ip
 try:
     from config import BRIDGEHOST
@@ -28,6 +29,8 @@ class afp_osx_test(unittest.TestCase):
     # Clean up any leftover items from previous failed runs
     @classmethod
     def setUpClass(inst):
+        cmd = 'umount -f "%s"; rmdir "%s"; exit 0;' % (MOUNTPOINT, MOUNTPOINT)
+        OSX_TEST(cmd)
         PUT("/services/afp/", {"afp_srv_guest": "false"})
         payload = {"afp_name": AFP_NAME, "afp_path": AFP_PATH}
         DELETE_ALL("/sharing/afp/", payload)
@@ -58,6 +61,44 @@ class afp_osx_test(unittest.TestCase):
         payload = {"afp_name": AFP_NAME,
                    "afp_path": AFP_PATH}
         assert POST("/sharing/afp/", payload) == 201
+
+    # Mount share on OSX system and create a test file
+    def test_07_Create_mount_point_for_AFP_on_OSX_system(self):
+        assert OSX_TEST('mkdir -p "${MOUNTPOINT}"') is True
+
+    def test_08_Mount_AFP_share_on_OSX_system(self):
+        cmd = 'mount -t afp "afp://%s/%s" "%s"' % (ip, AFP_NAME, MOUNTPOINT)
+        assert OSX_TEST(cmd) is True
+
+    def test_09_Checking_permissions_on_MOUNTPOINT(self):
+        device_name = return_output('dirname "$%s"' % MOUNTPOINT)
+        cmd = 'ls -la "$%s" | ' % device_name
+        cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+        assert OSX_TEST(cmd) is True
+
+    def test_10_Create_file_on_AFP_share_via_OSX_to_test_permissions(self):
+        assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
+
+    # Move test file to a new location on the AFP share
+    def test_11_Moving_AFP_test_file_into_a_new_directory(self):
+        cmd = 'mkdir -p "%s/tmp" && ' % MOUNTPOINT
+        cmd += 'mv "%s/testfile.txt" ' % MOUNTPOINT
+        cmd += '"%s/tmp/testfile.txt"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Delete test file and test directory from AFP share
+    def test_12_Deleting_test_file_and_directory_from_AFP_share(self):
+        cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
+        cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    def test_13_Verifying_test_file_directory_were_successfully_removed(self):
+        cmd = 'find -- "%s/" -prune -type d -empty | grep -q .' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Clean up mounted AFP share
+    def test_14_Unmount_AFP_share(self):
+        assert OSX_TEST("umount -f '%s'" % MOUNTPOINT) is True
 
     # Test disable AFP
     def test_15_Verify_AFP_service_can_be_disabled(self):
