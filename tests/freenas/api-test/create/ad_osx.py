@@ -110,42 +110,42 @@ class ad_osx_test(unittest.TestCase):
 
     # Mount share on OSX system and create a test file
     def test_10_Create_mount_point_for_SMB_on_OSX_system(self):
-        OSX_TEST('mkdir -p "%s"' % MOUNTPOINT)
+        assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_11_Mount_SMB_share_on_OSX_system(self):
         cmd = 'mount -t smbfs "smb://%s:' % ADUSERNAME
         cmd += '%s@%s/%s" "%s"' % (ADPASSWORD, ip, SMB_NAME, MOUNTPOINT)
-        OSX_TEST(cmd)
+        assert OSX_TEST(cmd) is True
 
     def test_12_Checking_permissions_on_MOUNTPOINT_(self):
         device_name = return_output('dirname "%s"' % MOUNTPOINT)
         cmd = "time ls -la \'%s\' | " % device_name
         cmd += "awk \'\$4 == \"%s\" && \$9 == \"%s\"\'" % (VOL_GROUP, DATASET)
-        OSX_TEST(cmd)
+        assert OSX_TEST(cmd) is True
 
     def test_13_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
-        OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT)
+        assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
 
     # Move test file to a new location on the SMB share
     def test_14_Moving_SMB_test_file_into_a_new_directory(self):
         cmd = 'mkdir -p "%s/tmp" && ' % MOUNTPOINT
         cmd += 'mv "%s/testfile.txt" ' % MOUNTPOINT
         cmd += '"%s/tmp/testfile.txt"' % MOUNTPOINT
-        OSX_TEST(cmd)
+        assert OSX_TEST(cmd) is True
 
     # Delete test file and test directory from SMB share
     def test_15_Deleting_test_file_and_directory_from_SMB_share(self):
         cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
         cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
-        OSX_TEST(cmd)
+        assert OSX_TEST(cmd) is True
 
     def test_16_Verifying_that_test_file_directory_successfully_removed(self):
         cmd = 'find -- "%s/" -prune -type d -empty | grep -q .' % MOUNTPOINT
-        OSX_TEST(cmd)
+        assert OSX_TEST(cmd) is True
 
     # Clean up mounted SMB share
     def test_17_Unmount_SMB_share(self):
-        OSX_TEST('umount -f "%s"' % MOUNTPOINT)
+        assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
 
     # Disable Active Directory Directory
     def test_18_Disabling_Active_Directory(self):

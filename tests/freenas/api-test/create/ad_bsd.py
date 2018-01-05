@@ -122,29 +122,31 @@ class ad_bsd_test(unittest.TestCase):
         device_name = return_output('dirname "%s"' % MOUNTPOINT)
         cmd = "ls -la %s | " % device_name
         cmd += "awk \'\$4 == \"%s\" && \$9 == \"%s\"\'" % (VOL_GROUP, DATASET)
-        BSD_TEST(cmd)
+        assert BSD_TEST(cmd) is True
 
     def test_13_Creating_SMB_file(self):
-        BSD_TEST('touch "%s/testfile"' % MOUNTPOINT)
+        assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
 
     def test_14_Moving_SMB_file(self):
-        BSD_TEST('mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT))
+        cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
 
     def test_15_Copying_SMB_file(self):
-        BSD_TEST('cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT))
+        cmd = 'cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
 
     def test_16_Deleting_SMB_file_1_2(self):
-        BSD_TEST('rm "%s/testfile"' % MOUNTPOINT)
+        assert BSD_TEST('rm "%s/testfile"' % MOUNTPOINT) is True
 
     def test_17_Deleting_SMB_file_2_2(self):
-        BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT)
+        assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
 
     def test_18_Unmounting_SMB(self):
-        BSD_TEST('umount "%s"' % MOUNTPOINT)
+        assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
 
     def test_19_Removing_SMB_mountpoint(self):
         cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
-        BSD_TEST(cmd)
+        assert BSD_TEST(cmd) is True
 
     # Disable Active Directory Directory
     def test_20_disabling_active_directory(self):
