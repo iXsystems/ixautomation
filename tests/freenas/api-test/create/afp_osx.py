@@ -21,7 +21,7 @@ DATASET = "afp-osx"
 AFP_NAME = "My AFP Share"
 AFP_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/afp-osx" + BRIDGEHOST
-VOL_GROUP = "qa"
+VOL_GROUP = "wheel"
 
 
 class afp_osx_test(unittest.TestCase):
@@ -71,11 +71,11 @@ class afp_osx_test(unittest.TestCase):
         cmd = 'mount -t afp "afp://%s/%s" "%s"' % (ip, AFP_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    def test_09_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output('dirname "$%s"' % MOUNTPOINT)
-        cmd = 'ls -la "$%s" | ' % device_name
-        cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
-        assert OSX_TEST(cmd) is True
+    # def test_09_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "$%s"' % MOUNTPOINT)
+    #     cmd = 'ls -la "$%s" | ' % device_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert OSX_TEST(cmd) is True
 
     def test_10_Create_file_on_AFP_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
