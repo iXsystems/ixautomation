@@ -9,7 +9,7 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, BSD_TEST
+from functions import PUT, POST, GET_OUTPUT
 
 try:
     from config import BRIDGEHOST
@@ -27,9 +27,6 @@ class iscsi_test(unittest.TestCase):
         payload = {"srv_enable": "false"}
         assert PUT("/services/services/iscsitarget/", payload) == 200
         # When BSD_TEST is functional will need to add the code to clean test
-        bsd_test "iscsictl -R -t ${TARGET_NAME}"
-        bsd_test "umount -f \"${MOUNTPOINT}\" &>/dev/null"
-        bsd_test "rmdir \"${MOUNTPOINT}\" &>/dev/null"
 
     # Add iSCSI initator
     def Test_02_Add_iSCSI_initiator(self):
