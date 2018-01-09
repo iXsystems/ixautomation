@@ -88,7 +88,6 @@ class smb_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    # BSD_TEST here when ready
     # Now check if we can mount SMB / create / rename / copy / delete / umount
     def test_07_Creating_SMB_mountpoint(self):
         assert BSD_TEST('mkdir -p "%s" && sync' % MOUNTPOINT) is True
