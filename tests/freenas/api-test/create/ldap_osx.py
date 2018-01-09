@@ -9,8 +9,9 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
-
+from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL, OSX_TEST
+from functions import return_output, SSH_TEST
+from auto_config import ip
 try:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPHOSTNAME
@@ -27,7 +28,8 @@ VOL_GROUP = "qa"
 class ldap_osx_test(unittest.TestCase):
     # Clean up any leftover items from previous failed AD LDAP or SMB runs
     def test_01_Clean_up_any_leftover_items(self):
-        # osx_test "umount -f '${MOUNTPOINT}'; rmdir '${MOUNTPOINT}'; exit 0"
+        cmd = 'umount -f "%s"; rmdir "%s"; exit 0' % (MOUNTPOINT, MOUNTPOINT)
+        OSX_TEST(cmd)
         payload1 = {"ad_bindpw": ADPASSWORD,
                     "ad_bindname": ADUSERNAME,
                     "ad_domainname": BRIDGEDOMAIN,
@@ -100,8 +102,53 @@ class ldap_osx_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
+    # def test_10_Checking_permissions_on_SMB_NAME(self):
+    #     vol_name = return_output('dirname "%s"' % SMB_NAME)
+    #     cmd = 'ls -la "%s" | ' % vol_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert SSH_TEST(cmd) is True
+
+    # Mount share on OSX system and create a test file
+    def test_11_Create_mount_point_for_SMB_on_OSX_system(self):
+        assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
+
+    def test_12_Mount_SMB_share_on_OSX_system(self):
+        cmd = 'mount -t smbfs "smb://ldapuser:12345678'
+        cmd += '@%s/%s" %s' % (ip, SMB_NAME, MOUNTPOINT)
+        assert OSX_TEST(cmd) is True
+
+    # def test_13_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'time ls -la "%s" | ' % device_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert OSX_TEST(cmd) is True
+
+    def test_14_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
+        assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
+
+    # Move test file to a new location on the SMB share
+    def test_15_Moving_SMB_test_file_into_a_new_directory(self):
+        cmd = 'mkdir -p "%s/tmp" && ' % MOUNTPOINT
+        cmd += 'mv "%s/testfile.txt" ' % MOUNTPOINT
+        cmd += '"%s/tmp/testfile.txt"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Delete test file and test directory from SMB share
+    def test_16_Deleting_test_file_and_directory_from_SMB_share(self):
+        cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
+        cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    def test_17_Verifying_test_file_directory_were_successfully_removed(self):
+        cmd = 'find -- "%s/" -prune -type d -empty | grep -q .' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Clean up mounted SMB share
+    def test_18_Unmount_SMB_share(self):
+        assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
+
     # Disable LDAP
-    def test_10_Disabling_LDAP_with_anonymous_bind(self):
+    def test_19_Disabling_LDAP_with_anonymous_bind(self):
         payload = {"ldap_basedn": LDAPBASEDN,
                    "ldap_anonbind": True,
                    "ldap_netbiosname_a": BRIDGEHOST,
@@ -111,18 +158,18 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Now stop the SMB service
-    def test_11_Stopping_SMB_service(self):
+    def test_20_Stopping_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
     # Check LDAP
-    def test_12_Verify_LDAP_is_disabled(self):
+    def test_21_Verify_LDAP_is_disabled(self):
         assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is False
 
-    def test_13_Verify_SMB_service_is_disabled(self):
+    def test_22_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_14_Destroying_SMB_dataset(self):
+    def test_23_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
