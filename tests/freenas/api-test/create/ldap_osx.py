@@ -26,8 +26,10 @@ VOL_GROUP = "qa"
 
 
 class ldap_osx_test(unittest.TestCase):
-    # Clean up any leftover items from previous failed AD LDAP or SMB runs
-    def test_01_Clean_up_any_leftover_items(self):
+
+    # Clean up any leftover items from previous failed runs
+    @classmethod
+    def setUpClass(inst):
         cmd = 'umount -f "%s"; rmdir "%s"; exit 0' % (MOUNTPOINT, MOUNTPOINT)
         OSX_TEST(cmd)
         payload1 = {"ad_bindpw": ADPASSWORD,
@@ -54,11 +56,11 @@ class ldap_osx_test(unittest.TestCase):
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
 
     # Set auxilary parameters to allow mount_smbfs to work with ldap
-    def test_02_Creating_SMB_dataset(self):
+    def test_01_Creating_SMB_dataset(self):
         assert POST("/storage/volume/tank/datasets/", {"name": DATASET}) == 201
 
     # Enable LDAP
-    def test_03_Enabling_LDAP_with_anonymous_bind(self):
+    def test_02_Enabling_LDAP_with_anonymous_bind(self):
         payload = {"ldap_basedn": LDAPBASEDN,
                    "ldap_anonbind": True,
                    "ldap_netbiosname_a": BRIDGEHOST,
@@ -68,10 +70,10 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Check LDAP
-    def test_04_Checking_LDAP(self):
+    def test_03_Checking_LDAP(self):
         assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is True
 
-    def test_05_Enabling_SMB_service(self):
+    def test_04_Enabling_SMB_service(self):
         payload = {"cifs_srv_description": "Test FreeNAS Server",
                    "cifs_srv_guest": "nobody",
                    "cifs_hostname_lookup": False,
@@ -79,13 +81,13 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/services/cifs/", payload) == 200
 
     # Now start the service
-    def test_06_Starting_SMB_service(self):
+    def test_05_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
 
-    def test_07_Checking_to_see_if_SMB_service_is_enabled(self):
+    def test_06_Checking_to_see_if_SMB_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
-    def test_08_Changing_permissions_on_SMB_PATH(self):
+    def test_07_Changing_permissions_on_SMB_PATH(self):
         payload = {"mp_path": SMB_PATH,
                    "mp_acl": "unix",
                    "mp_mode": "777",
@@ -94,7 +96,7 @@ class ldap_osx_test(unittest.TestCase):
                    "mp_recursive": True}
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_09_Creating_a_SMB_share_on_SMB_PATH(self):
+    def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -102,53 +104,53 @@ class ldap_osx_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    # def test_10_Checking_permissions_on_SMB_NAME(self):
+    # def test_09_Checking_permissions_on_SMB_NAME(self):
     #     vol_name = return_output('dirname "%s"' % SMB_NAME)
     #     cmd = 'ls -la "%s" | ' % vol_name
     #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert SSH_TEST(cmd) is True
 
     # Mount share on OSX system and create a test file
-    def test_11_Create_mount_point_for_SMB_on_OSX_system(self):
+    def test_10_Create_mount_point_for_SMB_on_OSX_system(self):
         assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
-    def test_12_Mount_SMB_share_on_OSX_system(self):
+    def test_11_Mount_SMB_share_on_OSX_system(self):
         cmd = 'mount -t smbfs "smb://ldapuser:12345678'
         cmd += '@%s/%s" %s' % (ip, SMB_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    # def test_13_Checking_permissions_on_MOUNTPOINT(self):
+    # def test_12_Checking_permissions_on_MOUNTPOINT(self):
     #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
     #     cmd = 'time ls -la "%s" | ' % device_name
     #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert OSX_TEST(cmd) is True
 
-    def test_14_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
+    def test_13_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
 
     # Move test file to a new location on the SMB share
-    def test_15_Moving_SMB_test_file_into_a_new_directory(self):
+    def test_14_Moving_SMB_test_file_into_a_new_directory(self):
         cmd = 'mkdir -p "%s/tmp" && ' % MOUNTPOINT
         cmd += 'mv "%s/testfile.txt" ' % MOUNTPOINT
         cmd += '"%s/tmp/testfile.txt"' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
     # Delete test file and test directory from SMB share
-    def test_16_Deleting_test_file_and_directory_from_SMB_share(self):
+    def test_15_Deleting_test_file_and_directory_from_SMB_share(self):
         cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
         cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
-    def test_17_Verifying_test_file_directory_were_successfully_removed(self):
+    def test_16_Verifying_test_file_directory_were_successfully_removed(self):
         cmd = 'find -- "%s/" -prune -type d -empty | grep -q .' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
     # Clean up mounted SMB share
-    def test_18_Unmount_SMB_share(self):
+    def test_17_Unmount_SMB_share(self):
         assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
 
     # Disable LDAP
-    def test_19_Disabling_LDAP_with_anonymous_bind(self):
+    def test_18_Disabling_LDAP_with_anonymous_bind(self):
         payload = {"ldap_basedn": LDAPBASEDN,
                    "ldap_anonbind": True,
                    "ldap_netbiosname_a": BRIDGEHOST,
@@ -158,18 +160,18 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/directoryservice/ldap/1/", payload) == 200
 
     # Now stop the SMB service
-    def test_20_Stopping_SMB_service(self):
+    def test_19_Stopping_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
     # Check LDAP
-    def test_21_Verify_LDAP_is_disabled(self):
+    def test_20_Verify_LDAP_is_disabled(self):
         assert GET_OUTPUT("/directoryservice/ldap/", "ldap_enable") is False
 
-    def test_22_Verify_SMB_service_is_disabled(self):
+    def test_21_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_23_Destroying_SMB_dataset(self):
+    def test_22_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
