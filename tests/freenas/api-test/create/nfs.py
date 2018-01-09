@@ -10,7 +10,7 @@ import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT
-from auto_config import ip
+from auto_config import ip, BSD_TEST
 try:
     from config import BRIDGEHOST
 except ImportError:
@@ -49,6 +49,39 @@ class nfs_test(unittest.TestCase):
 
     def test_06_Checking_to_see_if_NFS_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/nfs/", "srv_state") == "RUNNING"
+
+    # Now check if we can mount NFS / create / rename / copy / delete / umount
+    def test_07_Creating_NFS_mountpoint(self):
+        assert BSD_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
+
+    def test_07_Mounting_NFS(self):
+        cmd = 'mount_nfs %s:%s %s' % (ip, NFS_PATH, MOUNTPOINT)
+        # command below does not make sence
+        # "umount '${MOUNTPOINT}' ; rmdir '${MOUNTPOINT}'" "60"
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Creating_NFS_file(self):
+        cmd = 'touch "%s/testfile"' % MOUNTPOINT
+        # 'umount "${MOUNTPOINT}"; rmdir "${MOUNTPOINT}"'
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Moving_NFS_file(self):
+        cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Copying_NFS_file(self):
+        cmd = 'cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Deleting_NFS_file(self):
+        assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
+
+    def test_07_Unmounting_NFS(self):
+        assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
+
+    def test_07_Removing_NFS_mountpoint(self):
+        cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
 
 
 if __name__ == "__main__":

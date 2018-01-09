@@ -136,7 +136,7 @@ class ldap_bsd_test(unittest.TestCase):
     #    assert BSD_TEST(cmd) is True
 
     def test_15_Creating_SMB_file(self):
-        assert BSD_TEST("touch '${MOUNTPOINT}/testfile'") is True
+        assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
 
     def test_16_Moving_SMB_file(self):
         cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
