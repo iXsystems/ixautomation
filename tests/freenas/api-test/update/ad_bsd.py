@@ -10,6 +10,8 @@ import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
+from functions import BSD_TEST, return_output
+from auto_config import ip
 
 try:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
@@ -52,6 +54,9 @@ class ad_bsd_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
+        cmd = 'umount -f "%s" &>/dev/null; '
+        cmd += 'rmdir "%s" &>/dev/null'
+        BSD_TEST(cmd)
 
     # Set auxilary parameters allow mount_smbfs to work with Active Directory
     def test_01_Creating_SMB_dataset(self):
@@ -85,6 +90,47 @@ class ad_bsd_test(unittest.TestCase):
     # Now start the service
     def test_06_Starting_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": True}) == 200
+
+    # The ADUSER user must exist in AD with this password
+    def test_07_Store_AD_credentials_in_a_file_for_mount_smbfs(self):
+        cmd = 'echo "[TESTNAS:ADUSER]" > ~/.nsmbrc && '
+        cmd += 'echo "password=12345678" >> ~/.nsmbrc'
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Mounting_SMB(self):
+        cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
+        cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    # def test_07_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'ls -la "%s" | ' % device_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert BSD_TEST(cmd) is True
+
+    def test_07_Creating_SMB_file(self):
+        assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
+
+    def test_07_Moving_SMB_file(self):
+        cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Copying_SMB_file(self):
+        cmd = 'cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_07_Deleting_SMB_file_1_2(self):
+        assert BSD_TEST('rm "%s/testfile"' % MOUNTPOINT) is True
+
+    def test_07_Deleting_SMB_file_2_2(self):
+        assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
+
+    def test_07_Unmounting_SMB(self):
+        assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
+
+    def test_07_Removing_SMB_mountpoint(self):
+        cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
 
     # Disable Active Directory Directory
     def test_07_Disabling_Active_Directory(self):
