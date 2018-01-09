@@ -29,6 +29,7 @@ VOL_GROUP = "wheel"
 
 class ad_bsd_test(unittest.TestCase):
 
+    # Clean up any leftover items from previous failed runs
     @classmethod
     def setUpClass(inst):
         payload1 = {"ad_bindpw": ADPASSWORD,

@@ -31,7 +31,7 @@ class afp_osx_test(unittest.TestCase):
     def setUpClass(inst):
         cmd = 'umount -f "%s"; rmdir "%s"; exit 0;' % (MOUNTPOINT, MOUNTPOINT)
         OSX_TEST(cmd)
-        PUT("/services/afp/", {"afp_srv_guest": "false"})
+        PUT("/services/afp/", {"afp_srv_guest": False})
         payload = {"afp_name": AFP_NAME, "afp_path": AFP_PATH}
         DELETE_ALL("/sharing/afp/", payload)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
