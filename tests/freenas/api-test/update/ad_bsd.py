@@ -97,7 +97,7 @@ class ad_bsd_test(unittest.TestCase):
         cmd += 'echo "password=12345678" >> ~/.nsmbrc'
         assert BSD_TEST(cmd) is True
 
-    def test_07_Mounting_SMB(self):
+    def test_08_Mounting_SMB(self):
         cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
         cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
@@ -108,32 +108,32 @@ class ad_bsd_test(unittest.TestCase):
     #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert BSD_TEST(cmd) is True
 
-    def test_07_Creating_SMB_file(self):
+    def test_09_Creating_SMB_file(self):
         assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
 
-    def test_07_Moving_SMB_file(self):
+    def test_10_Moving_SMB_file(self):
         cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
-    def test_07_Copying_SMB_file(self):
+    def test_11_Copying_SMB_file(self):
         cmd = 'cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
-    def test_07_Deleting_SMB_file_1_2(self):
+    def test_12_Deleting_SMB_file_1_2(self):
         assert BSD_TEST('rm "%s/testfile"' % MOUNTPOINT) is True
 
-    def test_07_Deleting_SMB_file_2_2(self):
+    def test_13_Deleting_SMB_file_2_2(self):
         assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
 
-    def test_07_Unmounting_SMB(self):
+    def test_14_Unmounting_SMB(self):
         assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
 
-    def test_07_Removing_SMB_mountpoint(self):
+    def test_15_Removing_SMB_mountpoint(self):
         cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
     # Disable Active Directory Directory
-    def test_07_Disabling_Active_Directory(self):
+    def test_16_Disabling_Active_Directory(self):
         payload = {"ad_bindpw": ADPASSWORD,
                    "ad_bindname": ADUSERNAME,
                    "ad_domainname": BRIDGEDOMAIN,
@@ -143,15 +143,15 @@ class ad_bsd_test(unittest.TestCase):
         assert PUT("/directoryservice/activedirectory/1/", payload) == 200
 
     # Check Active Directory
-    def test_08_Verify_Active_Directory_is_disabled(self):
+    def test_17_Verify_Active_Directory_is_disabled(self):
         assert GET_OUTPUT("/directoryservice/activedirectory/",
                           "ad_enable") is False
 
-    def test_09_Verify_SMB_service_is_disabled(self):
+    def test_18_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_10_Destroying_SMB_dataset(self):
+    def test_19_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
