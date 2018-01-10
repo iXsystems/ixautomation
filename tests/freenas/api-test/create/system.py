@@ -9,7 +9,7 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET, SSH_BSD
+from functions import PUT, POST, GET, SSH_TEST
 
 
 class system_test(unittest.TestCase):
@@ -40,7 +40,7 @@ class system_test(unittest.TestCase):
 
     # Verify loader tunable
     def test_06_Verify_system_tunable_dummynet_load(self):
-        SSH_BSD('kldstat -m dummynet')
+        SSH_TEST('kldstat -m dummynet')
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

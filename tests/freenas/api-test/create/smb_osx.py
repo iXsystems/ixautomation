@@ -92,11 +92,11 @@ class smb_osx_test(unittest.TestCase):
         cmd += '@%s/%s" "%s"' % (ip, SMB_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    def test_08_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output('dirname "%s"' % MOUNTPOINT)
-        cmd = 'ls -la "%s" | ' % device_name
-        cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
-        assert OSX_TEST(cmd) is True
+    # def test_08_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'ls -la "%s" | ' % device_name
+    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert OSX_TEST(cmd) is True
 
     def test_09_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
@@ -110,8 +110,8 @@ class smb_osx_test(unittest.TestCase):
 
     # Delete test file and test directory from SMB share
     def test_11_Deleting_test_file_and_directory_from_SMB_share(self):
-        cmd = 'rm -f "%s/tmp/testfile.txt" '
-        cmd += '&& rmdir "%s/tmp"'
+        cmd = 'rm -f "%s/tmp/testfile.txt" ' % MOUNTPOINT
+        cmd += '&& rmdir "%s/tmp"' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
     def test_12_Verifying_test_file_directory_were_successfully_removed(self):
