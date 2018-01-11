@@ -100,7 +100,7 @@ class iscsi_test(unittest.TestCase):
             state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
             iscsi_state = return_output(state)
             dev = 'cat /tmp/.bsdCmdTestStdOut | '
-            'awk \'$2 == "%s:3620" {print $4}\''
+            dev += 'awk \'$2 == "%s:3620" {print $4}\''
             iscsi_dev = return_output(dev)
             if iscsi_state == "Connected:":
                 self.DEVICE_NAME = iscsi_dev
@@ -109,13 +109,13 @@ class iscsi_test(unittest.TestCase):
             sleep(3)
 
     def test_11_Format_the_target_volume(self):
-        assert BSD_TEST('newfs "/dev/%s"' % DEVICE_NAME) is True
+        assert BSD_TEST('newfs "/dev/%s"' % self.DEVICE_NAME) is True
 
     def test_12_Creating_iSCSI_mountpoint(self):
         assert BSD_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_13_Mount_the_target_volume(self):
-        cmd = 'mount "/dev/%s" "%s"' % (DEVICE_NAME, MOUNTPOINT)
+        cmd = 'mount "/dev/%s" "%s"' % (self.DEVICE_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
     def test_14_Creating_file(self):
