@@ -100,7 +100,7 @@ class iscsi_test(unittest.TestCase):
             state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
             iscsi_state = return_output(state)
             dev = 'cat /tmp/.bsdCmdTestStdOut | '
-            dev += 'awk \'$2 == "%s:3620" {print $4}\''
+            dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
             iscsi_dev = return_output(dev)
             if iscsi_state == "Connected:":
                 self.DEVICE_NAME = iscsi_dev

@@ -10,6 +10,7 @@ import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
+from Functions import BSD_TEST,
 
 try:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
@@ -54,6 +55,9 @@ class ldap_bsd_test(unittest.TestCase):
                     "cifs_vfsobjects": "streams_xattr"}
         DELETE_ALL("/sharing/cifs/", payload3)
         DELETE("/storage/volume/1/datasets/%s/" % DATASET)
+        cmd = 'umount -f "%s" &>/dev/null; ' % MOUNTPOINT
+        cmd += 'rmdir "%s" &>/dev/null' % MOUNTPOINT
+        BSD_TEST(cmd)
 
     # Set auxilary parameters to allow mount_smbfs to work with ldap
     def test_01_Creating_SMB_dataset(self):
@@ -88,23 +92,71 @@ class ldap_bsd_test(unittest.TestCase):
     def test_06_Checking_to_see_if_SMB_service_is_enabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "RUNNING"
 
-    # def test_07_Changing_permissions_on_SMB_PATH(self):
-    #     payload = {"mp_path": SMB_PATH,
-    #                "mp_acl": "unix",
-    #                "mp_mode": "777",
-    #                "mp_user": "root",
-    #                "mp_group": "qa",
-    #                "mp_recursive": True}
-    #     assert PUT("/storage/permission/", payload) == 200
+    def test_07_Changing_permissions_on_SMB_PATH(self):
+        payload = {"mp_path": SMB_PATH,
+                   "mp_acl": "unix",
+                   "mp_mode": "777",
+                   "mp_user": "root",
+                   "mp_group": "wheel",
+                   "mp_recursive": True}
+        assert PUT("/storage/permission/", payload) == 200
 
-    # def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
-    #     payload = {"mp_path": SMB_PATH,
-    #                "mp_acl": "unix",
-    #                "mp_mode": "777",
-    #                "mp_user": "root",
-    #                "mp_group": "qa",
-    #                "mp_recursive": True}
-    #     assert POST("/sharing/cifs/", payload) == 201
+    def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
+        payload = {"mp_path": SMB_PATH,
+                   "mp_acl": "unix",
+                   "mp_mode": "777",
+                   "mp_user": "root",
+                   "mp_group": "wheel",
+                   "mp_recursive": True}
+        assert POST("/sharing/cifs/", payload) == 201
+
+    # Now check if we can mount SMB / create / rename / copy / delete / umount
+    def test_09_Creating_SMB_mountpoint(self):
+        assert BSD_TEST('mkdir -p "%s" && sync' % MOUNTPOINT) is True
+
+    # The LDAPUSER user must exist in LDAP with this password
+    def test_09_Store_LDAP_credentials_in_file_for_mount_smbfs(self):
+        cmd = 'echo "[TESTNAS:LDAPUSER]" > ~/.nsmbrc && '
+        cmd += 'echo "password=12345678" >> ~/.nsmbrc'
+        assert BSD_TEST(cmd) is True
+
+    def test_09_Mounting_SMB(self):
+        cmd = 'mount_smbfs -N -I %s -W LDAP02 ' % ip
+        cmd += '"//%s@testnas/%s" "%s"' % (LDAP_USER, SMB_NAME, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_09_Checking_permissions_on_MOUNTPOINT(self):
+        device_name = return_output('dirname "%s"' % MOUNTPOINT)
+        cmd = 'ls -la "%s" | ' % device_name
+        cmd += 'awk \'$4 == "%s" && $9 == "%s" \'' % (VOL_GROUP, DATASET)
+        assert BSD_TEST(cmd) is True
+
+    def test_09_Creating_SMB_file(self):
+        assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
+
+    def test_09_Moving_SMB_file(self):
+        cmd = 'mv "%s/testfile" "%s/testfile2"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_09_Copying_SMB_file(self):
+        cmd = 'cp "%s/testfile2" "%s/testfile"' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
+
+    def test_09_Deleting_SMB_file_1_2(self):
+        assert BSD_TEST('rm "%s/testfile"' % MOUNTPOINT) is True
+
+    def test_09_Deleting_SMB_file_2_2(self):
+        assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
+
+    def test_09_Unmounting_SMB(self):
+        assert BSD_TEST('umount -f "%s"' % MOUNTPOINT) is True
+
+    def test_09_Verifying_SMB_share_was_unmounted(self):
+        assert BSD_TEST('mount | grep -qv "%s"' % MOUNTPOINT) is True
+
+    def test_09_Removing_SMB_mountpoint(self):
+        cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
+        assert BSD_TEST(cmd) is True
 
     def test_09_Removing_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
