@@ -7,11 +7,11 @@
 import unittest
 import sys
 import os
+from time import sleep
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import PUT, POST, GET_OUTPUT, BSD_TEST
+from functions import PUT, POST, GET_OUTPUT, BSD_TEST, return_output
 from auto_config import ip
-
 try:
     from config import BRIDGEHOST
 except ImportError:
@@ -94,24 +94,19 @@ class iscsi_test(unittest.TestCase):
         assert BSD_TEST(cmd) is True
 
     def test_10_Waiting_for_iscsi_connection_before_grabbing_device_name(self):
-        # local loop_cnt = 0
-        # while [ $loop_cnt -le 12 ] ; do
-        assert BSD_TEST("iscsictl -L") is True
-        #    iscsi_state=$(cat /tmp/.bsdCmdTestStdOut | awk '$2 == "'${BRIDGEIP}':3620" {print $3}')
-        #    iscsi_dev=$(cat /tmp/.bsdCmdTestStdOut | awk '$2 == "'${BRIDGEIP}':3620" {print $4}')
-
-        # if [ -n "${iscsi_state}" -a "${iscsi_state}" == "Connected:" ]:
-        #    if [ -n "${iscsi_dev}" ] ; then
-        #        DEVICE_NAME=$iscsi_dev
-        #        echo -n " using \"${DEVICE_NAME}\""
-        #        echo_ok && break
-        #    else:
-        #        echo -n "... connected with no device"
-        #    loop_cnt=$(expr $loop_cnt + 1)
-        #    [ $loop_cnt -gt 12 ] && echo_fail && return 1
-        #    echo -n "."
-        #    sleep 3
-        # done
+        while True:
+            BSD_TEST('iscsictl -L') is True
+            state = 'cat /tmp/.bsdCmdTestStdOut | '
+            state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
+            iscsi_state = return_output(state)
+            dev = 'cat /tmp/.bsdCmdTestStdOut | '
+            'awk \'$2 == "%s:3620" {print $4}\''
+            iscsi_dev = return_output(dev)
+            if iscsi_state == "Connected:":
+                self.DEVICE_NAME = iscsi_dev
+                print('using "%s"' % self.DEVICE_NAME)
+                break
+            sleep(3)
 
     def test_11_Format_the_target_volume(self):
         assert BSD_TEST('newfs "/dev/%s"' % DEVICE_NAME) is True

@@ -69,11 +69,13 @@ def DELETE_ALL(testpath, payload):
 
 
 def SSH_TEST(command):
+    teststdout = "/tmp/.sshCmdTestStdOut"
     cmd = "sshpass -p %s " % password
     cmd += "ssh -o StrictHostKeyChecking=no "
     cmd += "-o UserKnownHostsFile=/dev/null "
     cmd += "-o VerifyHostKeyDNS=no "
-    cmd += "%s@%s '%s'" % (user, ip, command)
+    cmd += "%s@%s '%s' " % (user, ip, command)
+    cmd += "> %s" % teststdout
     process = run(cmd, shell=True)
     if process.returncode != 0:
         return False
@@ -82,6 +84,7 @@ def SSH_TEST(command):
 
 
 def BSD_TEST(command):
+    teststdout = "/tmp/.bsdCmdTestStdOut"
     try:
         BSD_PASSWORD
         BSD_USERNAME
@@ -93,7 +96,8 @@ def BSD_TEST(command):
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
-        cmd += "%s@%s '%s'" % (BSD_USERNAME, BSD_HOST, command)
+        cmd += "%s@%s '%s' " % (BSD_USERNAME, BSD_HOST, command)
+        cmd += "> %s" % teststdout
         process = run(cmd, shell=True)
         if process.returncode != 0:
             return False
@@ -102,6 +106,7 @@ def BSD_TEST(command):
 
 
 def OSX_TEST(command):
+    teststdout = "/tmp/.osxCmdTestStdOut"
     try:
         OSX_PASSWORD
         OSX_USERNAME
@@ -113,7 +118,8 @@ def OSX_TEST(command):
         cmd += "ssh -o StrictHostKeyChecking=no "
         cmd += "-o UserKnownHostsFile=/dev/null "
         cmd += "-o VerifyHostKeyDNS=no "
-        cmd += "%s@%s '%s'" % (OSX_USERNAME, OSX_HOST, command)
+        cmd += "%s@%s '%s' " % (OSX_USERNAME, OSX_HOST, command)
+        cmd += "> %s" % teststdout
         process = run(cmd, shell=True)
         if process.returncode != 0:
             return False
