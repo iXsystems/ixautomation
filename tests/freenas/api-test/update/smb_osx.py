@@ -10,7 +10,8 @@ import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, DELETE, DELETE_ALL
-
+from functions import OSX_TEST, return_output
+from auto_config import ip
 try:
     from config import BRIDGEHOST, BRIDGEDOMAIN, ADPASSWORD, ADUSERNAME
     from config import LDAPBASEDN, LDAPHOSTNAME, LDAPBINDDN, LDAPBINDPASSWORD
@@ -21,6 +22,7 @@ DATASET = "smb-bsd"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/smb-bsd" + BRIDGEHOST
+VOL_GROUP = "wheel"
 
 
 class smb_osx_test(unittest.TestCase):
@@ -87,7 +89,46 @@ class smb_osx_test(unittest.TestCase):
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
-    def test_08_Removing_SMB_share_on_SMB_PATH(self):
+    # Mount share on OSX system and create a test file
+    def test_08_Create_mount_point_for_SMB_on_OSX_system(self):
+        assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
+
+    def test_09_Mount_SMB_share_on_OSX_system(self):
+        cmd = 'mount -t smbfs "smb://guest@'
+        cmd += '%s/%s" "%s"' % (ip, SMB_NAME, MOUNTPOINT)
+        assert OSX_TEST(cmd) is True
+
+    def test_10_Checking_permissions_on_MOUNTPOINT(self):
+        device_name = return_output('dirname "%s"' % MOUNTPOINT)
+        cmd = 'ls -la "%s" | ' % device_name
+        cmd += 'awk \'$4 == "%s" && $9 == "%s" \'' % (VOL_GROUP, DATASET)
+        assert OSX_TEST(cmd) is True
+
+    def test_11_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
+        assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
+
+    # Move test file to a new location on the SMB share
+    def test_12_Moving_SMB_test_file_into_a_new_directory(self):
+        cmd = 'mkdir -p "${MOUNTPOINT}/tmp" && ' % MOUNTPOINT
+        cmd += 'mv "${MOUNTPOINT}/testfile.txt" ' % MOUNTPOINT
+        cmd += '"${MOUNTPOINT}/tmp/testfile.txt"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Delete test file and test directory from SMB share
+    def test_13_Deleting_test_file_and_directory_from_SMB_share(self):
+        cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
+        cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    def test_14_Verifying_test_file_directory_were_successfully_removed(self):
+        cmd = 'find -- "%s/" -prune -type d -empty | grep -q .' % MOUNTPOINT
+        assert OSX_TEST(cmd) is True
+
+    # Clean up mounted SMB share
+    def test_15_Unmount_SMB_share(self):
+        assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
+
+    def test_16_Removing_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
@@ -96,14 +137,14 @@ class smb_osx_test(unittest.TestCase):
         assert DELETE_ALL("/sharing/cifs/", payload) == 204
 
     # Now stop the service
-    def test_09_Stopping_SMB_service(self):
+    def test_18_Stopping_SMB_service(self):
         assert PUT("/services/services/cifs/", {"srv_enable": False}) == 200
 
-    def test_10_Verify_SMB_service_is_disabled(self):
+    def test_19_Verify_SMB_service_is_disabled(self):
         assert GET_OUTPUT("/services/services/cifs/", "srv_state") == "STOPPED"
 
     # Check destroying a SMB dataset
-    def test_11_Destroying_SMB_dataset(self):
+    def test_20_Destroying_SMB_dataset(self):
         assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 
