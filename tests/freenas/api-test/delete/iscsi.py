@@ -9,7 +9,7 @@ import sys
 import os
 apifolder = os.getcwd()
 sys.path.append(apifolder)
-from functions import DELETE, PUT
+from functions import DELETE, PUT, BSD_TEST
 
 try:
     from config import BRIDGEHOST
@@ -27,6 +27,10 @@ class iscsi_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         PUT("/services/services/iscsitarget/", {"srv_enable": False})
+        BSD_TEST("iscsictl -R -t %s" % TARGET_NAME)
+        cmd = 'umount -f "${MOUNTPOINT}" &>/dev/null ; ' % MOUNTPOINT
+        cmd += 'rmdir "${MOUNTPOINT}" &>/dev/null' % MOUNTPOINT
+        BSD_TEST(cmd)
 
     # Remove iSCSI target
     def test_01_Delete_iSCSI_target(self):
