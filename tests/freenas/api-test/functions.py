@@ -137,7 +137,11 @@ def RC_TEST(command):
 
 def return_output(command):
     process = Popen(command, shell=True, stdout=PIPE, universal_newlines=True)
-    return process.stdout.readlines()[0].strip()
+    output = process.stdout.readlines()
+    if len(output) == 0:
+        return None
+    else:
+        return output[0].strip()
 
 
 def start_ssh_agent():
