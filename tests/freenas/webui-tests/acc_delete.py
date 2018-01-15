@@ -171,6 +171,8 @@ class delete_test(unittest.TestCase):
                 break
             ui_element = " "
 
+        print ("index, delNum, y: " + index + ", " + delNum + "," + y)
+
         #click on the 3 dots
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[" + str(num) + "]/div/app-entity-table-actions/div/md-icon").click()
         #click on delete option
