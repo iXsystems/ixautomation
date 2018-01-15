@@ -19,7 +19,7 @@ class cronjob_test(unittest.TestCase):
 
     # Ensure test file does exist
     def test_01_Verify_cronjob_has_created_the_test_file(seff):
-        assert SSH_TEST("test -f " + TESTFILE) == True
+        assert SSH_TEST("test -f %s" % TESTFILE) == True
 
     # Update cronjob to disabled with new cron_command
     def test_02_Updating_cron_job_status_to_disabled_updating_command(self):

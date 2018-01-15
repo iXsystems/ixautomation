@@ -52,14 +52,14 @@ class iscsi_test(unittest.TestCase):
         assert POST("/services/iscsi/target/", payload) == 201
 
     # Add Target to groups
-    # def test_04_Add_target_to_groups(self):
-    #    payload = {"iscsi_target": "1",
-    #               "iscsi_target_authgroup": None,
-    #               "iscsi_target_portalgroup": 1,
-    #               "iscsi_target_initiatorgroup": "1",
-    #               "iscsi_target_authtype": None,
-    #               "iscsi_target_initialdigest": "Auto"}
-    #    assert POST("/services/iscsi/targetgroup/", payload) == 201
+    def test_04_Add_target_to_groups(self):
+        payload = {"iscsi_target": "1",
+                   "iscsi_target_authgroup": None,
+                   "iscsi_target_portalgroup": 1,
+                   "iscsi_target_initiatorgroup": "1",
+                   "iscsi_target_authtype": None,
+                   "iscsi_target_initialdigest": "Auto"}
+        assert POST("/services/iscsi/targetgroup/", payload) == 201
 
     # Add iSCSI extent
     def test_05_Add_ISCSI_extent(self):
@@ -99,10 +99,10 @@ class iscsi_test(unittest.TestCase):
             state = 'cat /tmp/.bsdCmdTestStdOut | '
             state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
             iscsi_state = return_output(state)
-            dev = 'cat /tmp/.bsdCmdTestStdOut | '
-            dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
-            iscsi_dev = return_output(dev)
             if iscsi_state == "Connected:":
+                dev = 'cat /tmp/.bsdCmdTestStdOut | '
+                dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
+                iscsi_dev = return_output(dev)
                 self.DEVICE_NAME = iscsi_dev
                 print('using "%s"' % self.DEVICE_NAME)
                 break
