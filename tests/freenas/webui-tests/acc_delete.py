@@ -176,11 +176,14 @@ class delete_test(unittest.TestCase):
             ui_element = " "
 
         print ("index, delNum, num: " + str(index) + ", " + str(delNum) + "," + str(num))
+        time.sleep(1)
 
         #click on the 3 dots
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[" + str(num) + "]/div/app-entity-table-actions/div/md-icon").click()
+        time.sleep(1)
         #click on delete option
-        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[" + str(delNum) + "]/button/div").click()
+#        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[" + str(delNum) + "]/button/div").click()
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[3]/button/div").click()
         #click on confirmation checkbox
         driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
         #click on Ok
