@@ -74,7 +74,7 @@ class afp_osx_test(unittest.TestCase):
     # def test_09_Checking_permissions_on_MOUNTPOINT(self):
     #     device_name = return_output('dirname "$%s"' % MOUNTPOINT)
     #     cmd = 'ls -la "$%s" | ' % device_name
-    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert OSX_TEST(cmd) is True
 
     def test_10_Create_file_on_AFP_share_via_OSX_to_test_permissions(self):

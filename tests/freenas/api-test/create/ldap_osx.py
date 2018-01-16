@@ -107,7 +107,7 @@ class ldap_osx_test(unittest.TestCase):
     # def test_09_Checking_permissions_on_SMB_NAME(self):
     #     vol_name = return_output('dirname "%s"' % SMB_NAME)
     #     cmd = 'ls -la "%s" | ' % vol_name
-    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert SSH_TEST(cmd) is True
 
     # Mount share on OSX system and create a test file
@@ -122,7 +122,7 @@ class ldap_osx_test(unittest.TestCase):
     # def test_12_Checking_permissions_on_MOUNTPOINT(self):
     #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
     #     cmd = 'time ls -la "%s" | ' % device_name
-    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert OSX_TEST(cmd) is True
 
     def test_13_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
