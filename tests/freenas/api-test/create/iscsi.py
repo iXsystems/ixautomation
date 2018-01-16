@@ -92,6 +92,7 @@ class iscsi_test(unittest.TestCase):
     def test_09_Connecting_to_iSCSI_target(self):
         cmd = 'iscsictl -A -p %s:3620 -t %s' % (ip, TARGET_NAME)
         assert BSD_TEST(cmd) is True
+        exit()
 
     def test_10_Waiting_for_iscsi_connection_before_grabbing_device_name(self):
         while True:
@@ -99,6 +100,7 @@ class iscsi_test(unittest.TestCase):
             state = 'cat /tmp/.bsdCmdTestStdOut | '
             state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
             iscsi_state = return_output(state)
+            print(iscsi_state)
             if iscsi_state == "Connected:":
                 dev = 'cat /tmp/.bsdCmdTestStdOut | '
                 dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
