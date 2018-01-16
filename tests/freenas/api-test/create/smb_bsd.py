@@ -100,7 +100,7 @@ class smb_bsd_test(unittest.TestCase):
     # def test_09_Checking_permissions_on_MOUNTPOINT(self):
     #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
     #     cmd = 'ls -la "${device_name}" | ' % device_name
-    #     cmd += 'awk \'\$4 == "%s" && \$9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
     #     assert BSD_TEST(cmd) is True
 
     def test_10_Creating_SMB_file(self):
