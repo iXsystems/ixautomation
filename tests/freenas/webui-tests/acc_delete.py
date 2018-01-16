@@ -148,16 +148,20 @@ class delete_test(unittest.TestCase):
         time.sleep(1)
         #click select the highest number i.e 100
 
-        for y in range(0, 10):
-            if self.is_element_present(By.XPATH, "/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]"):
-                search=driver.find_element_by_xpath("/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]")
-                #get element data
-                search_data=search.text
-                if search_data == "100":
-                    driver.find_element_by_xpath("/html/body/div[" + str(y) + "]/div[2]/div/div/md-option[4]").click()
-                    break
+#        for y in range(0, 10):
+#            if self.is_element_present(By.XPATH, "/html/body/div[3]/div[2]/div/div/md-option[" + str(y) + "]"):
+#                search=driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[" + str(y) + "]")
+#                #get element data
+#                search_data=search.text
+#                print ("Loop first condition satisfied at: " + str(y))
+#                if search_data == "100":
+#                    driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[" + str(y) + "]").click()
+#                    print ("Loop Second condition satisfied at: "+ str(y))
+#                    break
+#            else:
+#                print ("Loop not working at all")
 
-#        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
         #wait till the list is loaded
         time.sleep(5)
         index = 0
@@ -171,7 +175,7 @@ class delete_test(unittest.TestCase):
                 break
             ui_element = " "
 
-        print ("index, delNum, y: " + index + ", " + delNum + "," + y)
+        print ("index, delNum, num: " + str(index) + ", " + str(delNum) + "," + str(num))
 
         #click on the 3 dots
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[" + str(num) + "]/div/app-entity-table-actions/div/md-icon").click()
