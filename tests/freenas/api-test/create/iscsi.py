@@ -29,12 +29,12 @@ class iscsi_test(unittest.TestCase):
     def setUpClass(inst):
         payload = {"srv_enable": False}
         PUT("/services/services/iscsitarget/", payload)
-        BSD_TEST("iscsictl -R -t %s" % TARGET_NAME)
+        BSD_TEST("iscsictl -R -a")
         BSD_TEST('umount -f "%s" &>/dev/null' % MOUNTPOINT)
         BSD_TEST('rmdir "%s" &>/dev/null' % MOUNTPOINT)
 
     # Add iSCSI initator
-    def Test_01_Add_iSCSI_initiator(self):
+    def test_01_Add_iSCSI_initiator(self):
         payload = {"id": 1,
                    "iscsi_target_initiator_auth_network": "ALL",
                    "iscsi_target_initiator_comment": "",
@@ -80,7 +80,7 @@ class iscsi_test(unittest.TestCase):
 
     # Enable the iSCSI service
     def test_07_Enable_iSCSI_service(self):
-        payload = {"srv_enable": "true"}
+        payload = {"srv_enable": True}
         assert PUT("/services/services/iscsitarget/", payload) == 200
 
     def test_08_Verify_the_iSCSI_service_is_enabled(self):

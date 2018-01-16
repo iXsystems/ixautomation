@@ -28,9 +28,9 @@ class iscsi_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         PUT("/services/services/iscsitarget/", {"srv_enable": False})
-        BSD_TEST("iscsictl -R -t ${TARGET_NAME}")
-        BSD_TEST("umount -f \"${MOUNTPOINT}\" &>/dev/null")
-        BSD_TEST("rmdir \"${MOUNTPOINT}\" &>/dev/null")
+        BSD_TEST('iscsictl -R -a')
+        BSD_TEST('umount -f "%s" &>/dev/null' % MOUNTPOINT)
+        BSD_TEST('rmdir "%s" &>/dev/null' % MOUNTPOINT)
 
     # Enable the iSCSI service
     def test_01_Enable_iSCSI_service(self):
