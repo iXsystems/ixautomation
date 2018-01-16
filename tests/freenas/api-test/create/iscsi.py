@@ -54,10 +54,10 @@ class iscsi_test(unittest.TestCase):
     # Add Target to groups
     def test_04_Add_target_to_groups(self):
         payload = {"iscsi_target": 1,
-                   "iscsi_target_authgroup": None,
+                   "iscsi_target_authgroup": "null",
                    "iscsi_target_portalgroup": 1,
                    "iscsi_target_initiatorgroup": 1,
-                   "iscsi_target_authtype": None,
+                   "iscsi_target_authtype": "None",
                    "iscsi_target_initialdigest": "Auto"}
         assert POST("/services/iscsi/targetgroup/", payload) == 201
 

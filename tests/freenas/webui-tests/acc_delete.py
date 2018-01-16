@@ -84,22 +84,22 @@ class delete_test(unittest.TestCase):
         #assert response
         self.assertTrue("Group" in page_data)
 
-    def test_02_01_delete_user(self):
+    def test_02_01_delete_group(self):
         print (" deleting a group: " + newusername)
         time.sleep(2)
         self.delete("group", newusername)
 
-    def test_02_02_delete_user(self):
+    def test_02_02_delete_group(self):
         print (" deleting a group: " + superusername)
         time.sleep(2)
         self.delete("group", superusername)
 
-    def test_02_03_delete_user(self):
+    def test_02_03_delete_group(self):
         print (" deleting a group: " + newgroupname)
         time.sleep(2)
         self.delete("group", newgroupname)
 
-    def test_02_04_delete_user(self):
+    def test_02_04_delete_group(self):
         print (" deleting a group: " + supergroupname)
         time.sleep(2)
         self.delete("group", supergroupname)
@@ -144,8 +144,8 @@ class delete_test(unittest.TestCase):
         #Click User submenu
         driver.find_element_by_xpath(xpaths['submenu' + path]).click()
         #click on the item per page option
-        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
-        time.sleep(1)
+#        driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
+#        time.sleep(1)
         #click select the highest number i.e 100
 
 #        for y in range(0, 10):
@@ -161,9 +161,9 @@ class delete_test(unittest.TestCase):
 #            else:
 #                print ("Loop not working at all")
 
-        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
+#        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
         #wait till the list is loaded
-        time.sleep(5)
+        time.sleep(2)
         index = 0
         ui_text = "null"
         for x in range(0, 8):
