@@ -84,22 +84,22 @@ class delete_test(unittest.TestCase):
         #assert response
         self.assertTrue("Group" in page_data)
 
-    def test_02_01_delete_user(self):
+    def test_02_01_delete_group(self):
         print (" deleting a group: " + newusername)
         time.sleep(2)
         self.delete("group", newusername)
 
-    def test_02_02_delete_user(self):
+    def test_02_02_delete_group(self):
         print (" deleting a group: " + superusername)
         time.sleep(2)
         self.delete("group", superusername)
 
-    def test_02_03_delete_user(self):
+    def test_02_03_delete_group(self):
         print (" deleting a group: " + newgroupname)
         time.sleep(2)
         self.delete("group", newgroupname)
 
-    def test_02_04_delete_user(self):
+    def test_02_04_delete_group(self):
         print (" deleting a group: " + supergroupname)
         time.sleep(2)
         self.delete("group", supergroupname)
