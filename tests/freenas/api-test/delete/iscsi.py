@@ -28,8 +28,8 @@ class iscsi_test(unittest.TestCase):
     def setUpClass(inst):
         PUT("/services/services/iscsitarget/", {"srv_enable": False})
         BSD_TEST("iscsictl -R -t %s" % TARGET_NAME)
-        cmd = 'umount -f "${MOUNTPOINT}" &>/dev/null ; ' % MOUNTPOINT
-        cmd += 'rmdir "${MOUNTPOINT}" &>/dev/null' % MOUNTPOINT
+        cmd = 'umount -f "%s" &>/dev/null ; ' % MOUNTPOINT
+        cmd += 'rmdir "%s" &>/dev/null' % MOUNTPOINT
         BSD_TEST(cmd)
 
     # Remove iSCSI target
