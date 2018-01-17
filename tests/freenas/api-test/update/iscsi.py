@@ -18,6 +18,8 @@ except ImportError:
     exit()
 
 MOUNTPOINT = "/tmp/iscsi" + BRIDGEHOST
+global DEVICE_NAME
+DEVICE_NAME = ""
 DEVICE_NAME_PATH = "/tmp/freenasiscsi"
 TARGET_NAME = "iqn.1994-09.freenasqa:target0"
 
@@ -55,8 +57,9 @@ class iscsi_test(unittest.TestCase):
                 dev = 'cat /tmp/.bsdCmdTestStdOut | '
                 dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
                 iscsi_dev = return_output(dev)
-                self.DEVICE_NAME = iscsi_dev
-                print('using "%s"' % self.DEVICE_NAME)
+                global DEVICE_NAME
+                DEVICE_NAME = iscsi_dev
+                print('using "%s"' % DEVICE_NAME)
                 break
             sleep(3)
 
@@ -65,7 +68,7 @@ class iscsi_test(unittest.TestCase):
         BSD_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_06_Mount_the_target_volume(self):
-        BSD_TEST('mount "/dev/%s" "%s"' % (self.DEVICE_NAME,
+        BSD_TEST('mount "/dev/%s" "%s"' % (DEVICE_NAME,
                                            MOUNTPOINT)) is True
 
     def test_07_Creating_45MB_file_to_verify_vzol_size_increase(self):
