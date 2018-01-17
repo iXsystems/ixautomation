@@ -18,7 +18,8 @@ except ImportError:
     exit()
 
 MOUNTPOINT = "/tmp/iscsi" + BRIDGEHOST
-DEVICE_NAME = "tmp/freenasiscsi"
+global DEVICE_NAME
+DEVICE_NAME = ""
 TARGET_NAME = "iqn.1994-09.freenasqa:target0"
 
 
@@ -56,7 +57,7 @@ class iscsi_test(unittest.TestCase):
         payload = {"iscsi_target": 1,
                    "iscsi_target_authgroup": "null",
                    "iscsi_target_portalgroup": 1,
-                   "iscsi_target_initiatorgroup": 1,
+                   "iscsi_target_initiatorgroup": "null",
                    "iscsi_target_authtype": "None",
                    "iscsi_target_initialdigest": "Auto"}
         assert POST("/services/iscsi/targetgroup/", payload) == 201
@@ -92,7 +93,6 @@ class iscsi_test(unittest.TestCase):
     def test_09_Connecting_to_iSCSI_target(self):
         cmd = 'iscsictl -A -p %s:3620 -t %s' % (ip, TARGET_NAME)
         assert BSD_TEST(cmd) is True
-        exit()
 
     def test_10_Waiting_for_iscsi_connection_before_grabbing_device_name(self):
         while True:
@@ -100,24 +100,23 @@ class iscsi_test(unittest.TestCase):
             state = 'cat /tmp/.bsdCmdTestStdOut | '
             state += 'awk \'$2 == "%s:3620" {print $3}\'' % ip
             iscsi_state = return_output(state)
-            print(iscsi_state)
             if iscsi_state == "Connected:":
                 dev = 'cat /tmp/.bsdCmdTestStdOut | '
                 dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
                 iscsi_dev = return_output(dev)
-                self.DEVICE_NAME = iscsi_dev
-                print('using "%s"' % self.DEVICE_NAME)
+                global DEVICE_NAME
+                DEVICE_NAME = iscsi_dev
                 break
             sleep(3)
 
     def test_11_Format_the_target_volume(self):
-        assert BSD_TEST('newfs "/dev/%s"' % self.DEVICE_NAME) is True
+        assert BSD_TEST('newfs "/dev/%s"' % DEVICE_NAME) is True
 
     def test_12_Creating_iSCSI_mountpoint(self):
         assert BSD_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_13_Mount_the_target_volume(self):
-        cmd = 'mount "/dev/%s" "%s"' % (self.DEVICE_NAME, MOUNTPOINT)
+        cmd = 'mount "/dev/%s" "%s"' % (DEVICE_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
     def test_14_Creating_file(self):
