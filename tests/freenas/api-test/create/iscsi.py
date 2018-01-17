@@ -18,7 +18,8 @@ except ImportError:
     exit()
 
 MOUNTPOINT = "/tmp/iscsi" + BRIDGEHOST
-DEVICE_NAME = "tmp/freenasiscsi"
+global DEVICE_NAME
+DEVICE_NAME = ""
 TARGET_NAME = "iqn.1994-09.freenasqa:target0"
 
 
@@ -103,19 +104,19 @@ class iscsi_test(unittest.TestCase):
                 dev = 'cat /tmp/.bsdCmdTestStdOut | '
                 dev += 'awk \'$2 == "%s:3620" {print $4}\'' % ip
                 iscsi_dev = return_output(dev)
-                self.DEVICE_NAME = iscsi_dev
-                print('using "%s"' % self.DEVICE_NAME)
+                global DEVICE_NAME
+                DEVICE_NAME = iscsi_dev
                 break
             sleep(3)
 
     def test_11_Format_the_target_volume(self):
-        assert BSD_TEST('newfs "/dev/%s"' % self.DEVICE_NAME) is True
+        assert BSD_TEST('newfs "/dev/%s"' % DEVICE_NAME) is True
 
     def test_12_Creating_iSCSI_mountpoint(self):
         assert BSD_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_13_Mount_the_target_volume(self):
-        cmd = 'mount "/dev/%s" "%s"' % (self.DEVICE_NAME, MOUNTPOINT)
+        cmd = 'mount "/dev/%s" "%s"' % (DEVICE_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
     def test_14_Creating_file(self):
