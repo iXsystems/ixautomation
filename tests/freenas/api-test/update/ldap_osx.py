@@ -21,8 +21,8 @@ except ImportError:
 
 DATASET = "ldap-osx"
 SMB_NAME = "TestShare"
-SMB_PATH = "/mnt/tank/${DATASET}"
-MOUNTPOINT = "/tmp/ldap-osx${BRIDGEHOST}"
+SMB_PATH = "/mnt/tank/%s" % DATASET
+MOUNTPOINT = "/tmp/ldap-osx%s" % BRIDGEHOST
 LDAP_USER = "ldapuser"
 LDAP_PASS = "12345678"
 VOL_GROUP = "wheel"
@@ -99,7 +99,7 @@ class ldap_osx_test(unittest.TestCase):
                    "mp_user": "root",
                    "mp_group": "wheel",
                    "mp_recursive": True}
-        assert PUT("/storage/permission/", payload) == 200
+        assert PUT("/storage/permission/", payload) == 201
 
     def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
@@ -137,7 +137,7 @@ class ldap_osx_test(unittest.TestCase):
     # Delete test file and test directory from SMB share
     def test_14_Deleting_test_file_and_directory_from_SMB_share(self):
         cmd = 'rm -f "%s/tmp/testfile.txt" && ' % MOUNTPOINT
-        cmd += 'rmdir "${MOUNTPOINT}/tmp"' % MOUNTPOINT
+        cmd += 'rmdir "%s/tmp"' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
     def test_15_Verifying_test_file_directory_were_successfully_removed(self):
@@ -146,7 +146,7 @@ class ldap_osx_test(unittest.TestCase):
 
     # Clean up mounted SMB share
     def test_16_Unmount_SMB_share(self):
-        assert OSX_TEST("umount -f '${MOUNTPOINT}'") is True
+        assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
 
     def test_17_Removing_SMB_share_on_SMB_PATH(self):
         payload = {"cfs_comment": "My Test SMB Share",
