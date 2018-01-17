@@ -51,7 +51,7 @@ def POST(testpath, payload):
 
 def POSTNOJSON(testpath, payload):
     postit = requests.post(freenas_url + testpath, headers=header,
-                           auth=authentification, data=json.dumps(payload))
+                           auth=authentification, data=payload)
     return postit.status_code
 
 

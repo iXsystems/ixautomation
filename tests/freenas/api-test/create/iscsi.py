@@ -11,6 +11,7 @@ from time import sleep
 apifolder = os.getcwd()
 sys.path.append(apifolder)
 from functions import PUT, POST, GET_OUTPUT, BSD_TEST, return_output
+from functions import POSTNOJSON
 from auto_config import ip
 try:
     from config import BRIDGEHOST
@@ -54,13 +55,13 @@ class iscsi_test(unittest.TestCase):
 
     # Add Target to groups
     def test_04_Add_target_to_groups(self):
-        payload = {"iscsi_target": "1",
-                   "iscsi_target_authgroup": "null",
+        payload = '''{"iscsi_target": "1",
+                   "iscsi_target_authgroup": null,
                    "iscsi_target_portalgroup": 1,
                    "iscsi_target_initiatorgroup": "1",
                    "iscsi_target_authtype": "None",
-                   "iscsi_target_initialdigest": "Auto"}
-        assert POST("/services/iscsi/targetgroup/", payload) == 201
+                   "iscsi_target_initialdigest": "Auto"}'''
+        assert POSTNOJSON("/services/iscsi/targetgroup/", payload) == 201
 
     # Add iSCSI extent
     def test_05_Add_ISCSI_extent(self):
