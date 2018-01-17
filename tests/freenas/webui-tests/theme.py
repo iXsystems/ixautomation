@@ -24,14 +24,7 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'themeBar' : "//*[@id='schemeToggle']/span/md-icon",
-          'theme1' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[1]/figure",
-          'theme2' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[2]/figure",
-          'theme3' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[3]/figure",
-          'theme4' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[4]/figure",
-          'theme5' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[5]/figure",
-          'theme6' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[6]/figure",
-          'theme7' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[7]/figure" 
+xpaths = { 'themeBar' : "//*[@id='schemeToggle']/span/md-icon"
           }
 
 
@@ -43,53 +36,25 @@ class change_theme_test(unittest.TestCase):
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_theme1(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 1st theme
-        driver.find_element_by_xpath(xpaths['theme1']).click()
-        time.sleep(3)
+        self.theme_change("1")
 
     def test_02_theme2(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 2nd theme
-        driver.find_element_by_xpath(xpaths['theme2']).click()
-        time.sleep(3)
+        self.theme_change("2")
 
     def test_03_theme3(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 3rd theme
-        driver.find_element_by_xpath(xpaths['theme3']).click()
-        time.sleep(3)
+        self.theme_change("3")
 
     def test_04_theme4(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 4th theme
-        driver.find_element_by_xpath(xpaths['theme4']).click()
-        time.sleep(3)
+        self.theme_change("4")
 
     def test_05_theme5(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 5th theme
-        driver.find_element_by_xpath(xpaths['theme5']).click()
-        time.sleep(3)
+        self.theme_change("5")
 
     def test_06_theme6(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 6th theme
-        driver.find_element_by_xpath(xpaths['theme6']).click()
-        time.sleep(3)
+        self.theme_change("6")
 
     def test_07_theme7(self):
-        #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 7th theme
-        driver.find_element_by_xpath(xpaths['theme7']).click()
-        time.sleep(3)
+        self.theme_change("7")
 
 
     #method to test if an element is present
@@ -102,6 +67,14 @@ class change_theme_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def theme_change(self, which):
+        #Click on the theme Button
+        driver.find_element_by_xpath(xpaths['themeBar']).click()
+        #Select 1st theme
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[" + str(which) + "]/figure/div/div[2]").click()
+        time.sleep(3)
+
 
     @classmethod
     def tearDownClass(inst):
