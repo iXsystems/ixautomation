@@ -164,9 +164,9 @@ class delete_test(unittest.TestCase):
 #        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
         #wait till the list is loaded
         time.sleep(2)
-        index = 0
+        index = 1
         ui_text = "null"
-        for x in range(0, 8):
+        for x in range(1, 8):
             if self.is_element_present(By.XPATH, "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-" + path + "-list/entity-table/div/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(x) + "]/datatable-body-row/div[2]/datatable-body-cell[1]/div/div"):
                 ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-" + path + "-list/entity-table/div/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(x) + "]/datatable-body-row/div[2]/datatable-body-cell[1]/div/div")
                 ui_text = ui_element.text
