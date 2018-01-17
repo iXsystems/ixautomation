@@ -25,13 +25,13 @@ except ImportError:
     import unittest
 
 xpaths = { 'themeBar' : "//*[@id='schemeToggle']/span/md-icon",
-          'theme1' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[1]/figure",
-          'theme2' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[2]/figure",
-          'theme3' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[3]/figure",
-          'theme4' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[4]/figure",
-          'theme5' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[5]/figure",
-          'theme6' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[6]/figure",
-          'theme7' : "/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[7]/figure" 
+          'theme1' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[1]/figure/div/div[2]",
+          'theme2' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[2]/figure/div/div[2]",
+          'theme3' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[3]/figure/div/div[2]",
+          'theme4' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[4]/figure/div/div[2]",
+          'theme5' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[5]/figure/div/div[2]",
+          'theme6' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[6]/figure/div/div[2]",
+          'theme7' : "/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[7]/figure/div/div[2]" 
           }
 
 
@@ -43,11 +43,13 @@ class change_theme_test(unittest.TestCase):
 
     #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_theme1(self):
+        self.theme_change("1")
+
         #Click on the theme Button
-        driver.find_element_by_xpath(xpaths['themeBar']).click()
+#        driver.find_element_by_xpath(xpaths['themeBar']).click()
         #Select 1st theme
-        driver.find_element_by_xpath(xpaths['theme1']).click()
-        time.sleep(3)
+#        driver.find_element_by_xpath(xpaths['theme1']).click()
+#        time.sleep(3)
 
     def test_02_theme2(self):
         #Click on the theme Button
@@ -102,6 +104,14 @@ class change_theme_test(unittest.TestCase):
         try: driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
+
+    def theme_change(self, which):
+        #Click on the theme Button
+        driver.find_element_by_xpath(xpaths['themeBar']).click()
+        #Select 1st theme
+        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[" + str(which) + "]/figure/div/div[2]").click()
+        time.sleep(3)
+
 
     @classmethod
     def tearDownClass(inst):
