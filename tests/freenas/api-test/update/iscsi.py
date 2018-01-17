@@ -32,7 +32,7 @@ class iscsi_test(unittest.TestCase):
         PUT("/services/services/iscsitarget/", {"srv_enable": False})
         BSD_TEST('iscsictl -R -a')
         BSD_TEST('umount -f "%s" &>/dev/null' % MOUNTPOINT)
-        BSD_TEST('rmdir "%s" &>/dev/null' % MOUNTPOINT)
+        BSD_TEST('rm -rf "%s" &>/dev/null' % MOUNTPOINT)
 
     # Enable the iSCSI service
     def test_01_Enable_iSCSI_service(self):
@@ -75,7 +75,7 @@ class iscsi_test(unittest.TestCase):
         BSD_TEST('dd if=/dev/zero of=/tmp/45Mfile.img bs=1M count=45') is True
 
     def test_08_Moving_45MB_file_to_verify_vzol_size_increase(self):
-        BSD_TEST('mv /tmp/45Mfile.img "/testfile1"' % MOUNTPOINT) is True
+        BSD_TEST('mv /tmp/45Mfile.img "%s/testfile1"' % MOUNTPOINT) is True
 
     def test_09_Deleting_file(self):
         BSD_TEST('rm "%s/testfile1"' % MOUNTPOINT) is True
@@ -84,7 +84,7 @@ class iscsi_test(unittest.TestCase):
         BSD_TEST('umount -f "%s"' % MOUNTPOINT) is True
 
     def test_11_Removing_iSCSI_volume_mountpoint(self):
-        BSD_TEST('rmdir "%s"' % MOUNTPOINT) is True
+        BSD_TEST('rm -rf "%s"' % MOUNTPOINT) is True
 
     def test_12_Disconnect_iSCSI_target(self):
         BSD_TEST('iscsictl -R -t %s' % TARGET_NAME) is True

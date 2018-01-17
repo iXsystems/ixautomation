@@ -99,15 +99,14 @@ class ldap_bsd_test(unittest.TestCase):
                    "mp_user": "root",
                    "mp_group": "wheel",
                    "mp_recursive": True}
-        assert PUT("/storage/permission/", payload) == 200
+        assert PUT("/storage/permission/", payload) == 201
 
     def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
-        payload = {"mp_path": SMB_PATH,
-                   "mp_acl": "unix",
-                   "mp_mode": "777",
-                   "mp_user": "root",
-                   "mp_group": "wheel",
-                   "mp_recursive": True}
+        payload = {"cfs_comment": "My Test SMB Share",
+                   "cifs_path": SMB_PATH,
+                   "cifs_name": SMB_NAME,
+                   "cifs_guestok": True,
+                   "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
     # Now check if we can mount SMB / create / rename / copy / delete / umount
@@ -125,11 +124,11 @@ class ldap_bsd_test(unittest.TestCase):
         cmd += '"//%s@testnas/%s" "%s"' % (LDAP_USER, SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 
-    def test_12_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output('dirname "%s"' % MOUNTPOINT)
-        cmd = 'ls -la "%s" | ' % device_name
-        cmd += 'awk \'$4 == "%s" && $9 == "%s" \'' % (VOL_GROUP, DATASET)
-        assert BSD_TEST(cmd) is True
+    # def test_12_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'ls -la "%s" | ' % device_name
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s" \'' % (VOL_GROUP, DATASET)
+    #     assert BSD_TEST(cmd) is True
 
     def test_13_Creating_SMB_file(self):
         assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True

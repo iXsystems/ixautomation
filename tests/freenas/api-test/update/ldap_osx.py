@@ -102,12 +102,11 @@ class ldap_osx_test(unittest.TestCase):
         assert PUT("/storage/permission/", payload) == 200
 
     def test_08_Creating_a_SMB_share_on_SMB_PATH(self):
-        payload = {"mp_path": SMB_PATH,
-                   "mp_acl": "unix",
-                   "mp_mode": "777",
-                   "mp_user": "root",
-                   "mp_group": "wheel",
-                   "mp_recursive": True}
+        payload = {"cfs_comment": "My Test SMB Share",
+                   "cifs_path": SMB_PATH,
+                   "cifs_name": SMB_NAME,
+                   "cifs_guestok": True,
+                   "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 
     # Mount share on OSX system and create a test file
@@ -119,11 +118,11 @@ class ldap_osx_test(unittest.TestCase):
         cmd += '@%s/%s" "%s"' % (ip, SMB_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    def test_11_Checking_permissions_on_MOUNTPOINT(self):
-        device_name = return_output('dirname "%s"' % MOUNTPOINT)
-        cmd = 'time ls -la "%s" | ' % device_name
-        cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
-        assert OSX_TEST(cmd) is True
+    # def test_11_Checking_permissions_on_MOUNTPOINT(self):
+    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
+    #     cmd = 'time ls -la "%s" | ' % device_name
+    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
+    #     assert OSX_TEST(cmd) is True
 
     def test_12_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % (MOUNTPOINT)) is True

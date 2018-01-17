@@ -32,7 +32,7 @@ class iscsi_test(unittest.TestCase):
         PUT("/services/services/iscsitarget/", payload)
         BSD_TEST("iscsictl -R -a")
         BSD_TEST('umount -f "%s" &>/dev/null' % MOUNTPOINT)
-        BSD_TEST('rmdir "%s" &>/dev/null' % MOUNTPOINT)
+        BSD_TEST('rm -rf "%s" &>/dev/null' % MOUNTPOINT)
 
     # Add iSCSI initator
     def test_01_Add_iSCSI_initiator(self):
@@ -140,7 +140,7 @@ class iscsi_test(unittest.TestCase):
         assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
 
     def test_19_Removing_iSCSI_volume_mountpoint(self):
-        assert BSD_TEST('rmdir "%s"' % MOUNTPOINT) is True
+        assert BSD_TEST('rm -rf "%s"' % MOUNTPOINT) is True
 
     def test_20_Disconnect_all_targets(self):
         assert BSD_TEST('iscsictl -R -t %s' % TARGET_NAME) is True
