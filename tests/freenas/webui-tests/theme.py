@@ -72,7 +72,7 @@ class change_theme_test(unittest.TestCase):
         #Click on the theme Button
         driver.find_element_by_xpath(xpaths['themeBar']).click()
         #Select 1st theme
-        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-grid-list/div/md-grid-tile[" + str(which) + "]/figure/div/div[2]").click()
+        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[" + str(which) + "]/figure/div/div[2]").click()
         time.sleep(3)
 
 
