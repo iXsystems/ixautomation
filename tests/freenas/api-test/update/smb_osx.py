@@ -109,9 +109,9 @@ class smb_osx_test(unittest.TestCase):
 
     # Move test file to a new location on the SMB share
     def test_12_Moving_SMB_test_file_into_a_new_directory(self):
-        cmd = 'mkdir -p "${MOUNTPOINT}/tmp" && ' % MOUNTPOINT
-        cmd += 'mv "${MOUNTPOINT}/testfile.txt" ' % MOUNTPOINT
-        cmd += '"${MOUNTPOINT}/tmp/testfile.txt"' % MOUNTPOINT
+        cmd = 'mkdir -p "%s/tmp" && ' % MOUNTPOINT
+        cmd += 'mv "%s/testfile.txt" ' % MOUNTPOINT
+        cmd += '"%s/tmp/testfile.txt"' % MOUNTPOINT
         assert OSX_TEST(cmd) is True
 
     # Delete test file and test directory from SMB share
