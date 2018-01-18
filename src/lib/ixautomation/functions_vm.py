@@ -45,6 +45,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             for iso in iso_list:
                 # Listing ISOs
                 print(" %s - %s" % (count, iso))
+                count += 1
             iso_selection = input("Enter your selection and press [ENTER]: ")
             # add 1 to iso_cnt to look in the full range.
             if int(iso_selection) in range(0, int(iso_cnt + 1)):
