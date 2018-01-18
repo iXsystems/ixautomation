@@ -4,12 +4,14 @@
 
 from os import getcwd
 
-baseurl = "http://10.20.20.135/ui"
+#baseurl = "http://10.20.20.135/ui"
 #baseurl = "http://10.211.1.117/ui"
+baseurl = "http://10.20.21.216/ui"
 #username for the machine
 username = "root"
 #password for the machine
-password = "testing"
+#password = "testing"
+password = "abcd1234"
 #new user with create primary group check
 newusername = "userNAS"
 #new user full name
