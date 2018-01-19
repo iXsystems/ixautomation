@@ -118,12 +118,6 @@ class ldap_osx_test(unittest.TestCase):
         cmd += '@%s/%s" "%s"' % (ip, SMB_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    # def test_11_Checking_permissions_on_MOUNTPOINT(self):
-    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
-    #     cmd = 'time ls -la "%s" | ' % device_name
-    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
-    #     assert OSX_TEST(cmd) is True
-
     def test_12_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % (MOUNTPOINT)) is True
 
