@@ -18,7 +18,7 @@ try:
 except ImportError:
     exit()
 
-DATASET = "smb-bsd"
+DATASET = "smb-bsd2"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/thank/" + DATASET
 MOUNTPOINT = "/tmp/smb-bsd" + BRIDGEHOST

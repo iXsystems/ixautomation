@@ -19,7 +19,7 @@ class cronjob_test(unittest.TestCase):
 
     # Ensure test file does exist
     def test_01_Verify_cronjob_has_created_the_test_file(seff):
-        assert SSH_TEST("test -f %s" % TESTFILE) == True
+        assert SSH_TEST('test -f "%s"' % TESTFILE) == True
 
     # Update cronjob to disabled with new cron_command
     def test_02_Updating_cron_job_status_to_disabled_updating_command(self):
@@ -34,7 +34,7 @@ class cronjob_test(unittest.TestCase):
     # Delete test file so we can verify it is no longer being created later
     # in the delete/cronjob test
     def test_02_Deleting_test_file_created_by_cronjob(self):
-        SSH_TEST("rm -f " + TESTFILE) is True
+        SSH_TEST('rm -f "%s"' % TESTFILE) is True
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
