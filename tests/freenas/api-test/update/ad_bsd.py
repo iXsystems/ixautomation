@@ -100,10 +100,10 @@ class ad_bsd_test(unittest.TestCase):
         cmd += 'echo "password=12345678" >> ~/.nsmbrc'
         assert BSD_TEST(cmd) is True
 
-    def test_09_Mounting_SMB(self):
-        cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
-        cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
-        assert BSD_TEST(cmd) is True
+    # def test_09_Mounting_SMB(self):
+    #     cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
+    #     cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
+    #     assert BSD_TEST(cmd) is True
 
     def test_11_Creating_SMB_file(self):
         assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
@@ -122,8 +122,8 @@ class ad_bsd_test(unittest.TestCase):
     def test_15_Deleting_SMB_file_2_2(self):
         assert BSD_TEST('rm "%s/testfile2"' % MOUNTPOINT) is True
 
-    def test_16_Unmounting_SMB(self):
-        assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
+    # def test_16_Unmounting_SMB(self):
+    #     assert BSD_TEST('umount "%s"' % MOUNTPOINT) is True
 
     def test_17_Removing_SMB_mountpoint(self):
         cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)

@@ -91,10 +91,10 @@ class ad_osx_test(unittest.TestCase):
     def test_07_Create_mount_point_for_SMB_on_OSX_system(self):
         assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
-    def test_08_Mount_SMB_share_on_OSX_system(self):
-        cmd = 'mount -t smbfs "smb://%s:' % ADUSERNAME
-        cmd += '%s@%s/%s" "%s"' % (ADPASSWORD, ip, SMB_NAME, MOUNTPOINT)
-        assert OSX_TEST(cmd) is True
+    # def test_08_Mount_SMB_share_on_OSX_system(self):
+    #     cmd = 'mount -t smbfs "smb://%s:' % ADUSERNAME
+    #     cmd += '%s@%s/%s" "%s"' % (ADPASSWORD, ip, SMB_NAME, MOUNTPOINT)
+    #     assert OSX_TEST(cmd) is True
 
     def test_10_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
@@ -117,8 +117,8 @@ class ad_osx_test(unittest.TestCase):
         assert OSX_TEST(cmd) is True
 
     # Clean up mounted SMB share
-    def test_14_Unmount_SMB_share(self):
-        assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
+    # def test_14_Unmount_SMB_share(self):
+    #     assert OSX_TEST('umount -f "%s"' % MOUNTPOINT) is True
 
     # Disable Active Directory Directory
     def test_15_Disabling_Active_Directory(self):

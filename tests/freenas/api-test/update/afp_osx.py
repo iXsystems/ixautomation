@@ -74,12 +74,6 @@ class afp_osx_test(unittest.TestCase):
         cmd = 'mount -t afp "afp://%s/%s" "%s"' % (ip, AFP_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
 
-    # def test_10_Checking_permissions_on_MOUNTPOINT(self):
-    #     device_name = return_output('dirname "%s"') % MOUNTPOINT
-    #     cmd = 'ls -la "%s" | ' % device_name
-    #     cmd += 'awk \'$4 == "%s" && $9 == "%s" \' ' % (VOL_GROUP, DATASET)
-    #     assert OSX_TEST(cmd) is True
-
     def test_11_Create_file_on_AFP_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
 
@@ -109,8 +103,8 @@ class afp_osx_test(unittest.TestCase):
         assert PUT("/services/afp/", {"afp_srv_guest": False}) == 200
 
     # Test delete AFP dataset
-    def test_17_Verify_AFP_dataset_can_be_destroyed(self):
-        assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
+    # def test_17_Verify_AFP_dataset_can_be_destroyed(self):
+    #     assert DELETE("/storage/volume/1/datasets/%s/" % DATASET) == 204
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
