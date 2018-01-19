@@ -88,7 +88,7 @@ class smb_bsd_test(unittest.TestCase):
         payload = {"cfs_comment": "My Test SMB Share",
                    "cifs_path": SMB_PATH,
                    "cifs_name": SMB_NAME,
-                   "cifs_guestok": True,
+                   "cifs_guestok": "true",
                    "cifs_vfsobjects": "streams_xattr"}
         assert POST("/sharing/cifs/", payload) == 201
 

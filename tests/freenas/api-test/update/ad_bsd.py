@@ -19,7 +19,7 @@ try:
 except ImportError:
     exit()
 
-DATASET = "ad-bsd"
+DATASET = "ad-bsd2"
 SMB_NAME = "TestShare"
 SMB_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/ad-bsd" + BRIDGEHOST
@@ -104,12 +104,6 @@ class ad_bsd_test(unittest.TestCase):
         cmd = 'mount_smbfs -N -I %s -W AD01 ' % ip
         cmd += '"//aduser@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
-
-    # def test_10_Checking_permissions_on_MOUNTPOINT(self):
-    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
-    #     cmd = 'ls -la "%s" | ' % device_name
-    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
-    #     assert BSD_TEST(cmd) is True
 
     def test_11_Creating_SMB_file(self):
         assert BSD_TEST('touch "%s/testfile"' % MOUNTPOINT) is True
