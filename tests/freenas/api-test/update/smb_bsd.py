@@ -97,7 +97,7 @@ class smb_bsd_test(unittest.TestCase):
         assert BSD_TEST('mkdir "%s" && sync' % MOUNTPOINT) is True
 
     def test_09_Mounting_SMB(self):
-        cmd = 'mount_smbfs -N -I %s' % ip
+        cmd = 'mount_smbfs -N -I %s ' % ip
         cmd += '//guest@testnas/%s %s' % (SMB_NAME, MOUNTPOINT)
         assert BSD_TEST(cmd) is True
 

@@ -92,15 +92,9 @@ class ad_osx_test(unittest.TestCase):
         assert OSX_TEST('mkdir -p "%s"' % MOUNTPOINT) is True
 
     def test_08_Mount_SMB_share_on_OSX_system(self):
-        cmd = 'mount -t smbfs "smb://aduser:12345678'
-        cmd += '@%s/%s" "%s"' % (ip, SMB_NAME, MOUNTPOINT)
+        cmd = 'mount -t smbfs "smb://%s:' % ADUSERNAME
+        cmd += '%s@%s/%s" "%s"' % (ADPASSWORD, ip, SMB_NAME, MOUNTPOINT)
         assert OSX_TEST(cmd) is True
-
-    # def test_09_Checking_permissions_on_MOUNTPOINT(self):
-    #     device_name = return_output('dirname "%s"' % MOUNTPOINT)
-    #     cmd = 'time ls -la "%s" | ' % device_name
-    #     cmd += 'awk \'$4 == "%s" && $9 == "%s"\'' % (VOL_GROUP, DATASET)
-    #     assert OSX_TEST(cmd) is True
 
     def test_10_Create_file_on_SMB_share_via_OSX_to_test_permissions(self):
         assert OSX_TEST('touch "%s/testfile.txt"' % MOUNTPOINT) is True
