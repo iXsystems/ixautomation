@@ -23,3 +23,15 @@ sysrc -f /etc/rc.conf vm_dir="/usr/local/ixautomation/vms"
 if [ ! -f "/usr/local/etc/ixautomation.conf" ] ; then
   cp /usr/local/etc/ixautomation.cfg.dist /usr/local/etc/ixautomation.cfg
 fi
+
+find /usr/local/lib -name selenium | grep selenium >/dev/null
+if [ "$?" != "0" ]; then
+  echo "Installing selenium"
+  pip-3.6 install selenium
+fi
+
+find /usr/local/lib -name xmlrunner | grep selenium >/dev/null
+if [ "$?" != "0" ]; then
+  echo "Installing selenium"
+  pip-3.6 install unittest-xml-reporting
+fi
