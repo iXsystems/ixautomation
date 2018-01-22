@@ -58,7 +58,7 @@ def jenkins_vm_tests(workspace, systype, test):
     vm_install(MASTERWRKDIR, systype, workspace)
     ip = vm_boot(MASTERWRKDIR, systype, workspace)
     jenkins_api_tests(workspace, systype, ip, test)
-    exit_clean(MASTERWRKDIR)
+    # exit_clean(MASTERWRKDIR)
 
 
 def jenkins_start_vm(workspace, systype):
