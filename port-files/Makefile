@@ -14,7 +14,7 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/firefox:www/firefox-esr \
 		${LOCALBASE}/bin/geckodriver:www/geckodriver \
-		xorg-vfbserver:>=0:x11-servers/xorg-vfbserver \
+		xorg-vfbserver>=0:x11-servers/xorg-vfbserver \
 		bhyve-firmware>=0:sysutils/bhyve-firmware
 
 WRKSRC_SUBDIR=  src

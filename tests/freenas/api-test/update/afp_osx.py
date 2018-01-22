@@ -17,7 +17,7 @@ try:
 except ImportError:
     exit()
 
-DATASET = "afp-osx"
+DATASET = "afp-osx2"
 AFP_NAME = "MyAFPShare"
 AFP_PATH = "/mnt/tank/" + DATASET
 MOUNTPOINT = "/tmp/afp-osx" + BRIDGEHOST
