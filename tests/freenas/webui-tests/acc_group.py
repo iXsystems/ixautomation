@@ -29,7 +29,7 @@ xpaths = {
           'submenuGroup' : "//*[@id='1-0']",
          'newGroupName' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
         'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
-        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button",
+        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial",
         'fabAction' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions/button"
         }
 
