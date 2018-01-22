@@ -84,22 +84,22 @@ class smb_bsd_test(unittest.TestCase):
                    "mp_group": "wheel"}
         assert PUT("/storage/permission/", payload) == 201
 
-    def test_07_Creating_a_SMB_share_on_SMB_PATH(self):
-        payload = {"cfs_comment": "My Test SMB Share",
-                   "cifs_path": SMB_PATH,
-                   "cifs_name": SMB_NAME,
-                   "cifs_guestok": True,
-                   "cifs_vfsobjects": "streams_xattr"}
-        assert POST("/sharing/cifs/", payload) == 201
+    # def test_07_Creating_a_SMB_share_on_SMB_PATH(self):
+    #     payload = {"cfs_comment": "My Test SMB Share",
+    #                "cifs_path": SMB_PATH,
+    #                "cifs_name": SMB_NAME,
+    #                "cifs_guestok": True,
+    #                "cifs_vfsobjects": "streams_xattr"}
+    #     assert POST("/sharing/cifs/", payload) == 201
 
     # Now check if we can mount SMB / create / rename / copy / delete / umount
     def test_08_Creating_SMB_mountpoint(self):
         assert BSD_TEST('mkdir "%s" && sync' % MOUNTPOINT) is True
 
-    def test_09_Mounting_SMB(self):
-        cmd = 'mount_smbfs -N -I %s ' % ip
-        cmd += '"//guest@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
-        assert BSD_TEST(cmd) is True
+    # def test_09_Mounting_SMB(self):
+    #     cmd = 'mount_smbfs -N -I %s ' % ip
+    #     cmd += '"//guest@testnas/%s" "%s"' % (SMB_NAME, MOUNTPOINT)
+    #     assert BSD_TEST(cmd) is True
 
     def test_11_Creating_SMB_file(self):
         assert BSD_TEST('touch %s/testfile' % MOUNTPOINT) is True
@@ -118,8 +118,8 @@ class smb_bsd_test(unittest.TestCase):
     def test_15_Deleting_SMB_file_2_2(self):
         assert BSD_TEST('rm %s/testfile2' % MOUNTPOINT) is True
 
-    def test_16_Unmounting_SMB(self):
-        assert BSD_TEST('umount -f %s' % MOUNTPOINT) is True
+    # def test_16_Unmounting_SMB(self):
+    #     assert BSD_TEST('umount -f %s' % MOUNTPOINT) is True
 
     def test_17_Removing_SMB_mountpoint(self):
         cmd = 'test -d "%s" && rmdir "%s" || exit 0' % (MOUNTPOINT, MOUNTPOINT)
