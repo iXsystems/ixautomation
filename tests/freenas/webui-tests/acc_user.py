@@ -37,7 +37,7 @@ xpaths = {
         'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
         'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div",
         'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
-        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-trigger/button",
+        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial",
         'fabAction' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions/button"
         }
 
@@ -76,6 +76,7 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         #Perform hover to show menu
+
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
@@ -248,8 +249,8 @@ class create_user_test(unittest.TestCase):
 
     def selectlist(self, element):
         for i in range(0,10):
-            if self.is_element_present(By.XPATH, "/html/body/div[3]/div[2]/div/div/md-option[" + str(i) + "]"):
-                dropdown_el = driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[" + str(i) + "]")
+            if self.is_element_present(By.XPATH, "/html/body/div[4]/div[2]/div/div/md-option[" + str(i) + "]"):
+                dropdown_el = driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/div/md-option[" + str(i) + "]")
                 dropdown_text = dropdown_el.text
                 if dropdown_text == element:
                     dropdown_el.click()
