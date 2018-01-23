@@ -57,8 +57,41 @@ def jenkins_vm_tests(workspace, systype, test):
     vm_select_iso(MASTERWRKDIR, systype, workspace)
     vm_install(MASTERWRKDIR, systype, workspace)
     ip = vm_boot(MASTERWRKDIR, systype, workspace)
-    jenkins_api_tests(workspace, systype, ip, test)
-    # exit_clean(MASTERWRKDIR)
+    if test == "api-tests":
+        jenkins_api_tests(workspace, systype, ip)
+    elif test == "middlewared-tests":
+        jenkins_middleware_tests(workspace, systype, ip)
+
+
+def jenkins_middleware_tests(workspace, systype, ip):
+    middlewaretestpath = "%s/tests/%s/middlewared-tests" % (workspace, systype)
+    os.chdir(middlewaretestpath)
+    cmd1 = "python3.6 setup_client.py install --user "
+    cmd1 += "--single-version-externally-managed --record"
+    run(cmd1, shell=True)
+    target = open('target.conf', 'w')
+    target.writelines('[Target]\n')
+    target.writelines('hostname = %s' % ip)
+    target.writelines('api = /api/v2.0/')
+    target.writelines('username = "root"')
+    target.writelines('password = "testing"')
+    target.close()
+    cmd2 = "sed -i '' \"s|'freenas'|'testing'|g\" "
+    cmd2 += "functional/test_0001_authentication.py"
+    run(cmd2, shell=True)
+    cmd3 = "python3.6 -m pytest -sv functional "
+    cmd3 += "--junitxml=results/middlewared.xml"
+    run(cmd3, shell=True)
+    os.chdir(workspace)
+
+
+def jenkins_api_tests(workspace, systype, ip):
+    apipath = "%s/tests/%s/api-test" % (workspace, systype)
+    os.chdir(apipath)
+    cmd = "python3.6 runtest.py --ip %s" % ip
+    cmd += " --password testing --interface vtnet0"
+    run(cmd, shell=True)
+    os.chdir(workspace)
 
 
 def jenkins_vm_destroy_all():
@@ -66,16 +99,6 @@ def jenkins_vm_destroy_all():
     vm_destroy_all()
     sys.exit(0)
     return 0
-
-
-def jenkins_api_tests(workspace, systype, ip, test):
-    if test is True:
-        apipath = "%s/tests/%s/api-test" % (workspace, systype)
-        os.chdir(apipath)
-        cmd = "python3.6 runtest.py --ip %s" % ip
-        cmd += " --password testing --interface vtnet0"
-        run(cmd, shell=True)
-        os.chdir(workspace)
 
 
 def jenkins_freenas_webui_tests(workspace, systype):
