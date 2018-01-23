@@ -2,13 +2,13 @@
 import sys
 from subprocess import call
 from os import path
-#when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
+# when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
 from driver import webDriver
-#from driverU import webDriver
-## Importing test
-#from autoflush import autoflush
+# from driverU import webDriver
+# Importing test
+# from autoflush import autoflush
 from login import run_login_test
-#from guide import run_guide_test
+# from guide import run_guide_test
 from acc_group import run_create_group_test
 from acc_user import run_create_user_test
 from serv_ssh import run_configure_ssh_test
@@ -25,9 +25,9 @@ sys.stdout.flush()
 
 global runDriver
 runDriver = webDriver()
-#turning on the autoflush to display result
-#autoflush(True)
-## Starting the test and genewratinf result
+# turning on the autoflush to display result
+# autoflush(True)
+# Starting the test and genewratinf result
 run_login_test(runDriver)
 # run_guide_test(runDriver)
 
@@ -71,12 +71,12 @@ else:
     run_change_theme_test(runDriver)
 
 run_logout_test(runDriver)
-#turning off autoflush, the default mode
-#autoflush(False)
-## Example test run
+# turning off autoflush, the default mode
+# autoflush(False)
+# Example test run
 # run_creat_nameofthetest(runDriver)
 
-##cleaning up files
+# cleaning up files
 if path.exists('login.pyc'):
     call(["rm", "login.pyc"])
 
@@ -128,7 +128,7 @@ if path.exists('theme.pyc'):
 if path.exists('autoflush.pyc'):
     call(["rm", "autoflush.pyc"])
 
-#if path.exists('example.pyc'):
+# if path.exists('example.pyc'):
 #    call(["rm", "example.pyc"])
 
 if path.exists('geckodriver.log'):

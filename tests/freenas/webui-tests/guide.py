@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 2
+# Test case count: 2
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -36,36 +36,36 @@ class view_guide_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
+    # Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_guide(self):
-        #Click an element indirectly
+        # Click an element indirectly
         driver.find_element_by_xpath(xpaths['navGuide']).click()
-        #allowing page to load by giving explicit time(in seconds)
+        # allowing page to load by giving explicit time(in seconds)
         time.sleep(1)
-        #get the ui element
+        # get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
-        #get the weather data
+        # get the weather data
         page_data=ui_element.text
         print ("the Page now is: " + page_data)
-        #assert response
+        # assert response
         self.assertTrue("Guide" in page_data)
 
     def test_02_check_version(self):
-        #cancelling the tour
+        # cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
 
-        #get the ui element
+        # get the ui element
         ui_element=driver.find_element_by_xpath("//*[@id='freenas-version-user-guide']/h1")
-        #get the weather data
+        # get the weather data
         page_data=ui_element.text
         print ("The version of FreeNAS guide is:  " + page_data)
-        #assert response to check version of freenas guide
+        # assert response to check version of freenas guide
         self.assertTrue("FreeNAS" in page_data)
         time.sleep(10)
 
 
-    #method to test if an element is present
+    # method to test if an element is present
     def is_element_present(self, how, what):
         """
         Helper method to confirm the presence of an element on page
@@ -79,10 +79,7 @@ class view_guide_test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(inst):
-        #if not the last module
         pass
-        #if it is the last module
-        #driver.close()
 
 def run_view_guide_test(webdriver):
     global driver

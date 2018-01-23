@@ -2,7 +2,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 1
+# Test case count: 1
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -37,23 +37,23 @@ class login_test(unittest.TestCase):
         driver.get(baseurl)
 
 
-    #Tests in numerals in order to sequence the tests
-    #Test enter username,password,login and check successfully login
+    # Tests in numerals in order to sequence the tests
+    # Test enter username,password,login and check successfully login
     def test_01_login(self):
         print ("loging in FreeNAS new webui- woot woot")
-        #enter username in the username textbox
+        # enter username in the username textbox
         driver.find_element_by_xpath(xpaths['usernameTxtBox']).clear()
         driver.find_element_by_xpath(xpaths['usernameTxtBox']).send_keys(username)
-        #enter password in the password textbox
+        # enter password in the password textbox
         driver.find_element_by_xpath(xpaths['passwordTxtBox']).send_keys(password)
-        #click
+        # click
         driver.find_element_by_xpath(xpaths['submitButton']).click()
 
-        #check if the dashboard opens
+        # check if the dashboard opens
         time.sleep(1)
-        #get the ui element
+        # get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
-        #get the weather data
+        # get the weather data
         page_data=ui_element.text
         print ("The page now is: " + page_data)
         #assert response
@@ -63,7 +63,7 @@ class login_test(unittest.TestCase):
         if self.is_element_present(By.XPATH,"/html/body/div[3]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[3]/div[1]/button").click()
 
-    #method to test if an element is present
+    # method to test if an element is present
     def is_element_present(self, how, what):
         """
         Helper method to confirm the presence of an element on page
@@ -76,7 +76,6 @@ class login_test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(inst):
-        #driver.close()
         pass
 
 def run_login_test(webdriver):
@@ -84,5 +83,5 @@ def run_login_test(webdriver):
     driver = webdriver
 
     suite = unittest.TestLoader().loadTestsFromTestCase(login_test)
-    #unittest.TextTestRunner(verbosity=2).run(suite)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
     xmlrunner.XMLTestRunner(output=results_xml, verbosity=2).run(suite)

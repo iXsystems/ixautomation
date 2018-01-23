@@ -3,7 +3,7 @@
 # Author: Eric Turgeon
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 1
+# Test case count: 1
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -37,23 +37,19 @@ class logout_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_logout(self):
         print (" loging out of the ui, see ya")
-        #Click on root account
+        # Click on root account
         driver.find_element_by_xpath(xpaths['rootButton']).click()
-        #Click on logout
+        # Click on logout
         time.sleep(2)
         driver.find_element_by_xpath(xpaths['logoutButton']).click()
         time.sleep(2)
-        #check the logout confirmation checkbox
-#        driver.find_element_by_xpath(xpaths['logoutconfirmationCheckbox']).click()
-        #Click on OK when re-confirm logout
+        # check the logout confirmation checkbox
+        # driver.find_element_by_xpath(xpaths['logoutconfirmationCheckbox']).click()
+        # Click on OK when re-confirm logout
         driver.find_element_by_xpath(xpaths['logoutconfirmationButton']).click()
         time.sleep(2)
-
-    # Next step-- To check if the new user is present in the list via automation
-
 
     #method to test if an element is present
     def is_element_present(self, how, what):

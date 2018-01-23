@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 5
+# Test case count: 5
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -47,151 +47,151 @@ class create_user_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
+    # Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_nav_acc_user(self):
-        #Click  Account menu
+        # Click  Account menu
         print (" navigating to the user submenu")
         a = driver.find_element_by_xpath(xpaths['navAccount'])
         a.click()
-        #allowing the button to load
+        # allowing the button to load
         time.sleep(1)
-        #Click User submenu
+        # Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #get the ui element
+        # get the ui element
         ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li[2]/a")
-        #get the weather data
+        # get the weather data
         page_data=ui_element.text
         print ("the Page now is: " + page_data)
-        #assert response
+        # assert response
         self.assertTrue("User" in page_data)
 
 
     def test_02_create_newuser(self):
         print (" creating a new user with create new primary group")
-        #cancelling the tour
+        # cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[5]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[5]/div[1]/button").click()
 
-        #scroll down to find hover tab
+        # scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #Perform hover to show menu
+        # Perform hover to show menu
 
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
-        #Click create new user option
+        # Click create new user option
         driver.find_element_by_xpath(xpaths['fabAction']).click()
-        #Enter New Username
+        # Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusername)
-        #Enter User Full name
+        # Enter User Full name
         driver.find_element_by_xpath(xpaths['newUserName']).send_keys(newuserfname)
-        #Enter Password
+        # Enter Password
         driver.find_element_by_xpath(xpaths['newUserPass']).send_keys(newuserpassword)
-        #Enter Password Conf
+        # Enter Password Conf
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
-        #Click on create new User button
+        # Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if there is a generic error when making a duplicate user, and print the error
+        # check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
 
     def test_03_create_newuser_primarygroup_uncheck(self):
         time.sleep(2)
         print (" creating a new user without creating a primary group")
-        #Click User submenu
+        # Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #scroll down to find hover tab
+        # scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #Perform hover to show menu
+        # Perform hover to show menu
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
-        #Click create new user option
+        # Click create new user option
         driver.find_element_by_xpath(xpaths['fabAction']).click()
-        #Enter New Username
+        # Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusernameuncheck)
-        #uncheck create primary group  Checkbox
+        # uncheck create primary group  Checkbox
         driver.find_element_by_xpath(xpaths['primaryGroupcheckbox']).click()
-        #click on primary group dropdownlist
+        # click on primary group dropdownlist
         driver.find_element_by_xpath(xpaths['primaryGroupdropdown']).click()
-        #select the element from the dropdown list by using selectlist function
+        # select the element from the dropdown list by using selectlist function
         self.selectlist("wheel")
-#        driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[3]").click()
-        #Enter User Full name
+        # driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[3]").click()
+        # Enter User Full name
         driver.find_element_by_xpath(xpaths['newUserName']).send_keys(newuserfnameuncheck)
-        #Enter Password
+        # Enter Password
         driver.find_element_by_xpath(xpaths['newUserPass']).send_keys(newuserpassword)
-        #Enter Password Conf
+        # Enter Password Conf
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
-        #Click on create new User button
+        # Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if there is a generic error when making a duplicate user, and print the error
+        # check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
 
 
     def test_04_create_superuser(self):
         print (" creating a super user with root access")
         time.sleep(2)
-        #Click User submenu
+        # Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #scroll down to find hover tab
+        # scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #Perform hover to show menu
+        # Perform hover to show menu
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
-        #Click create new user option
+        # Click create new user option
         driver.find_element_by_xpath(xpaths['fabAction']).click()
-        #Enter New Username
+        # Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(superusername)
-        #Enter User Full name
+        # Enter User Full name
         driver.find_element_by_xpath(xpaths['newUserName']).send_keys(superuserfname)
-        #Enter Password
+        # Enter Password
         driver.find_element_by_xpath(xpaths['newUserPass']).send_keys(superuserpassword)
-        #Enter Password Conf
+        # Enter Password Conf
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(superuserpassword)
-        #check Permit Sudo Checkbox
+        # check Permit Sudo Checkbox
         driver.find_element_by_xpath(xpaths['permitSudocheckbox']).click()
-        #Click on create new User button
+        # Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if there is a generic error when making a duplicate user, and print the error
+        # check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
-        #check if the the user list is loaded after addding a new user
+        # check if the the user list is loaded after addding a new user
 
     def test_05_create_duplicateuser(self):
         print (" creating a duplicate user")
-        #Click User submenu
+        # Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #cancelling the tour
+        # cancelling the tour
         if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
 
-        #scroll down to find hover tab
+        # scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
-        #Perform hover to show menu
+        # Perform hover to show menu
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
         time.sleep(1)
-        #Click create new user option
+        # Click create new user option
         driver.find_element_by_xpath(xpaths['fabAction']).click()
-        #Enter New Username
+        # Enter New Username
         driver.find_element_by_xpath(xpaths['newUser']).send_keys(newusername)
-        #Enter User Full name
+        # Enter User Full name
         driver.find_element_by_xpath(xpaths['newUserName']).send_keys(newuserfname)
-        #Enter Password
+        # Enter Password
         driver.find_element_by_xpath(xpaths['newUserPass']).send_keys(newuserpassword)
-        #Enter Password Conf
+        # Enter Password Conf
         driver.find_element_by_xpath(xpaths['newUserPassConf']).send_keys(newuserpassword)
-        #Click on create new User button
+        # Click on create new User button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
-        #check if there is a generic error when making a duplicate user, and print the error
+        # check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
         time.sleep(20)
 
@@ -218,13 +218,13 @@ class create_user_test(unittest.TestCase):
             driver.find_element_by_xpath("/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
 
     def delete(self, name):
-        #Click User submenu
+        # Click User submenu
         driver.find_element_by_xpath(xpaths['submenuUser']).click()
-        #click on the item per page option
+        # click on the item per page option
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[3]/md-paginator/div[1]/md-select/div").click()
-        #click select the highest number i.e 100
+        # click select the highest number i.e 100
         driver.find_element_by_xpath("/html/body/div[3]/div[2]/div/div/md-option[4]").click()
-        #wait till the list is loaded
+        # wait till the list is loaded
         time.sleep(5)
         index = 0
         ui_text = "null"
@@ -237,13 +237,13 @@ class create_user_test(unittest.TestCase):
                 break
             ui_element = " "
 
-        #click on the 3 dots
+        # click on the 3 dots
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[7]/div/app-entity-table-actions/div/md-icon").click()
-        #click on delete option
+        # click on delete option
         driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[2]/button/div").click()
-        #click on confirmation checkbox
+        # click on confirmation checkbox
         driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
-        #click on Ok
+        # click on Ok
         driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
         print (newusernameuncheck + " deleted")
 
@@ -261,7 +261,6 @@ class create_user_test(unittest.TestCase):
     @classmethod
     def tearDownClass(inst):
         pass
-        #driver.close()
 
 def run_create_user_test(webdriver):
     global driver
