@@ -13,9 +13,9 @@ LICENSE=	BSD2CLAUSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pytest-capturelog>=0:www/py-pytest-capturelog@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pytest-runner>=0:www/py-pytest-runner@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pytest-xdist>=0:www/py-pytest-xdist@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pytest-capturelog>=0:devel/py-pytest-capturelog${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pytest-runner>=0:devel/py-pytest-runner@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pytest-xdist>=0:devel/py-pytest-xdist@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>=0:www/py-requests@${FLAVOR} \
 		${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
