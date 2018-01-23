@@ -96,7 +96,6 @@ class create_group_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-group-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         #check if there is a generic error when making a duplicate group, and print the error
         self.error_check()
-        time.sleep(20)
 
     def test_04_create_duplicategroup(self):
         print (" creating a duplicate group")
@@ -138,11 +137,11 @@ class create_group_test(unittest.TestCase):
         return True
 
     def error_check(self):
-        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
-            ui_element=driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
+            ui_element=driver.find_element_by_xpath("/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
             error_element=ui_element.text
             print (error_element)
-            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
+            driver.find_element_by_xpath("/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
 
     @classmethod
     def tearDownClass(inst):

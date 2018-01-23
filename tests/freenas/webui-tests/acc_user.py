@@ -69,8 +69,8 @@ class create_user_test(unittest.TestCase):
     def test_02_create_newuser(self):
         print (" creating a new user with create new primary group")
         #cancelling the tour
-        if self.is_element_present(By.XPATH,"/html/body/div[4]/div[1]/button"):
-            driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
+        if self.is_element_present(By.XPATH,"/html/body/div[5]/div[1]/button"):
+            driver.find_element_by_xpath("/html/body/div[5]/div[1]/button").click()
 
         #scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
@@ -211,11 +211,11 @@ class create_user_test(unittest.TestCase):
         return True
 
     def error_check(self):
-        if self.is_element_present(By.XPATH,"/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
-            ui_element=driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
+        if self.is_element_present(By.XPATH,"/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[1]/p"):
+            ui_element=driver.find_element_by_xpath("/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[1]/p")
             error_element=ui_element.text
             print (error_element)
-            driver.find_element_by_xpath("/html/body/div[3]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
+            driver.find_element_by_xpath("/html/body/div[4]/div/div[2]/md-dialog-container/error-dialog/div[2]/button").click()
 
     def delete(self, name):
         #Click User submenu

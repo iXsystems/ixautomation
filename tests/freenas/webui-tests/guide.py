@@ -56,7 +56,7 @@ class view_guide_test(unittest.TestCase):
             driver.find_element_by_xpath("/html/body/div[4]/div[1]/button").click()
 
         #get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/div/section/div/div/div[1]/ul/li[2]/text()[2]")
+        ui_element=driver.find_element_by_xpath("//*[@id='freenas-version-user-guide']/h1")
         #get the weather data
         page_data=ui_element.text
         print ("The version of FreeNAS guide is:  " + page_data)

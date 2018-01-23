@@ -24,7 +24,7 @@ except ImportError:
     import unittest
 
 xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
-           'turnoffConfirm' : "/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
+           'turnoffConfirm' : "/html/body/div[4]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
           'status' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/div[2]/div[1]/md-chip"
         }
 
@@ -61,6 +61,7 @@ class configure_webdav_test(unittest.TestCase):
         time.sleep(1)
         #click on configure button
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[17]/md-card/div[2]/div[3]/button").click()
+        time.sleep(1)
         #Enter password newuserpassword
         driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").clear()
         driver.find_element_by_xpath("//*[@id='5']/form-input/div/md-input-container/div/div[1]/div/input").send_keys(newuserpassword)
