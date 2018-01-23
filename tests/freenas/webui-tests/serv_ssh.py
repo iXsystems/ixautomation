@@ -26,7 +26,7 @@ except ImportError:
 
 
 xpaths = { 'navService' : "//*[@id='nav-8']/div/a[1]",
-          'turnoffConfirm' : "/html/body/div[3]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
+          'turnoffConfirm' : "/html/body/div[4]/div/div[2]/md-dialog-container/app-confirm/div[2]/button[1]",
           'status' : "/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/services/div/service[14]/md-card/div[2]/div[1]/md-chip"
         }
 
@@ -39,17 +39,7 @@ class configure_ssh_test(unittest.TestCase):
     def test_01_nav_services(self):
         #Click  Service menu
         print ("navigating to service menu")
-#        wait = WebDriverWait(driver, 10)
-#        element = wait.until(EC.element_to_be_clickable((By.ID, 'nav-8')))
         driver.find_element_by_xpath(xpaths['navService']).click()
-
-#        if self.is_element_present(By.XPATH,xpaths['navService']):
-#            driver.find_element_by_xpath(xpaths['navService']).click()
-#            print (" navigating to the service")
-#        else:
-#            time.sleep(5)
-#            driver.find_element_by_xpath(xpaths['navService']).click()
-#            print("element not present and after wait attempt")
         #allowing the button to load
         time.sleep(1)
         #get the ui element

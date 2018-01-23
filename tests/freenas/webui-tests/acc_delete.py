@@ -181,25 +181,26 @@ class delete_test(unittest.TestCase):
         #click on the 3 dots
         driver.find_element_by_xpath("//*[@id='entity-table-component']/div[5]/ngx-datatable/div/datatable-body/datatable-selection/datatable-scroller/datatable-row-wrapper[" + str(index) + "]/datatable-body-row/div[2]/datatable-body-cell[" + str(num) + "]/div/app-entity-table-actions/div/md-icon").click()
         time.sleep(1)
-
-        for z in range(0, 10):
-            if self.is_element_present(By.XPATH,"/html/body/div[3]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button"):
-                print ("first condition satisfied at z=" + str(z))
-                ui_option = driver.find_element_by_xpath("/html/body/div[3]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button")
-                ui_text = ui_option.text
-                if (ui_text == "Delete"):
-                    print ("second condition satisfied at z= " + str(z))
-                    driver.find_element_by_xpath("/html/body/div[3]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button").click()
-                    print ("Delete click attempted")
+#        """
+#        for z in range(0, 10):
+#            if self.is_element_present(By.XPATH,"/html/body/div[4]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button"):
+#                print ("first condition satisfied at z=" + str(z))
+#                ui_option = driver.find_element_by_xpath("/html/body/div[4]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button")
+#                ui_text = ui_option.text
+#                if (ui_text == "Delete"):
+#                    print ("second condition satisfied at z= " + str(z))
+#                    driver.find_element_by_xpath("/html/body/div[4]/div[" + str(z) + "]/div/div/span[" + str(delNum) + "]/button").click()
+#                    print ("Delete click attempted")
                     #click on confirmation checkbox
-                    driver.find_element_by_xpath("/html/body/div[3]/div[" + str(z) + "]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
+#                    driver.find_element_by_xpath("/html/body/div[4]/div[" + str(z) + "]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
                     #click on Ok
-                    driver.find_element_by_xpath("/html/body/div[3]/div[" + str(z) + "]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
-                    print (name + " deleted")
-                    break
-            ui_option = " "
+#                    driver.find_element_by_xpath("/html/body/div[4]/div[" + str(z) + "]/div[2]/md-dialog-container/confirm-dialog/div[2]/button[1]").click()
+#                    print (name + " deleted")
+#                    break
+#            ui_option = " "
+#        """
         #click on delete option
-#        driver.find_element_by_xpath("/html/body/div[3]/div[" + str(index + 1) + "]/div/div/span[" + str(delNum) + "]/button/div").click()
+        driver.find_element_by_xpath("/html/body/div[4]/div[" + str(index + 1) + "]/div/div/span[" + str(delNum) + "]/button/div").click()
 #        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/span[3]/button/div").click()
         #click on confirmation checkbox
 #        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div").click()
