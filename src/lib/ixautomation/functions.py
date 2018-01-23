@@ -66,9 +66,9 @@ def jenkins_vm_tests(workspace, systype, test):
 def jenkins_middleware_tests(workspace, systype, ip):
     middlewaretestpath = "%s/tests/%s/middlewared-tests" % (workspace, systype)
     os.chdir(middlewaretestpath)
-    cmd1 = "python3.6 setup_client.py install --user "
-    cmd1 += "--single-version-externally-managed --record"
-    run(cmd1, shell=True)
+    # cmd1 = "python3.6 setup_client.py install --user "
+    # cmd1 += "--single-version-externally-managed --record"
+    # run(cmd1, shell=True)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
     target.writelines('hostname = %s' % ip)
