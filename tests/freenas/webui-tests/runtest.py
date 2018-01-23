@@ -1,5 +1,5 @@
 #/usr/bin/env python
-
+import sys
 from subprocess import call
 from os import path
 #when running for jenkins user driver, and when running on  an ubuntu system user driverU, because of  capabilities
@@ -30,16 +30,46 @@ runDriver = webDriver()
 ## Starting the test and genewratinf result
 run_login_test(runDriver)
 # run_guide_test(runDriver)
-run_create_user_test(runDriver)
-run_create_group_test(runDriver)
-run_check_update_test(runDriver)
-run_conf_system_advanced(runDriver)
-run_view_guide_test(runDriver)
-run_configure_ssh_test(runDriver)
-run_configure_afp_test(runDriver)
-run_configure_webdav_test(runDriver)
-run_delete_test(runDriver)
-run_change_theme_test(runDriver)
+
+if len(sys.argv)==2:
+    test_name = sys.argv[1]
+    if (test_name == "account"):
+        print ("Running: Accounts Test")
+        run_create_user_test(runDriver)
+        run_create_group_test(runDriver)
+        run_delete_test(runDriver)
+
+    elif (test_name == "system"):
+        run_check_update_test(runDriver)
+        run_conf_system_advanced(runDriver)
+
+    elif (test_name == "guide"):
+        print ("Running: Guide Tests")
+        run_view_guide_test(runDriver)
+
+    elif (test_name == "service"):
+        print ("Running: Guide Tests")
+        run_configure_ssh_test(runDriver)
+        run_configure_afp_test(runDriver)
+        run_configure_webdav_test(runDriver)
+
+    elif (test_name == "theme"):
+        print ("Running: Theme Tests")
+        run_change_theme_test(runDriver)
+
+else:
+    print ("Running: All Tests")
+    run_create_user_test(runDriver)
+    run_create_group_test(runDriver)
+    run_check_update_test(runDriver)
+    run_conf_system_advanced(runDriver)
+    run_view_guide_test(runDriver)
+    run_configure_ssh_test(runDriver)
+    run_configure_afp_test(runDriver)
+    run_configure_webdav_test(runDriver)
+    run_delete_test(runDriver)
+    run_change_theme_test(runDriver)
+
 run_logout_test(runDriver)
 #turning off autoflush, the default mode
 #autoflush(False)
