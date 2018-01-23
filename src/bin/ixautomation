@@ -30,6 +30,7 @@ if curentUser != "root":
     print("This script must be run as root")
     sys.exit(1)
 
+# start-vm          - Start a vm only for FreeNAS or TrueOS
 
 UsageMSG = """
 Usage for %s:
@@ -37,10 +38,9 @@ Usage for %s:
 Available Commands:
 
 --run                     - Runs option givin
-        vm-tests          - Runs a (freenas, or trueos) in a VM using vm-bhyve
-        api-tests         - Runs Python API tests (freenas or trueos)
+        vm-tests          - Start (freenas, or trueos) in a VM using vm-bhyve
+        api-tests         - Start VM with Python API tests (freenas or trueos)
         webui-tests       - Runs FreeNAS web UI tests using webdriver
-        start-vm          - Start a vm only for FreeNAS or TrueOS
 
 --systype                 - Use by run to see what system we need to run
         freenas           - FreeNAS to be run
@@ -98,5 +98,5 @@ elif run == "api-tests":
     jenkins_vm_tests(workspace, systype, True)
 elif run == "webui-tests":
     jenkins_freenas_webui_tests(workspace, systype)
-elif run == "start-vm":
-    jenkins_start_vm(workspace, systype)
+# elif run == "start-vm":
+#     jenkins_start_vm(workspace, systype)
