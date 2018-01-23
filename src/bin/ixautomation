@@ -98,6 +98,6 @@ if run == "vm-tests":
 elif run == "api-tests":
     jenkins_vm_tests(workspace, systype, run)
 elif run == "middlewared-tests":
-    jenkins_middleware_tests(workspace, run)
+    jenkins_vm_tests(workspace, systype, run)
 elif run == "webui-tests":
     jenkins_freenas_webui_tests(workspace, systype)
