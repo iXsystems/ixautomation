@@ -7,7 +7,7 @@ import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
-from functions import jenkins_vm_destroy_all, jenkins_start_vm
+from functions import jenkins_vm_destroy_all
 sys.stdout.flush()
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -98,5 +98,3 @@ elif run == "api-tests":
     jenkins_vm_tests(workspace, systype, True)
 elif run == "webui-tests":
     jenkins_freenas_webui_tests(workspace, systype)
-# elif run == "start-vm":
-#     jenkins_start_vm(workspace, systype)
