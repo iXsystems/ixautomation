@@ -64,11 +64,19 @@ def jenkins_vm_tests(workspace, systype, test):
 
 
 def jenkins_middleware_tests(workspace, systype, ip):
-    middlewaretestpath = "%s/tests/%s/middlewared-tests" % (workspace, systype)
-    os.chdir(middlewaretestpath)
-    # cmd1 = "python3.6 setup_client.py install --user "
-    # cmd1 += "--single-version-externally-managed --record"
-    # run(cmd1, shell=True)
+    apiv2_path = "/tmp/apiv2-freenas"
+    middlewared_path = "%s/src/middlewared" % apiv2_path
+    middlewared_test_path = "%s/middlewared/pytest" % middlewared_path
+    cmd1 = "git clone https://www.github.com/freenas/freenas "
+    cmd1 += "--depth=1 %s" % apiv2_path
+    run(cmd1, shell=True)
+    os.chdir(middlewared_path)
+    cmd2 = "pip-3.6 uninstall -y middlewared.client"
+    run(cmd2, shell=True)
+    cmd3 = "python3.6 setup_client.py install --user "
+    cmd3 += "--single-version-externally-managed --record $(mktemp)"
+    run(cmd3, shell=True)
+    os.chdir(middlewared_test_path)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
     target.writelines('hostname = %s' % ip)
@@ -76,12 +84,12 @@ def jenkins_middleware_tests(workspace, systype, ip):
     target.writelines('username = "root"')
     target.writelines('password = "testing"')
     target.close()
-    cmd2 = "sed -i '' \"s|'freenas'|'testing'|g\" "
-    cmd2 += "functional/test_0001_authentication.py"
-    run(cmd2, shell=True)
-    cmd3 = "python3.6 -m pytest -sv functional "
-    cmd3 += "--junitxml=results/middlewared.xml"
-    run(cmd3, shell=True)
+    cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" "
+    cmd4 += "functional/test_0001_authentication.py"
+    run(cmd4, shell=True)
+    cmd5 = "python3.6 -m pytest -sv functional "
+    cmd5 += "--junitxml=results/middlewared.xml"
+    run(cmd5, shell=True)
     os.chdir(workspace)
 
 
