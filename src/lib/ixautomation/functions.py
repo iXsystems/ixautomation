@@ -79,10 +79,10 @@ def jenkins_middleware_tests(workspace, systype, ip):
     os.chdir(middlewared_test_path)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
-    target.writelines('hostname = %s' % ip)
-    target.writelines('api = /api/v2.0/')
-    target.writelines('username = "root"')
-    target.writelines('password = "testing"')
+    target.writelines('hostname = %s\n' % ip)
+    target.writelines('api = /api/v2.0/\n')
+    target.writelines('username = "root"\n')
+    target.writelines('password = "testing"\n')
     target.close()
     cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" "
     cmd4 += "functional/test_0001_authentication.py"
@@ -91,6 +91,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
     cmd5 += "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
+    os.rmdir(apiv2_path)
 
 
 def jenkins_api_tests(workspace, systype, ip):
