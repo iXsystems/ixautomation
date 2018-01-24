@@ -7,7 +7,7 @@ import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
-from functions import jenkins_vm_destroy_all, jenkins_middleware_tests
+from functions import jenkins_vm_destroy_all
 sys.stdout.flush()
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -40,12 +40,15 @@ Available Commands:
 --run                     - Runs option givin
         vm-tests          - Start (freenas, or trueos) in a VM using vm-bhyve
         api-tests         - Start VM with Python API tests (FreeNAS only)
-        middlewared-tests  - Start VM with the middleware tests (FreeNAS only)
+        middlewared-tests - Start VM with the middleware tests (FreeNAS only)
         webui-tests       - Runs FreeNAS web UI tests using webdriver
 
 --systype                 - Use by run to see what system we need to run
         freenas           - FreeNAS to be run
         trueos            - TrueOS to be run
+
+--ip                      - IP and network card of the machine targeted
+        0.0.0.0:card or 0.0.0.0
 
 --destroy-all-vm          - Stop all vm running, remove vm directory and iso
 
@@ -57,13 +60,13 @@ if len(argument) == 1:
     exit()
 
 # list of argument that chould be use.
-optionlist = ["run=", "systype=", "destroy-all-vm"]
+optionlist = ["run=", "systype=", "ip=", "destroy-all-vm"]
 systypelist = ["freenas", "trueos"]
 runlist = ["vm-tests", "api-tests", "webui-tests", "middlewared-tests"]
 # look if all the argument are there.
 
 try:
-    myopts, args = getopt.getopt(argument[1:], 'rs', optionlist)
+    myopts, args = getopt.getopt(argument[1:], 'rsi', optionlist)
 except getopt.GetoptError as e:
     print(str(e))
     print(UsageMSG)
@@ -82,6 +85,8 @@ for output, arg in myopts:
         run = arg
     elif output == '--systype':
         systype = arg
+    elif output == '--ip':
+        ipnc = arg
 
 if run not in runlist:
     print(run + " is not a valid --run option")
@@ -93,11 +98,16 @@ if systype not in systypelist:
     print(UsageMSG)
     sys.exit(1)
 
+try:
+    ipnc
+except NameError:
+    ipnc = None
+
 if run == "vm-tests":
-    jenkins_vm_tests(workspace, systype, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run)
 elif run == "api-tests":
-    jenkins_vm_tests(workspace, systype, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run)
 elif run == "middlewared-tests":
-    jenkins_vm_tests(workspace, systype, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run)
 elif run == "webui-tests":
-    jenkins_freenas_webui_tests(workspace)
+    jenkins_freenas_webui_tests(workspace, ipnc)
