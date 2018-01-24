@@ -26,9 +26,14 @@ try:
 except ImportError:
     import unittest
 
-xpaths = {'usernameTxtBox': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[1]/md-input-container/div/div[1]/div/input",
-           'passwordTxtBox': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[2]/md-input-container/div/div[1]/div/input",
-          'submitButton': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/button",
+xpaths = {'usernameTxtBox': "/html/body/app-root/app-auth-layout/"
+          "app-signin/div/div/md-card/md-card-content/div[1]/form/"
+          "div[1]/md-input-container/div/div[1]/div/input",
+          'passwordTxtBox': "/html/body/app-root/app-auth-layout/"
+          "app-signin/div/div/md-card/md-card-content/div[1]/form/"
+          "div[2]/md-input-container/div/div[1]/div/input",
+          'submitButton': "/html/body/app-root/app-auth-layout/"
+          "app-signin/div/div/md-card/md-card-content/div[1]/form/button",
           }
 
 
@@ -46,7 +51,6 @@ class login_test(unittest.TestCase):
         driver.find_element_by_xpath(xpaths['passwordTxtBox']).send_keys(password)
         # click
         driver.find_element_by_xpath(xpaths['submitButton']).click()
-
         # check if the dashboard opens
         time.sleep(1)
         # get the ui element
