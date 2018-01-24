@@ -1,9 +1,9 @@
-#/usr/bin/env python
+# /usr/bin/env python
 # Author: Eric Turgeon
 # License: BSD
 
 from source import *
-#from autoflush import autoflush
+# from autoflush import autoflush
 from login import run_login_test
 # from guide import run_guide_test
 from acc_group import run_create_group_test
@@ -19,10 +19,11 @@ from guide import run_view_guide_test
 from logout import run_logout_test
 from os import path
 from selenium import webdriver
-#from example import run_creat_nameofthetest
+# from example import run_creat_nameofthetest
+
 
 def webDriver():
-#marionette setting is fixed in selenium 3.0 and above by default
+    # marionette setting is fixed in selenium 3.0 and above by default
     caps = webdriver.DesiredCapabilities().FIREFOX
     caps["marionette"] = False
     global driver
@@ -30,4 +31,3 @@ def webDriver():
     driver.implicitly_wait(30)
     driver.maximize_window()
     return driver
-

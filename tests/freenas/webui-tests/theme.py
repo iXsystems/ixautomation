@@ -1,7 +1,7 @@
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
-#Test case count: 7
+# Test case count: 7
 
 from source import *
 from selenium.webdriver.common.keys import Keys
@@ -34,7 +34,6 @@ class change_theme_test(unittest.TestCase):
         driver.implicitly_wait(30)
         pass
 
-    #Test navigation Account>Users>Hover>New User and enter username,fullname,password,confirmation and wait till user is  visibile in the list
     def test_01_theme1(self):
         self.theme_change("1")
 
@@ -57,7 +56,7 @@ class change_theme_test(unittest.TestCase):
         self.theme_change("7")
 
 
-    #method to test if an element is present
+    # method to test if an element is present
     def is_element_present(self, how, what):
         """
         Helper method to confirm the presence of an element on page
@@ -69,19 +68,16 @@ class change_theme_test(unittest.TestCase):
         return True
 
     def theme_change(self, which):
-        #Click on the theme Button
+        # Click on the theme Button
         driver.find_element_by_xpath(xpaths['themeBar']).click()
-        #Select 1st theme
+        # Select 1st theme
         driver.find_element_by_xpath("/html/body/div[3]/div[3]/div/div/md-grid-list/div/md-grid-tile[" + str(which) + "]/figure/div/div[2]").click()
         time.sleep(3)
 
 
     @classmethod
     def tearDownClass(inst):
-        #if not the last module
         pass
-        #if it is the last module
-        #driver.close()
 
 def run_change_theme_test(webdriver):
     global driver
