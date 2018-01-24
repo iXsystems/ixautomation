@@ -100,4 +100,4 @@ elif run == "api-tests":
 elif run == "middlewared-tests":
     jenkins_vm_tests(workspace, systype, run)
 elif run == "webui-tests":
-    jenkins_freenas_webui_tests(workspace, systype)
+    jenkins_freenas_webui_tests(workspace)
