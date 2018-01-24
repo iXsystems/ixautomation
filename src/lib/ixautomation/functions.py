@@ -10,8 +10,8 @@ from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
 
 
-def create_workdir(workspace, systype):
-    builddir = "%s/tests/%s/build" % (workspace, systype)
+def create_workdir():
+    builddir = "/tmp/ixautomation"
     tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
     global MASTERWRKDIR
     MASTERWRKDIR = builddir + '/' + tempdir
@@ -50,7 +50,7 @@ def exit_fail(*args):
 
 
 def jenkins_vm_tests(workspace, systype, test):
-    create_workdir(workspace, systype)
+    create_workdir()
     signal.signal(signal.SIGINT, exit_fail)
     signal.signal(signal.SIGTERM, exit_fail)
     vm_setup()
@@ -64,12 +64,8 @@ def jenkins_vm_tests(workspace, systype, test):
 
 
 def jenkins_middleware_tests(workspace, systype, ip):
-    apiv2_path = "/tmp/apiv2-freenas"
-    middlewared_path = "%s/src/middlewared" % apiv2_path
+    middlewared_path = "%s/src/middlewared" % workspace
     middlewared_test_path = "%s/middlewared/pytest" % middlewared_path
-    cmd1 = "git clone https://www.github.com/freenas/freenas "
-    cmd1 += "--depth=1 %s" % apiv2_path
-    run(cmd1, shell=True)
     os.chdir(middlewared_path)
     cmd2 = "pip-3.6 uninstall -y middlewared.client"
     run(cmd2, shell=True)
@@ -91,7 +87,6 @@ def jenkins_middleware_tests(workspace, systype, ip):
     cmd5 += "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
-    os.removedirs(apiv2_path)
 
 
 def jenkins_api_tests(workspace, systype, ip):
@@ -110,8 +105,8 @@ def jenkins_vm_destroy_all():
     return 0
 
 
-def jenkins_freenas_webui_tests(workspace, systype):
-    webUIpath = "%s/tests/%s/webui-tests" % (workspace, systype)
+def jenkins_freenas_webui_tests(workspace):
+    webUIpath = "%s/tests/" % (workspace)
     os.chdir(webUIpath)
     cmd = "export DISPLAY=:0 && stdbuf -oL python3.6 -u runtest.py"
     run(cmd, shell=True)
