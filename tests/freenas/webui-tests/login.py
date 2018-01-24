@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # Author: Rishabh Chauhan
 # License: BSD
 # Location for tests  of FreeNAS new GUI
@@ -26,19 +26,17 @@ try:
 except ImportError:
     import unittest
 
-xpaths = { 'usernameTxtBox' : "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[1]/md-input-container/div/div[1]/div/input",
-           'passwordTxtBox' : "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[2]/md-input-container/div/div[1]/div/input",
-          'submitButton' : "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/button",
-        }
+xpaths = {'usernameTxtBox': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[1]/md-input-container/div/div[1]/div/input",
+           'passwordTxtBox': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/div[2]/md-input-container/div/div[1]/div/input",
+          'submitButton': "/html/body/app-root/app-auth-layout/app-signin/div/div/md-card/md-card-content/div[1]/form/button",
+          }
+
 
 class login_test(unittest.TestCase):
     @classmethod
     def setUpClass(inst):
         driver.get(baseurl)
 
-
-    # Tests in numerals in order to sequence the tests
-    # Test enter username,password,login and check successfully login
     def test_01_login(self):
         print ("loging in FreeNAS new webui- woot woot")
         # enter username in the username textbox
@@ -52,15 +50,14 @@ class login_test(unittest.TestCase):
         # check if the dashboard opens
         time.sleep(1)
         # get the ui element
-        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li")
+        ui_element=driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/app-breadcrumb/div/ul/li") 
         # get the weather data
         page_data=ui_element.text
         print ("The page now is: " + page_data)
-        #assert response
+        # assert response
         self.assertTrue("Dashboard" in page_data)
-
-        #cancelling the tour
-        if self.is_element_present(By.XPATH,"/html/body/div[3]/div[1]/button"):
+        # cancelling the tour
+        if self.is_element_present(By.XPATH, "/html/body/div[3]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[3]/div[1]/button").click()
 
     # method to test if an element is present

@@ -1,4 +1,9 @@
-#/usr/bin/env python
+# !/usr/bin/env python
+# Author: Rishabh Chauhan
+# License: BSD
+# Location for tests  of FreeNAS new GUI
+# Test case count: 1
+
 import sys
 from subprocess import call
 from os import path
@@ -16,7 +21,7 @@ from serv_afp import run_configure_afp_test
 from serv_webdav import run_configure_webdav_test
 from sys_update import run_check_update_test
 from sys_advanced import run_conf_system_advanced
-from guide import  run_view_guide_test
+from guide import run_view_guide_test
 from acc_delete import run_delete_test
 from theme import run_change_theme_test
 from logout import run_logout_test
@@ -31,7 +36,7 @@ runDriver = webDriver()
 run_login_test(runDriver)
 # run_guide_test(runDriver)
 
-if len(sys.argv)==2:
+if len(sys.argv) == 2:
     test_name = sys.argv[1]
     if (test_name == "account"):
         print ("Running: Accounts Test")

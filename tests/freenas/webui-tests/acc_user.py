@@ -26,20 +26,32 @@ except ImportError:
 
 
 xpaths = {
-        'navAccount' : "//*[@id='nav-1']/div/a[1]",
-        'submenuUser' : "//*[@id='1-1']",
-        'submenuGroup' : "//*[@id='1-0']",
-         'newUser' : "//*[@id='1']/form-input/div/md-input-container/div/div[1]/div/input",
-          'primaryGroupcheckbox' : "//*[@id='2']/form-checkbox/div/md-checkbox/label/div",
-         'primaryGroupdropdown' : "//*[@id='3']/form-select/div/md-select/div",
-         'newUserName' : "//*[@id='7']/form-input/div/md-input-container/div/div[1]/div/input",
-         'newUserPass' : "//*[@id='9']/form-input/div/md-input-container/div/div[1]/div/input",
-        'newUserPassConf' : "//*[@id='10']/form-input/div/md-input-container/div/div[1]/div/input",
-        'permitSudocheckbox' : "//*[@id='13']/form-checkbox/div/md-checkbox/label/div",
-        'deleteConfirm' : "/html/body/div[3]/div[3]/div[2]/md-dialog-container/confirm-dialog/div[1]/md-checkbox/label/div",
-        'fabTrigger' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial",
-        'fabAction' : "//*[@id='entity-table-component']/div[1]/app-entity-table-add-actions/div/smd-fab-speed-dial/div/smd-fab-actions/button"
+        'navAccount': "//*[@id='nav-1']/div/a[1]",
+        'submenuUser': "//*[@id='1-1']",
+        'submenuGroup': "//*[@id='1-0']",
+        'newUser': "//*[@id='1']/form-input/div/" 
+        "md-input-container/div/div[1]/div/input",
+        'primaryGroupcheckbox': "//*[@id='2']/form-checkbox/"
+        "div/md-checkbox/label/div",
+        'primaryGroupdropdown': "//*[@id='3']"
+        "/form-select/div/md-select/div",
+        'newUserName': "//*[@id='7']/form-input/"
+        "div/md-input-container/div/div[1]/div/input",
+        'newUserPass': "//*[@id='9']/form-input/"
+        "div/md-input-container/div/div[1]/div/input",
+        'newUserPassConf': "//*[@id='10']/form-input/div/"
+        "md-input-container/div/div[1]/div/input",
+        'permitSudocheckbox': "//*[@id='13']/form-checkbox/"
+        "div/md-checkbox/label/div",
+        'deleteConfirm': "/html/body/div[3]/div[3]/div[2]/md-dialog-container/"
+        "confirm-dialog/div[1]/md-checkbox/label/div",
+        'fabTrigger': "//*[@id='entity-table-component']/div[1]/"
+        "app-entity-table-add-actions/div/smd-fab-speed-dial",
+        'fabAction': "//*[@id='entity-table-component']/div[1]/"
+        "app-entity-table-add-actions/div/smd-fab-speed-dial"
+        "/div/smd-fab-actions/button"
         }
+
 
 class create_user_test(unittest.TestCase):
     @classmethod
@@ -65,18 +77,15 @@ class create_user_test(unittest.TestCase):
         # assert response
         self.assertTrue("User" in page_data)
 
-
     def test_02_create_newuser(self):
         print (" creating a new user with create new primary group")
         # cancelling the tour
-        if self.is_element_present(By.XPATH,"/html/body/div[5]/div[1]/button"):
+        if self.is_element_present(By.XPATH, "/html/body/div[5]/div[1]/button"):
             driver.find_element_by_xpath("/html/body/div[5]/div[1]/button").click()
-
         # scroll down to find hover tab
         driver.find_element_by_tag_name('html').send_keys(Keys.END)
         time.sleep(2)
         # Perform hover to show menu
-
         hover_element = driver.find_element_by_xpath(xpaths['fabTrigger'])
         hover = ActionChains(driver).move_to_element(hover_element)
         hover.perform()
@@ -130,7 +139,6 @@ class create_user_test(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/app-root/app-admin-layout/md-sidenav-container/div[6]/div/app-user-form/entity-form/md-card/div/form/md-card-actions/button[1]").click()
         # check if there is a generic error when making a duplicate user, and print the error
         self.error_check()
-
 
     def test_04_create_superuser(self):
         print (" creating a super user with root access")
