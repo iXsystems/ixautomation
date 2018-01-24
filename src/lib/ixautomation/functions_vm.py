@@ -16,7 +16,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
         sysname = "FreeNAS"
     elif systype == "trueos":
         sysname = "TrueOS"
-    iso_dir = "%s/tests/%s/iso/" % (workspace, systype)
+    iso_dir = "%s/tests/iso/" % (workspace)
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
     # List ISOs in iso_dir and allow the user to select the target
@@ -80,11 +80,10 @@ def vm_stop(MASTERWRKDIR):
 def vm_install(MASTERWRKDIR, systype, workspace):
     VM = MASTERWRKDIR.split('/')[-1]
     # Get console device for newly created VM
-    sleep(1)
+    sleep(3)
     vm_output = "/tmp/%sconsole.log" % VM
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = 'expect %s/tests/%s/install-tests/install.exp "%s" "%s"' % (workspace,
-                                                                     systype,
+    expctcmd = 'expect %s/tests/install.exp "%s" "%s"' % (workspace,
                                                                      VM,
                                                                      vm_output)
     run(expctcmd, shell=True)
@@ -97,11 +96,11 @@ def vm_install(MASTERWRKDIR, systype, workspace):
 def vm_boot(MASTERWRKDIR, systype, workspace):
     vm_start(MASTERWRKDIR)
     VM = MASTERWRKDIR.split('/')[-1]
-    sleep(1)
+    sleep(3)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = "/tmp/%sconsole.log" % VM
-    expectcnd = 'expect %s/tests/%s/install-tests/boot.exp "%s" "%s"' % (workspace,
-                                                                   systype, VM,
+    expectcnd = 'expect %s/tests/boot.exp "%s" "%s"' % (workspace,
+                                                                   VM,
                                                                    vm_output)
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions

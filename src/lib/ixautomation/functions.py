@@ -10,8 +10,8 @@ from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
 
 
-def create_workdir(workspace, systype):
-    builddir = "%s/tests/%s/build" % (workspace, systype)
+def create_workdir():
+    builddir = "/tmp/ixautomation"
     tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
     global MASTERWRKDIR
     MASTERWRKDIR = builddir + '/' + tempdir
@@ -50,7 +50,7 @@ def exit_fail(*args):
 
 
 def jenkins_vm_tests(workspace, systype, test):
-    create_workdir(workspace, systype)
+    create_workdir()
     signal.signal(signal.SIGINT, exit_fail)
     signal.signal(signal.SIGTERM, exit_fail)
     vm_setup()
