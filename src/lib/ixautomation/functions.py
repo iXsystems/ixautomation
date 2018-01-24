@@ -105,8 +105,8 @@ def jenkins_vm_destroy_all():
     return 0
 
 
-def jenkins_freenas_webui_tests(workspace, systype):
-    webUIpath = "%s/tests/%s/webui-tests" % (workspace, systype)
+def jenkins_freenas_webui_tests(workspace):
+    webUIpath = "%s/tests/" % (workspace)
     os.chdir(webUIpath)
     cmd = "export DISPLAY=:0 && stdbuf -oL python3.6 -u runtest.py"
     run(cmd, shell=True)
