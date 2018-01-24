@@ -91,7 +91,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
     cmd5 += "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
-    os.rmdir(apiv2_path)
+    os.removedirs(apiv2_path)
 
 
 def jenkins_api_tests(workspace, systype, ip):
