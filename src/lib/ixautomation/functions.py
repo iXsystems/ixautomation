@@ -64,12 +64,8 @@ def jenkins_vm_tests(workspace, systype, test):
 
 
 def jenkins_middleware_tests(workspace, systype, ip):
-    apiv2_path = "/tmp/apiv2-freenas"
-    middlewared_path = "%s/src/middlewared" % apiv2_path
+    middlewared_path = "%s/src/middlewared" % workspace 
     middlewared_test_path = "%s/middlewared/pytest" % middlewared_path
-    cmd1 = "git clone https://www.github.com/freenas/freenas "
-    cmd1 += "--depth=1 %s" % apiv2_path
-    run(cmd1, shell=True)
     os.chdir(middlewared_path)
     cmd2 = "pip-3.6 uninstall -y middlewared.client"
     run(cmd2, shell=True)
@@ -91,7 +87,6 @@ def jenkins_middleware_tests(workspace, systype, ip):
     cmd5 += "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
-    os.rmdir(apiv2_path)
 
 
 def jenkins_api_tests(workspace, systype, ip):
