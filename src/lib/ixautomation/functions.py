@@ -69,9 +69,9 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
             netcard = "vtnet0"
 
     if test == "api-tests":
-        jenkins_api_tests(workspace, systype, ip)
+        jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
-        jenkins_middleware_tests(workspace, systype, ip, netcard)
+        jenkins_middleware_tests(workspace, systype, ip)
     elif test == "middlewared-tests":
         jenkins_freenas_webui_tests(workspace, ip)
 

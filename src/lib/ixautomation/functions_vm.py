@@ -84,8 +84,8 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     vm_output = "/tmp/%sconsole.log" % VM
     # Run our expect/tcl script to automate the installation dialog
     expctcmd = 'expect %s/tests/install.exp "%s" "%s"' % (workspace,
-                                                                     VM,
-                                                                     vm_output)
+                                                          VM,
+                                                          vm_output)
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
@@ -100,8 +100,8 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = "/tmp/%sconsole.log" % VM
     expectcnd = 'expect %s/tests/boot.exp "%s" "%s"' % (workspace,
-                                                                   VM,
-                                                                   vm_output)
+                                                        VM,
+                                                        vm_output)
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
