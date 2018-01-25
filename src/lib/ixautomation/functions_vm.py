@@ -21,16 +21,13 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
         os.makedirs(iso_dir)
     # List ISOs in iso_dir and allow the user to select the target
     iso_list = os.listdir(iso_dir)
-    iso_list.remove(".keepme")
+    if len(iso_list) != 0:
+        iso_list.remove(".keepme")
     iso_cnt = len(iso_list)
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
     if iso_cnt is 0:
         print('Please put a %s ISO in "%s"' % (sysname, iso_dir))
         sys.exit(1)
-    # Repopulate the list iso_dir and allow the user to select the target
-    iso_list = os.listdir(iso_dir)
-    iso_list.remove(".keepme")
-    iso_cnt = len(iso_list)
     # Our to-be-determined file name of the ISO to test; must be inside iso_dir
     iso_name = ""
     # If there's only one ISO in the $iso_dir, assume it's for testing.
