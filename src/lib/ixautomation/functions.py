@@ -72,7 +72,7 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
         jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
         jenkins_middleware_tests(workspace, systype, ip)
-    elif test == "middlewared-tests":
+    elif test == "webui-tests":
         jenkins_freenas_webui_tests(workspace, ip)
 
 
