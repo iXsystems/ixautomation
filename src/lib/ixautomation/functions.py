@@ -67,7 +67,6 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
         else:
             ip = ipnc
             netcard = "vtnet0"
-
     if test == "api-tests":
         jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
@@ -103,7 +102,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
 
 
 def jenkins_api_tests(workspace, systype, ip, netcard):
-    apipath = "%s/tests/" % (workspace)
+    apipath = "%s/tests" % (workspace)
     os.chdir(apipath)
     cmd = "python3.6 runtest.py --ip %s " % ip
     cmd += "--password testing --interface %s" % netcard
