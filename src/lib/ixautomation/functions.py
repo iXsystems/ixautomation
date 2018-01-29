@@ -72,7 +72,7 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
         jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
         jenkins_middleware_tests(workspace, systype, ip)
-    elif test == "middlewared-tests":
+    elif test == "webui-tests":
         jenkins_freenas_webui_tests(workspace, ip)
 
 
@@ -103,7 +103,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
 
 
 def jenkins_api_tests(workspace, systype, ip, netcard):
-    apipath = "%s/tests/" % (workspace)
+    apipath = "%s/tests" % (workspace)
     os.chdir(apipath)
     cmd = "python3.6 runtest.py --ip %s " % ip
     cmd += "--password testing --interface %s" % netcard
