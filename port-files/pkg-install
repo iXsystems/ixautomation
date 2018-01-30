@@ -24,38 +24,8 @@ if [ ! -f "/usr/local/etc/ixautomation.conf" ] ; then
   cp /usr/local/etc/ixautomation.cfg.dist /usr/local/etc/ixautomation.cfg
 fi
 
-find /usr/local/lib -name selenium | grep selenium >/dev/null
-if [ "$?" != "0" ]; then
-  echo "Installing selenium"
-  pip-3.6 install selenium
-fi
-
 find /usr/local/lib -name xmlrunner | grep selenium >/dev/null
 if [ "$?" != "0" ]; then
   echo "Installing unittest-xml-reporting"
   pip-3.6 install unittest-xml-reporting
-fi
-
-python3.6 -c "import ws4py" >/dev/null 2>/dev/null
-if [ "$?" != "0" ]; then
-  echo "Installing ws4py"
-  pip-3.6 install ws4py
-fi
-
-python3.6 -c "import pytest_cache" >/dev/null 2>/dev/null
-if [ "$?" != "0" ]; then
-  echo "Installing pytest-cache"
-  pip-3.6 install pytest-cache
-fi
-
-python3.6 -c "import pytest_localserver" >/dev/null 2>/dev/null
-if [ "$?" != "0" ]; then
-  echo "Installing pytest-localserver"
-  pip-3.6 install pytest-localserver
-fi
-
-python3.6 -c "import pytest_tornado" >/dev/null 2>/dev/null
-if [ "$?" != "0" ]; then
-  echo "Installing pytest-tornado"
-  pip-3.6 install pytest-tornado
 fi
