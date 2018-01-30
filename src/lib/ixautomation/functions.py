@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 from subprocess import Popen, run, PIPE
+from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
@@ -73,7 +74,18 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
     elif test == "middlewared-tests":
         jenkins_middleware_tests(workspace, systype, ip)
     elif test == "webui-tests":
-        jenkins_freenas_webui_tests(workspace, ip)
+        jenkins_webui_tests(workspace, ip)
+
+
+def jenkins_api_tests(workspace, systype, ip, netcard):
+    apipath = "%s/tests" % (workspace)
+    if os.path.exists("/usr/local/etc/ixautomation.conf"):
+        copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
+    os.chdir(apipath)
+    cmd = "python3.6 runtest.py --ip %s " % ip
+    cmd += "--password testing --interface %s" % netcard
+    run(cmd, shell=True)
+    os.chdir(workspace)
 
 
 def jenkins_middleware_tests(workspace, systype, ip):
@@ -102,11 +114,11 @@ def jenkins_middleware_tests(workspace, systype, ip):
     os.chdir(workspace)
 
 
-def jenkins_api_tests(workspace, systype, ip, netcard):
-    apipath = "%s/tests" % (workspace)
-    os.chdir(apipath)
-    cmd = "python3.6 runtest.py --ip %s " % ip
-    cmd += "--password testing --interface %s" % netcard
+def jenkins_webui_tests(workspace, ip):
+    webUIpath = "%s/tests/" % (workspace)
+    os.chdir(webUIpath)
+    cmd = "export DISPLAY=:0 && stdbuf -oL "
+    cmd += "python3.6 -u runtest.py --ip %s" % ip
     run(cmd, shell=True)
     os.chdir(workspace)
 
@@ -116,11 +128,3 @@ def jenkins_vm_destroy_all():
     vm_destroy_all()
     sys.exit(0)
     return 0
-
-
-def jenkins_freenas_webui_tests(workspace, ip):
-    webUIpath = "%s/tests/" % (workspace)
-    os.chdir(webUIpath)
-    cmd = "export DISPLAY=:0 && stdbuf -oL python3.6 -u runtest.py"
-    run(cmd, shell=True)
-    os.chdir(workspace)
