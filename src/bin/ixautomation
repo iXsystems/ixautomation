@@ -6,7 +6,7 @@ import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import jenkins_vm_tests, jenkins_freenas_webui_tests
+from functions import jenkins_vm_tests, jenkins_webui_tests
 from functions import jenkins_vm_destroy_all
 sys.stdout.flush()
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
