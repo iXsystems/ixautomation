@@ -11,18 +11,6 @@ from functions import jenkins_vm_destroy_all
 sys.stdout.flush()
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
-try:
-    workspace = os.environ["WORKSPACE"]
-except KeyError:
-    if os.path.exists(ixautomationconfig):
-        ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
-        for line in ixautomationcfglist:
-            linelist = line.rstrip().split('=')
-            if "WORKSPACE" in linelist[0] and "#" not in linelist[0]:
-                workspace = linelist[1]
-    else:
-        print("Please add " + ixautomationconfig)
-
 loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
@@ -99,6 +87,22 @@ if systype not in systypelist:
     sys.exit(1)
 
 try:
+    workspace = os.environ["WORKSPACE"]
+except KeyError:
+    if os.path.exists(ixautomationconfig):
+        ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
+        for line in ixautomationcfglist:
+            linelist = line.rstrip().split('=')
+            if run == "webui-tests":
+                if "WebUI" in linelist[0] and "#" not in linelist[0]:
+                    workspace = linelist[1].replace('"', '')
+            else:
+                if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
+                    workspace = linelist[1].replace('"', '')
+    else:
+        print("Please add " + ixautomationconfig)
+
+try:
     ipnc
 except NameError:
     ipnc = None
@@ -110,4 +114,4 @@ elif run == "api-tests":
 elif run == "middlewared-tests":
     jenkins_vm_tests(workspace, systype, ipnc, run)
 elif run == "webui-tests":
-    jenkins_freenas_webui_tests(workspace, ipnc)
+    jenkins_vm_tests(workspace, systype, ipnc, run)
