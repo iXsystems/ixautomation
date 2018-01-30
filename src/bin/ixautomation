@@ -6,19 +6,17 @@ import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import jenkins_vm_tests, jenkins_webui_tests
-from functions import jenkins_vm_destroy_all
-sys.stdout.flush()
+from functions import jenkins_vm_tests, jenkins_vm_destroy_all
+
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
 loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
+
 if curentUser != "root":
     print("This script must be run as root")
     sys.exit(1)
-
-# start-vm          - Start a vm only for FreeNAS or TrueOS
 
 UsageMSG = """
 Usage for %s:
@@ -91,16 +89,29 @@ try:
 except KeyError:
     if os.path.exists(ixautomationconfig):
         ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
+        find_line = False
         for line in ixautomationcfglist:
             linelist = line.rstrip().split('=')
             if run == "webui-tests":
                 if "WebUI" in linelist[0] and "#" not in linelist[0]:
                     workspace = linelist[1].replace('"', '')
+                    find_line = True
+                    break
             else:
                 if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
                     workspace = linelist[1].replace('"', '')
+                    find_line = True
+                    break
+        if find_line is False:
+            if run == "webui-tests":
+                print("Please setup WebUI path in " + ixautomationconfig)
+                sys.exit(1)
+            else:
+                print("Please setup FreeNAS path in " + ixautomationconfig)
+                sys.exit(1)
     else:
         print("Please add " + ixautomationconfig)
+        sys.exit(1)
 
 try:
     ipnc
