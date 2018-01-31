@@ -165,13 +165,13 @@ service ixautomation start
 Copy ixautomation conf.dist to ixautomation.conf 
 
 ```
-cp /usr/local/etc/ixautomation.conf.dist /usr/local/etc/conf.ixautomation.cfg
+cp /usr/local/etc/ixautomation.conf.dist /usr/local/etc/conf.ixautomation.conf
 ```
 
 Edit ixautomation.cfg
 
 ```
-edit /usr/local/etc/ixautomation.cfg
+edit /usr/local/etc/ixautomation.conf
 ```
 
 Set location of git repo with tests when running local
