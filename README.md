@@ -63,6 +63,15 @@ Start the ixautomation service
 service ixautomation start
 ```
 
+Set location of git repo with tests when running local
+
+```
+## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
+TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
+WebUI = "/home/eturgeon/projects/ixsystems/webui"
+```
+
 Getting started using port method
 ============
 
@@ -117,7 +126,16 @@ Start the ixautomation service
 service ixautomation start
 ```
 
-Getting started using git
+Set location of git repo with tests when running local
+
+```
+## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
+TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
+WebUI = "/home/eturgeon/projects/ixsystems/webui"
+```
+
+Getting started using git method
 ============
 
 To prep a new system for testing, first download the repo:
