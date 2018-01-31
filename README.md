@@ -177,9 +177,10 @@ edit /usr/local/etc/ixautomation.conf
 Set location of git repo with tests when running local
 
 ```
-# When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
-WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation"
-export WORKSPACE
+## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
+TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
+WebUI = "/home/eturgeon/projects/ixsystems/webui"
 ```
 
 VM Tests
