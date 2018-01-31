@@ -6,7 +6,7 @@
 # WebUI = "/home/eturgeon/projects/freenas/webui"
 
 ###########################################################################
-# FreeNAS specific settings
+# FreeNAS specific settings for API tests
 ###########################################################################
 
 ## Set this be the network information assigned to the bridged interface
