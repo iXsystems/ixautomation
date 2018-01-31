@@ -38,14 +38,14 @@ Required Jenkins Plugins:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Getting Started from package
+Getting Started using package method
 ============
 
 ```
 sudo pkg install py36-ixautomation
 ```
 
-Getting Started from port
+Getting started using port method
 ============
 
 Clone the latest ports tree from TrueOS:
@@ -81,7 +81,7 @@ Generate the port from the latest git commit
 sudo make install clean
 ```
 
-Getting Started from git
+Getting started using git
 ============
 
 To prep a new system for testing, first download the repo:
