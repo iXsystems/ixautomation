@@ -38,7 +38,7 @@ Required Jenkins Plugins:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Getting Started using package method
+Getting started using package method
 ============
 
 ```
