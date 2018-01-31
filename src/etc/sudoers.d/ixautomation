@@ -1,2 +1,2 @@
 %jenkins ALL=(ALL) NOPASSWD: ALL
-Defaults      env_keep += "SSH_AUTH_SOCK HOME WORKSPACE"
+Defaults      env_keep += "DISPLAY SSH_AUTH_SOCK HOME WORKSPACE"

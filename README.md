@@ -19,7 +19,7 @@ Recommended hardware:
 
 Required OS:
 
-* [TrueOS](http://download.trueos.org/master/amd64/)
+* [TrueOS Unstable](http://download.trueos.org/unstable/amd64/)
 
 Required Packages:
 
@@ -58,9 +58,6 @@ Install the framework
 sudo python3.6 setup.py install
 ```
 
-VM Tests
-============
-
 Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
 
 ```
@@ -89,7 +86,7 @@ service ixautomation start
 Copy ixautomation conf.dist to ixautomation.conf 
 
 ```
-cp /usr/local/etc/ixautomation.cfg.dist /usr/local/etc/ixautomation.cfg
+cp /usr/local/etc/ixautomation.conf.dist /usr/local/etc/conf.ixautomation.cfg
 ```
 
 Edit ixautomation.cfg
@@ -106,6 +103,9 @@ WORKSPACE="/home/jmaloney/projects/ixsystems/ixautomation"
 export WORKSPACE
 ```
 
+VM Tests
+============
+
 Create a VM, and test install using vm-bhyve
 
 ```
@@ -113,10 +113,22 @@ sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
 ```
 
-Selenium Tests
+API Tests (To run VM tests as well remove --ip)
+============
+```
+sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
+```
+
+Middlewared Tests (To run VM tests as well remove --ip)
+============
+```
+sudo ixautomation --run middleware-tests --systype freenas --ip 192.168.0.2
+```
+
+Selenium Tests (To run VM tests as well remove --ip)
 ============
 
 Test webui with selenium
 ```
-ixautomation --run webui-test --systype freenas
+sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
 ```
