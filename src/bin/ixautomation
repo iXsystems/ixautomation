@@ -14,10 +14,6 @@ loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
 
-if curentUser != "root":
-    print("This script must be run as root")
-    sys.exit(1)
-
 UsageMSG = """
 Usage for %s:
 

@@ -119,9 +119,12 @@ def jenkins_webui_tests(workspace, ip):
     cmd = "pip-3.6 install unittest-xml-reporting" 
     run(cmd, shell=True)
     os.chdir(webUIpath)
-    cmd2 = "export DISPLAY=:0 && stdbuf -oL "
-    cmd2 += "python3.6 -u runtest.py --ip %s" % ip
+    cmd2 = "xhost +"
     run(cmd2, shell=True)
+    os.chdir(webUIpath)
+    cmd3 = "export DISPLAY=:0 && stdbuf -oL "
+    cmd3 += "python3.6 -u runtest.py --ip %s" % ip
+    run(cmd3, shell=True)
     os.chdir(workspace)
 
 
