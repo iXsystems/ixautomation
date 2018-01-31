@@ -45,6 +45,24 @@ Getting Started using package method
 sudo pkg install py36-ixautomation
 ```
 
+Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
+
+```
+sysrc -f /etc/rc.conf ixautomation_iface="re0"
+```
+
+Add the ixautomation service
+
+```
+rc-update add ixautomation
+```
+
+Start the ixautomation service
+
+```
+service ixautomation start
+```
+
 Getting started using port method
 ============
 
@@ -79,6 +97,24 @@ cd /usr/ports/sysutils/py36-ixautomation
 Generate the port from the latest git commit
 ```
 sudo make install clean
+```
+
+Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
+
+```
+sysrc -f /etc/rc.conf ixautomation_iface="re0"
+```
+
+Add the ixautomation service
+
+```
+rc-update add ixautomation
+```
+
+Start the ixautomation service
+
+```
+service ixautomation start
 ```
 
 Getting started using git
