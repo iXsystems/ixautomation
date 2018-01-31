@@ -3,7 +3,7 @@
 # from a checked out git repo
 
 # Set the port
-port="sysutils/ixautomation"
+port="sysutils/py-ixautomation"
 dfile="ixautomation"
 
 massage_subdir() {
