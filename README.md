@@ -6,7 +6,7 @@ The scripts in this repo will allow you to test iX projects, either as an automa
 It includes support to test the following projects:
 
  * FreeNAS
- * TrueOS
+ * TrueOS Server
 
 Requirements
 ============
