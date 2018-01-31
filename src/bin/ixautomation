@@ -94,12 +94,12 @@ except KeyError:
             linelist = line.rstrip().split('=')
             if run == "webui-tests":
                 if "WebUI" in linelist[0] and "#" not in linelist[0]:
-                    workspace = linelist[1].replace('"', '')
+                    workspace = linelist[1].replace('"', '').strip()
                     find_line = True
                     break
             else:
                 if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
-                    workspace = linelist[1].replace('"', '')
+                    workspace = linelist[1].replace('"', '').strip()
                     find_line = True
                     break
         if find_line is False:
