@@ -184,7 +184,6 @@ export WORKSPACE
 
 VM Tests
 ============
-
 Create a VM, and test install using vm-bhyve
 
 ```
@@ -192,22 +191,23 @@ sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
 ```
 
-API Tests (To run VM tests as well remove --ip)
+API Tests
 ============
+In order to run VM tests as well remove --ip:
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
 ```
 
-Middlewared Tests (To run VM tests as well remove --ip)
+Middlewared Tests
 ============
+In order to run VM tests as well remove --ip:
 ```
 sudo ixautomation --run middleware-tests --systype freenas --ip 192.168.0.2
 ```
 
-Selenium Tests (To run VM tests as well remove --ip)
+Selenium Tests
 ============
-
-Test webui with selenium
+In order to run VM tests as well remove --ip:
 ```
 sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
 ```
