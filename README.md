@@ -38,7 +38,50 @@ Required Jenkins Plugins:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Getting Started
+Getting Started from package
+============
+
+```
+sudo pkg install py36-ixautomation
+```
+
+Getting Started from port
+============
+
+Clone the latest ports tree from TrueOS:
+
+```
+sudo git clone --depth=1 https://www.github.com/trueos/freebsd-ports /usr/ports/
+```
+
+To prep a new system for testing, first download the repo:
+
+```
+git clone --depth=1 https://github.com/iXsystems/ixautomation.git
+```
+
+Enter the directory for installing ixautomation from git:
+
+```
+cd ixautomation/
+```
+
+Generate the port from the latest git commit
+```
+sudo ./mkport.sh /usr/ports/ /usr/ports/distfiles/
+```
+
+Install the port
+```
+cd /usr/ports/sysutils/py36-ixautomation
+```
+
+Generate the port from the latest git commit
+```
+sudo make install clean
+```
+
+Getting Started from git
 ============
 
 To prep a new system for testing, first download the repo:
