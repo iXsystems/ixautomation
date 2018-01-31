@@ -19,7 +19,7 @@ Recommended hardware:
 
 Required OS:
 
-* [TrueOS](http://download.trueos.org/master/amd64/)
+* [TrueOS Unstable](http://download.trueos.org/unstable/amd64/)
 
 Required Packages:
 
@@ -57,9 +57,6 @@ Install the framework
 ```
 sudo python3.6 setup.py install
 ```
-
-VM Tests
-============
 
 Make sure vm-bhyve is enabled, and we set the vm location for ixautomation
 
