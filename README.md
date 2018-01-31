@@ -193,21 +193,21 @@ sudo ixautomation --run vm-tests --systype trueos
 
 API Tests
 ============
-In order to run VM tests as well remove --ip:
+In order to run VM tests as well remove --ip
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
 ```
 
 Middlewared Tests
 ============
-In order to run VM tests as well remove --ip:
+In order to run VM tests as well remove --ip
 ```
 sudo ixautomation --run middleware-tests --systype freenas --ip 192.168.0.2
 ```
 
 Selenium Tests
 ============
-In order to run VM tests as well remove --ip:
+In order to run VM tests as well remove --ip
 ```
 sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
 ```
