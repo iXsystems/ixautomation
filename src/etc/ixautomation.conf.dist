@@ -2,6 +2,7 @@
 
 ## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
 # FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
+# TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 # WebUI = "/home/eturgeon/projects/ixsystems/webui"
 
 ###########################################################################

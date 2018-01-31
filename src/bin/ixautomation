@@ -98,17 +98,28 @@ except KeyError:
                     find_line = True
                     break
             else:
-                if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
-                    workspace = linelist[1].replace('"', '').strip()
-                    find_line = True
-                    break
+                if systype == 'freenas':
+                    if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
+                        workspace = linelist[1].replace('"', '').strip()
+                        find_line = True
+                        break
+                elif systype == 'trueos':
+                    if "TrueOS" in linelist[0] and "#" not in linelist[0]:
+                        workspace = linelist[1].replace('"', '').strip()
+                        find_line = True
+                        break
+
         if find_line is False:
             if run == "webui-tests":
                 print("Please setup WebUI path in " + ixautomationconfig)
                 sys.exit(1)
             else:
-                print("Please setup FreeNAS path in " + ixautomationconfig)
-                sys.exit(1)
+                if systype == 'freenas':
+                    print("Please setup FreeNAS path in " + ixautomationconfig)
+                    sys.exit(1)
+                elif systype == 'trueos':
+                    print("Please setup TrueOS path in " + ixautomationconfig)
+                    sys.exit(1)
     else:
         print("Please add " + ixautomationconfig)
         sys.exit(1)
