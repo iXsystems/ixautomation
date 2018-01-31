@@ -116,7 +116,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
 def jenkins_webui_tests(workspace, ip):
     webUIpath = "%s/tests/" % (workspace)
     os.chdir(webUIpath)
-    cmd = "pip3.6 install unittest-xml-reporting" 
+    cmd = "pip-3.6 install unittest-xml-reporting" 
     run(cmd, shell=True)
     os.chdir(webUIpath)
     cmd2 = "export DISPLAY=:0 && stdbuf -oL "
