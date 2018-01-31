@@ -38,7 +38,7 @@ Required Jenkins Plugins:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Getting started using package method
+Install the framework using package method
 ============
 
 ```
@@ -72,7 +72,7 @@ TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
 ```
 
-Getting started using port method
+Install the framework using port method
 ============
 
 Clone the latest ports tree from TrueOS:
@@ -135,7 +135,7 @@ TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
 ```
 
-Getting started using git method
+Install the framework using git method
 ============
 
 To prep a new system for testing, first download the repo:
