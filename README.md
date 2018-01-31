@@ -130,9 +130,9 @@ Set location of git repo with tests when running local
 
 ```
 ## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
-FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
+FreeNAS = "/home/eturgeon/projects/freenas/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
-WebUI = "/home/eturgeon/projects/ixsystems/webui"
+WebUI = "/home/eturgeon/projects/freenas/webui"
 ```
 
 Install the framework using git method
