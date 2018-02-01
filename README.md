@@ -83,14 +83,14 @@ Shutdown, and cleanup all running vms
 sudo ixautomation --destroy-all-vm
 ```
 
-API Tests
+ReST API Tests
 ============
 In order to run VM tests remove --ip
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
 ```
 
-Middlewared Tests
+Middleware Tests
 ============
 In order to run VM tests remove --ip
 ```
