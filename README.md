@@ -21,10 +21,6 @@ Required OS:
 
 * [TrueOS Unstable](http://download.trueos.org/unstable/amd64/)
 
-Required Packages:
-
-* See Run Depends in port Makefile
-
 Jenkins Requirements:
 * One master node
 * Slave nodes for running ixautomation
@@ -38,7 +34,7 @@ Required Jenkins Plugins:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Install the framework using package method
+Install the framework on TrueOS
 ============
 
 ```
@@ -63,7 +59,7 @@ Start the ixautomation service
 service ixautomation start
 ```
 
-Set location of git repo with tests when running local
+Set location of git repo with tests
 
 ```
 ## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
