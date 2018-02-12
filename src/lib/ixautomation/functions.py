@@ -101,8 +101,8 @@ def jenkins_middleware_tests(workspace, systype, ip):
     target.writelines('[Target]\n')
     target.writelines('hostname = %s\n' % ip)
     target.writelines('api = /api/v2.0/\n')
-    target.writelines('username = "root"\n')
-    target.writelines('password = "testing"\n')
+    target.writelines('username = root\n')
+    target.writelines('password = testing\n')
     target.close()
     cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" "
     cmd4 += "functional/test_0001_authentication.py"
