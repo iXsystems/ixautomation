@@ -27,6 +27,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${LOCALBASE}/bin/firefox:www/firefox-esr \
 		${LOCALBASE}/bin/geckodriver:www/geckodriver \
 		xorg-vfbserver>=0:x11-servers/xorg-vfbserver \
+		xhost>=0:x11/xhost \
 		bhyve-firmware>=0:sysutils/bhyve-firmware
 
 WRKSRC_SUBDIR=  src
