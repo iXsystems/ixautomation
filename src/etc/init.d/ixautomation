@@ -3,6 +3,11 @@
 name="ixautomation"
 description="iXSystems automation framework"
 
+depend()
+{
+	need dbus
+}
+
 start_pre()
 {
   sysctl net.link.bridge.ipfw=1
