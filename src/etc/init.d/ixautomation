@@ -10,7 +10,9 @@ depend()
 
 start_pre()
 {
-  sysctl net.link.bridge.ipfw=1
+  if service ipfw status | grep -q started; then
+    sysctl net.link.bridge.ipfw=1
+  fi
   ixautomation_bridge="ixautomation"
   if [ -z "$ixautomation_iface" ] ; then
     eerror "Failed to find an interface with internet access for bridge.  Please define an interface with ixautomation_iface= in /etc/rc.conf."
