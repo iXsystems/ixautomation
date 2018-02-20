@@ -58,8 +58,8 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
         vm_setup()
         vm_select_iso(MASTERWRKDIR, systype, workspace)
         vm_install(MASTERWRKDIR, systype, workspace)
-        ip = vm_boot(MASTERWRKDIR, systype, workspace)
         netcard = "vtnet0"
+        ip = vm_boot(MASTERWRKDIR, systype, workspace, netcard)
     else:
         if ":" in ipnc:
             ipnclist = ipnc.split(":")
@@ -116,7 +116,7 @@ def jenkins_middleware_tests(workspace, systype, ip):
 def jenkins_webui_tests(workspace, ip):
     webUIpath = "%s/tests/" % (workspace)
     os.chdir(webUIpath)
-    cmd = "pip-3.6 install unittest-xml-reporting" 
+    cmd = "pip-3.6 install unittest-xml-reporting"
     run(cmd, shell=True)
     os.chdir(webUIpath)
     cmd2 = "xhost +"

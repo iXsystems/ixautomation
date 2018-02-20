@@ -90,7 +90,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     vm_stop(MASTERWRKDIR)
 
 
-def vm_boot(MASTERWRKDIR, systype, workspace):
+def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     vm_start(MASTERWRKDIR)
     VM = MASTERWRKDIR.split('/')[-1]
     sleep(3)
@@ -104,9 +104,13 @@ def vm_boot(MASTERWRKDIR, systype, workspace):
     os.system('clear')
     consolelog = open(vm_output, 'r')
     outputloglist = consolelog.readlines()
+    count = False
     for line in outputloglist:
-        if "http" in line:
-            FNASTESTIP = line.rstrip().replace("http://", "")
+        if netcard in line:
+            count = True
+        if count is True:
+            if "inet " in line:
+                FNASTESTIP = line.strip().split()[1]
     try:
         FNASTESTIP
     except NameError:
