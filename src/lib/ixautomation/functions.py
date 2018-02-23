@@ -96,6 +96,15 @@ def jenkins_middleware_tests(workspace, systype, ip):
     cmd3 = "python3.6 setup_client.py install --user "
     cmd3 += "--single-version-externally-managed --record $(mktemp)"
     run(cmd3, shell=True)
+    # Run network test only
+    apipath = "%s/tests" % (workspace)
+    if os.path.exists("/usr/local/etc/ixautomation.conf"):
+        copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
+    os.chdir(apipath)
+    cmd = "python3.6 runtest.py --ip %s " % ip
+    cmd += "--password testing --interface %s --test network" % netcard
+    run(cmd, shell=True)
+    os.chdir(workspace)
     os.chdir(middlewared_test_path)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
