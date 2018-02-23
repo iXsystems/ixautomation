@@ -71,7 +71,7 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
     if test == "api-tests":
         jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
-        jenkins_middleware_tests(workspace, systype, ip)
+        jenkins_middleware_tests(workspace, systype, ip, netcard)
     elif test == "webui-tests":
         jenkins_webui_tests(workspace, ip)
 
@@ -87,7 +87,7 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
     os.chdir(workspace)
 
 
-def jenkins_middleware_tests(workspace, systype, ip):
+def jenkins_middleware_tests(workspace, systype, ip, netcard):
     middlewared_path = "%s/src/middlewared" % workspace
     middlewared_test_path = "%s/middlewared/pytest" % middlewared_path
     os.chdir(middlewared_path)
