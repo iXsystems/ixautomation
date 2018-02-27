@@ -70,6 +70,8 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
             netcard = "vtnet0"
     if test == "api-tests":
         jenkins_api_tests(workspace, systype, ip, netcard)
+    elif test == "api2-tests":
+        jenkins_api2_tests(workspace, systype, ip, netcard)
     elif test == "middlewared-tests":
         jenkins_middleware_tests(workspace, systype, ip, netcard)
     elif test == "webui-tests":
@@ -83,6 +85,17 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
     os.chdir(apipath)
     cmd = "python3.6 runtest.py --ip %s " % ip
     cmd += "--password testing --interface %s" % netcard
+    run(cmd, shell=True)
+    os.chdir(workspace)
+
+
+def jenkins_api2_tests(workspace, systype, ip, netcard):
+    apipath = "%s/tests" % (workspace)
+    if os.path.exists("/usr/local/etc/ixautomation.conf"):
+        copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
+    os.chdir(apipath)
+    cmd = "python3.6 runtest.py --ip %s " % ip
+    cmd += "--password testing --interface %s --api 2.0" % netcard
     run(cmd, shell=True)
     os.chdir(workspace)
 
