@@ -2,7 +2,7 @@
 
 import os
 import sys
-from subprocess import run
+from subprocess import run, Popen, PIPE
 from time import sleep
 
 
@@ -102,23 +102,17 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
-    consolelog = open(vm_output, 'r')
-    outputloglist = consolelog.readlines()
-    count = False
-    for line in outputloglist:
-        if netcard in line:
-            count = True
-        if count is True:
-            if "inet " in line:
-                FNASTESTIP = line.strip().split()[1]
-    try:
-        FNASTESTIP
-    except NameError:
-        FNASTESTIP = "0.0.0.0"
-        print("FNAESTIP=0.0.0.0")
-        print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
-    else:
+
+    cmd = "cat '%s' | grep -A 5 '%s: f' | grep -a 'inet '" % (vm_output, netcard)
+    cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
+    inetcnsl = cnsl.stdout.readlines()
+    if len(inetcnsl) != 0:
+        FNASTESTIP = inetcnsl[0].strip().split()[1]
         print("FNASTESTIP=%s" % FNASTESTIP)
+    else:
+        FNASTESTIP = "0.0.0.0"
+        print("FNAESTIP=%s" % FNASTESTIP)
+        print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
     return FNASTESTIP
 
 
