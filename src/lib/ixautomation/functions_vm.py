@@ -103,7 +103,8 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     # Reset/clear to get native term dimensions
     os.system('clear')
 
-    cmd = "cat '%s' | grep -A 5 '%s: f' | grep -a 'inet '" % (vm_output, netcard)
+    cmd = "cat '%s' | grep -A 5 '%s: f' | grep -a 'inet '" % (vm_output,
+                                                              netcard)
     cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
     inetcnsl = cnsl.stdout.readlines()
     if len(inetcnsl) != 0:
@@ -111,7 +112,7 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
         print("FNASTESTIP=%s" % FNASTESTIP)
     else:
         FNASTESTIP = "0.0.0.0"
-        print("FNAESTIP=%s" % FNASTESTIP)
+        print("FNASTESTIP=%s" % FNASTESTIP)
         print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
     return FNASTESTIP
 

@@ -135,18 +135,34 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     os.chdir(workspace)
 
 
+def killall_process(process):
+    run('killall %s' % process, shell=True)
+
+
+def remove_file(file):
+    run('rm %s' % file, shell=True)
+
+
 def jenkins_webui_tests(workspace, ip):
-    webUIpath = "%s/tests/" % (workspace)
+    webUIpath = "%s/tests/" % workspace
+    webuixvfbpath = "%swebui-xvfb" % webUIpath
     os.chdir(webUIpath)
     cmd = "pip-3.6 install unittest-xml-reporting"
     run(cmd, shell=True)
     os.chdir(webUIpath)
-    cmd2 = "xhost +"
+    killall_process('Xvfb')
+    remove_file('rm /tmp/.X1-lock')
+    if not os.path.isdir(webuixvfbpath):
+        os.makedirs(webuixvfbpath)
+    cmd1 = "export DISPLAY=:1"
+    run(cmd1, shell=True)
+    cmd2 = "Xvfb :1 -screen 0 1920x1080x24 -fbdir %s" % webuixvfbpath
     run(cmd2, shell=True)
-    os.chdir(webUIpath)
     cmd3 = "stdbuf -oL "
     cmd3 += "python3.6 -u runtest.py --ip %s" % ip
     run(cmd3, shell=True)
+    killall_process('Xvfb')
+    remove_file('rm /tmp/.X1-lock')
     os.chdir(workspace)
 
 
