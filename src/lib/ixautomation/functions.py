@@ -9,6 +9,7 @@ import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
+from pyvirtualdisplay import Display
 
 
 def create_workdir():
@@ -135,36 +136,21 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     os.chdir(workspace)
 
 
-def killall_process(process):
-    run('killall %s' % process, shell=True)
-
-
-def remove_file(file):
-    run('rm %s' % file, shell=True)
-
-
 def jenkins_webui_tests(workspace, ip):
     webUIpath = "%s/tests/" % workspace
-    webuixvfbpath = "%swebui-xvfb" % webUIpath
     os.chdir(webUIpath)
-    cmd = "pip-3.6 install unittest-xml-reporting"
-    run(cmd, shell=True)
+    try:
+        import xmlrunner
+    except ImportError:
+        cmd = "pip-3.6 install unittest-xml-reporting"
+        run(cmd, shell=True)
+    display = Display(visible=0, size=(800, 600))
+    display.start()
     os.chdir(webUIpath)
-    killall_process('Xvfb')
-    remove_file('rm /tmp/.X1-lock')
-    if not os.path.isdir(webuixvfbpath):
-        os.makedirs(webuixvfbpath)
-    cmd1 = "export DISPLAY=:1"
+    cmd1 = "python3.6 -u runtest.py --ip %s" % ip
     run(cmd1, shell=True)
-    cmd2 = "Xvfb :1 -screen 0 1920x1080x24 -fbdir %s && " % webuixvfbpath
-    # run(cmd2, shell=True)
-    cmd3 = "stdbuf -oL "
-    cmd3 += "python3.6 -u runtest.py --ip %s" % ip
-    cmd4 = cmd2 + cmd3
-    run(cmd4, shell=True)
-    killall_process('Xvfb')
-    remove_file('rm /tmp/.X1-lock')
     os.chdir(workspace)
+    display.stop()
 
 
 def jenkins_vm_destroy_all():
