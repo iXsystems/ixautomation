@@ -156,11 +156,12 @@ def jenkins_webui_tests(workspace, ip):
         os.makedirs(webuixvfbpath)
     cmd1 = "export DISPLAY=:1"
     run(cmd1, shell=True)
-    cmd2 = "Xvfb :1 -screen 0 1920x1080x24 -fbdir %s" % webuixvfbpath
-    run(cmd2, shell=True)
+    cmd2 = "Xvfb :1 -screen 0 1920x1080x24 -fbdir %s && " % webuixvfbpath
+    # run(cmd2, shell=True)
     cmd3 = "stdbuf -oL "
     cmd3 += "python3.6 -u runtest.py --ip %s" % ip
-    run(cmd3, shell=True)
+    cmd4 = cmd2 + cmd3
+    run(cmd4, shell=True)
     killall_process('Xvfb')
     remove_file('rm /tmp/.X1-lock')
     os.chdir(workspace)
