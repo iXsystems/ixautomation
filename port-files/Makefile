@@ -23,7 +23,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest-tornado>=0:devel/py-pytest-tornado@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pyvirtualdisplay>=0:x11/py-pyvirtualdisplay@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ws4py>=0:www/py-ws4py@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}xmlrunner>=0:devel/py-unittest-xml-reporting@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${FLAVOR} \
 		${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/firefox:www/firefox-esr \
