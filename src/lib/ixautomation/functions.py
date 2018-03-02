@@ -138,11 +138,6 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
 
 def jenkins_webui_tests(workspace, ip):
     webUIpath = "%s/tests/" % workspace
-    try:
-        import xmlrunner
-    except ImportError:
-        cmd = "pip-3.6 install unittest-xml-reporting"
-        run(cmd, shell=True)
     display = Display(visible=0, size=(1920, 1080))
     display.start()
     os.chdir(webUIpath)
