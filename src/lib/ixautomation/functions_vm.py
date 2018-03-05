@@ -56,7 +56,9 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             else:
                 print("Invalid selection..")
                 sleep(2)
-    iso_path = iso_dir + "/" + iso_name
+    iso_file = iso_dir + iso_name
+    iso_path = iso_file.replace("(", "\(").replace(")", "\)")
+    print(iso_path)
     run("vm iso %s" % iso_path, shell=True)
     run("vm create -t %s %s" % (systype, VM), shell=True)
     run("vm install %s %s" % (VM, iso_name), shell=True)
@@ -76,16 +78,18 @@ def vm_stop(MASTERWRKDIR):
 
 def vm_install(MASTERWRKDIR, systype, workspace):
     VM = MASTERWRKDIR.split('/')[-1]
+    testworkspace = workspace + '/tests'
     # Get console device for newly created VM
     sleep(3)
     vm_output = "/tmp/%sconsole.log" % VM
+    # change workspace to test dirctory
+    os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = 'expect %s/tests/install.exp "%s" "%s"' % (workspace,
-                                                          VM,
-                                                          vm_output)
+    expctcmd = 'expect install.exp "%s" "%s"' % (VM, vm_output)
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
+    os.chdir(workspace)
     print("Success: Shutting down the installation VM..")
     vm_stop(MASTERWRKDIR)
 
@@ -93,16 +97,17 @@ def vm_install(MASTERWRKDIR, systype, workspace):
 def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     vm_start(MASTERWRKDIR)
     VM = MASTERWRKDIR.split('/')[-1]
+    testworkspace = workspace + '/tests'
     sleep(3)
+    # change workspace to test dirctory
+    os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = "/tmp/%sconsole.log" % VM
-    expectcnd = 'expect %s/tests/boot.exp "%s" "%s"' % (workspace,
-                                                        VM,
-                                                        vm_output)
+    expectcnd = 'expect boot.exp "%s" "%s"' % (VM, vm_output)
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
-
+    os.chdir(workspace)
     cmd = "cat '%s' | grep -A 5 '%s: f' | grep -a 'inet '" % (vm_output,
                                                               netcard)
     cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
