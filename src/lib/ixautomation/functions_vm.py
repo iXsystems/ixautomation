@@ -58,7 +58,6 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
                 sleep(2)
     iso_file = iso_dir + iso_name
     iso_path = iso_file.replace("(", "\(").replace(")", "\)")
-    print(iso_path)
     run("vm iso %s" % iso_path, shell=True)
     run("vm create -t %s %s" % (systype, VM), shell=True)
     run("vm install %s %s" % (VM, iso_name), shell=True)
