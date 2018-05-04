@@ -3,11 +3,6 @@
 name="ixautomation"
 description="iXSystems automation framework"
 
-depend()
-{
-	need dbus
-}
-
 start_pre()
 {
   if service ipfw status | grep -q started; then
