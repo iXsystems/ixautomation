@@ -99,12 +99,6 @@ sudo ixautomation --run middleware-tests --systype freenas --ip 192.168.0.2
 
 Selenium Tests
 ============
-If running locally outside of jenkins export display, and disable xorg ACL:
-```
-export DISPLAY=:0
-xhost +
-```
-
 In order to run VM tests remove --ip
 ```
 sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
