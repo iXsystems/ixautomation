@@ -9,8 +9,6 @@ import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
-from pyvirtualdisplay import Display
-
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
