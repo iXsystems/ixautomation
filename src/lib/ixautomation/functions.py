@@ -136,13 +136,10 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
 
 def jenkins_webui_tests(workspace, ip):
     webUIpath = "%s/tests/" % workspace
-    display = Display(visible=0, size=(1920, 1080))
-    display.start()
     os.chdir(webUIpath)
     cmd1 = "python3.6 -u runtest.py --ip %s" % ip
     run(cmd1, shell=True)
     os.chdir(workspace)
-    display.stop()
 
 
 def jenkins_vm_destroy_all():
