@@ -85,9 +85,29 @@ sudo ixautomation --destroy-all-vm
 
 ReST API Tests
 ============
-In order to run VM tests remove --ip
+Run API test with VM tests
+
+API 1.0
+
+```
+sudo ixautomation --run api-tests --systype freenas
+```
+
+API 2.0
+
+```
+sudo ixautomation --run api2-tests --systype freenas
+```
+
+Run API test from VM or real machine
+
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
+```
+For a real machine add the driver card to use.
+
+```
+sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2:re0
 ```
 
 Middleware Tests
