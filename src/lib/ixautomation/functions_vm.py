@@ -113,11 +113,13 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     inetcnsl = cnsl.stdout.readlines()
     if len(inetcnsl) != 0:
         FNASTESTIP = inetcnsl[0].strip().split()[1]
-        print("FNASTESTIP=%s" % FNASTESTIP)
+        if systype == 'freenas':
+            print("FNASTESTIP=%s" % FNASTESTIP)
     else:
         FNASTESTIP = "0.0.0.0"
-        print("FNASTESTIP=%s" % FNASTESTIP)
-        print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
+        if systype == 'freenas':
+            print("FNASTESTIP=%s" % FNASTESTIP)
+            print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
     return FNASTESTIP
 
 
