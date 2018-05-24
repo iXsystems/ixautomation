@@ -30,7 +30,7 @@ pipeline {
                     }
                     steps {
                         sh 'rm -rf tests || true'
-                        sh 'git clone --depth=1 git://10.20.21.137/freenas tests'
+                      sh 'git clone --depth=1 git://10.20.21.137/freenas ${WORKSPACE}'
                         echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
@@ -44,7 +44,7 @@ pipeline {
                     }
                     steps {
                         sh 'rm -rf tests || true'
-                        sh 'git clone --depth=1 git://10.20.21.137/freenas tests'
+                        sh 'git clone --depth=1 git://10.20.21.137/freenas ${WORKSPACE}'
                         echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
@@ -58,11 +58,10 @@ pipeline {
                     }
                     steps {
                         sh 'rm -rf tests || true'
-                        sh 'git clone --depth=1 git://10.20.21.137/freenas tests'
+                        sh 'git clone --depth=1 git://10.20.21.137/freenas ${WORKSPACE}'
                         echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
-                        sh 'cp -R freenas/src ${WORKSPACE}'
                         sh 'ixautomation --run middlewared-tests --systype freenas'
                         junit 'src/middlewared/middlewared/pytest/results/*.xml'
                     }
@@ -73,7 +72,7 @@ pipeline {
                     }
                     steps {
                         sh 'rm -rf tests || true'
-                        sh 'git clone --depth=1 git://10.20.21.137/webui tests'
+                        sh 'git clone --depth=1 git://10.20.21.137/webui ${WORKSPACE}'
                         echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
