@@ -102,8 +102,7 @@ pipeline {
     		   always {
 				script {
 					cleanWs notFailBuild: true
-					env.WORKSPACE = pwd()
-            				sh "rm ${env.WORKSPACE}/* -fr"
+					deleteDir()
       				}
 				}
 	    	}
