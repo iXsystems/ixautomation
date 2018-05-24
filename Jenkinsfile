@@ -21,7 +21,7 @@ pipeline {
         sh 'ixautomation --destroy-all-vm'
       }
     }
-    
+
  stage('Run Tests') {
             parallel {
                 stage('API 1.0') {
@@ -95,10 +95,16 @@ pipeline {
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run webui-tests --systype freenas'
                         junit 'tests/results/*.xml'
-                    }
-                }
-            }
-        }
-    
-  }
+					}
+				}
+			}
+		  post {
+    		   always {
+				script {
+					cleanWs notFailBuild: true
+      				}
+				}
+	    	}
+		}
+	}
 }
