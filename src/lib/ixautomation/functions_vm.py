@@ -48,8 +48,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             if int(iso_selection) in range(0, int(iso_cnt + 1)):
                 iso_name = iso_list[int(iso_selection)]
                 # Confirm our user's ISO selection with another prompt
-                ask = 'You have selected "%s", ' % iso_name
-                ask += 'is this correct?(Y/n): '
+                ask = f'You have selected {iso_name}, is this correct?(Y/n): '
                 confirm = input(ask)
                 if confirm in ["Y", "y", "Yes", "yes", "YES"]:
                     break

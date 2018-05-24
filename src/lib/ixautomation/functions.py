@@ -10,6 +10,7 @@ import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
 
+
 def create_workdir():
     builddir = "/tmp/ixautomation"
     tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
@@ -82,8 +83,8 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
         copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
     os.chdir(apipath)
-    cmd = "python3.6 runtest.py --ip %s " % ip
-    cmd += "--password testing --interface %s" % netcard
+    cmd = f"python3.6 runtest.py --ip {ip} " \
+          f"--password testing --interface {netcard}"
     run(cmd, shell=True)
     os.chdir(workspace)
 
@@ -93,8 +94,8 @@ def jenkins_api2_tests(workspace, systype, ip, netcard):
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
         copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
     os.chdir(apipath)
-    cmd = "python3.6 runtest.py --ip %s " % ip
-    cmd += "--password testing --interface %s --api 2.0" % netcard
+    cmd = f"python3.6 runtest.py --ip {ip} " \
+          f"--password testing --interface {netcard} --api 2.0"
     run(cmd, shell=True)
     os.chdir(workspace)
 
@@ -105,16 +106,16 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     os.chdir(middlewared_path)
     cmd2 = "pip-3.6 uninstall -y middlewared.client"
     run(cmd2, shell=True)
-    cmd3 = "python3.6 setup_client.py install --user "
-    cmd3 += "--single-version-externally-managed --record $(mktemp)"
+    cmd3 = "python3.6 setup_client.py install --user " \
+           "--single-version-externally-managed --record $(mktemp)"
     run(cmd3, shell=True)
     # Run network test only
     apipath = "%s/tests" % (workspace)
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
         copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
     os.chdir(apipath)
-    cmd = "python3.6 runtest.py --ip %s " % ip
-    cmd += "--password testing --interface %s --test network" % netcard
+    cmd = f"python3.6 runtest.py --ip {ip} " \
+          f"--password testing --interface {netcard} --test network"
     run(cmd, shell=True)
     os.chdir(workspace)
     os.chdir(middlewared_test_path)
@@ -125,11 +126,11 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     target.writelines('username = root\n')
     target.writelines('password = testing\n')
     target.close()
-    cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" "
-    cmd4 += "functional/test_0001_authentication.py"
+    cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" " \
+           "functional/test_0001_authentication.py"
     run(cmd4, shell=True)
-    cmd5 = "python3.6 -m pytest -sv functional "
-    cmd5 += "--junitxml=results/middlewared.xml"
+    cmd5 = "python3.6 -m pytest -sv functional " \
+           "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
 
