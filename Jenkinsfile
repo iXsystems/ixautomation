@@ -101,11 +101,13 @@ pipeline {
 		  post {
     		   always {
 				script {
-					cleanWs notFailBuild: true
-					deleteDir()
-      				}
+				cleanWs notFailBuild: true
+				dir("${env.WORKSPACE}*") {
+      				deleteDir()
+    				}
 				}
 	    	}
+		}
 		}
 	}
 }
