@@ -98,19 +98,30 @@ pipeline {
 					}
 				}
 			}
-		  post {
-    		   always {
-				script {
-				cleanWs notFailBuild: true
-				dir("${env.WORKSPACE}*") {
-      				deleteDir()
-    				}
-				dir("${env.WORKSPACE}*@*") {
-      				deleteDir()
-    				}
+					post {
+						always {
+							script {
+								cleanWs notFailBuild: true
+									dir("${env.WORKSPACE}*") {
+										deleteDir()
+    								}
+									dir("${env.WORKSPACE}1@*") {
+      										deleteDir()
+    								}
+									dir("${env.WORKSPACE}2@*") {
+									}
+									dir("${env.WORKSPACE}3@*") {
+      										deleteDir()
+									}
+									dir("${env.WORKSPACE}4@*") {
+											deleteDir()
+    								}
+									dir("${env.WORKSPACE}5@*") {
+      										deleteDir()
+									}			
+								}
+							}
+						}
+					}
 				}
-	    	}
-		}
-		}
-	}
-}
+			}
