@@ -105,7 +105,7 @@ pipeline {
 				dir("${env.WORKSPACE}*") {
       				deleteDir()
     				}
-				dir("${env.WORKSPACE}@*") {
+				dir("${env.WORKSPACE}*@*") {
       				deleteDir()
     				}
 				}
