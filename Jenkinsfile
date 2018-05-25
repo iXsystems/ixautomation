@@ -105,6 +105,9 @@ pipeline {
 				dir("${env.WORKSPACE}*") {
       				deleteDir()
     				}
+				dir("${env.WORKSPACE}@*") {
+      				deleteDir()
+    				}
 				}
 	    	}
 		}
