@@ -109,14 +109,27 @@ pipeline {
       										deleteDir()
     								}
 									dir("${env.WORKSPACE}@2") {
+											deleteDir()
 									}
+									dir("${env.WORKSPACE}@2@tmp") {
+      										deleteDir()
+    								}
 									dir("${env.WORKSPACE}@3") {
       										deleteDir()
 									}
+									dir("${env.WORKSPACE}@3@tmp") {
+      										deleteDir()
+    								}
 									dir("${env.WORKSPACE}@4") {
 											deleteDir()
     								}
+									dir("${env.WORKSPACE}@4@tmp") {
+      										deleteDir()
+    								}
 									dir("${env.WORKSPACE}@5") {
+      										deleteDir()
+    								}
+									dir("${env.WORKSPACE}@5@tmp") {
       										deleteDir()
 									}			
 								}
