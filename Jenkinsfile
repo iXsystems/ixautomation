@@ -105,18 +105,18 @@ pipeline {
 									dir("${env.WORKSPACE}*") {
 										deleteDir()
     								}
-									dir("${env.WORKSPACE}1@*") {
+									dir("${env.WORKSPACE}@1*") {
       										deleteDir()
     								}
-									dir("${env.WORKSPACE}2@*") {
+									dir("${env.WORKSPACE}@2*") {
 									}
-									dir("${env.WORKSPACE}3@*") {
+									dir("${env.WORKSPACE}@3*") {
       										deleteDir()
 									}
-									dir("${env.WORKSPACE}4@*") {
+									dir("${env.WORKSPACE}@4*") {
 											deleteDir()
     								}
-									dir("${env.WORKSPACE}5@*") {
+									dir("${env.WORKSPACE}@5*") {
       										deleteDir()
 									}			
 								}
