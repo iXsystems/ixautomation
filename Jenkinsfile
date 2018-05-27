@@ -7,7 +7,6 @@ pipeline {
 
     stage('Checkout') {
       steps {
-	throttle(['iXqa'])
         echo '*** Checking out test repositories ***'
         sh 'rm -rf freenas || true'
         sh 'rm -rf webui || true'
@@ -17,7 +16,6 @@ pipeline {
 
     stage('Cleanup') {
       steps {
-		throttle(['iXqa'])
         echo '*** Performing cleanup ***'
         sh 'ls /dev/vmm | xargs vm poweroff || true'
         sh 'ixautomation --destroy-all-vm'
@@ -31,7 +29,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
-			throttle(['iXqa'])
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -50,7 +48,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
-			throttle(['iXqa'])
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -69,7 +67,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
-			throttle(['iXqa'])
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
