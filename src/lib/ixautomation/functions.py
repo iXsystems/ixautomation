@@ -50,7 +50,7 @@ def exit_fail(*args):
     return 1
 
 
-def jenkins_vm_tests(workspace, systype, ipnc, test):
+def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
     if ipnc is None:
         create_workdir()
         signal.signal(signal.SIGINT, exit_fail)
@@ -76,6 +76,9 @@ def jenkins_vm_tests(workspace, systype, ipnc, test):
         jenkins_middleware_tests(workspace, systype, ip, netcard)
     elif test == "webui-tests":
         jenkins_webui_tests(workspace, ip)
+    # clean up vm if --keep-alive is not specify
+    if keep_alive is False:
+        exit_clean(MASTERWRKDIR)
 
 
 def jenkins_api_tests(workspace, systype, ip, netcard):

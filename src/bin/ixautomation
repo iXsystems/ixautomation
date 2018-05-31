@@ -35,6 +35,7 @@ Available Commands:
 
 --destroy-all-vm          - Stop all vm running, remove vm directory and iso
 
+--keep-alive              - Keep the Bhyve alive and running
 """ % argument[0]
 
 # if have no argumment stop
@@ -43,7 +44,7 @@ if len(argument) == 1:
     exit()
 
 # list of argument that chould be use.
-optionlist = ["run=", "systype=", "ip=", "destroy-all-vm"]
+optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]
 systypelist = ["freenas", "trueos"]
 runlist = ["vm-tests", "api-tests", "api2-tests", "webui-tests",
            "middlewared-tests"]
@@ -62,11 +63,15 @@ if "--systype" not in myopts and "--run" in myopts:
     print(UsageMSG)
     sys.exit(1)
 
+keep_alive = False
+
 for output, arg in myopts:
     if output == "--destroy-all-vm":
         jenkins_vm_destroy_all()
         sys.exit(0)
-    if output == '--run':
+    elif output == "--keep-alive":
+        keep_alive = True
+    elif output == '--run':
         run = arg
     elif output == '--systype':
         systype = arg
@@ -129,12 +134,12 @@ except NameError:
     ipnc = None
 
 if run == "vm-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
 elif run == "api-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
 elif run == "api2-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
 elif run == "middlewared-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
 elif run == "webui-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run)
+    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
