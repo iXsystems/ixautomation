@@ -14,14 +14,6 @@ pipeline {
       }
     }
 
-    stage('Cleanup') {
-      steps {
-        echo '*** Performing cleanup ***'
-        sh 'ls /dev/vmm | xargs vm poweroff || true'
-        sh 'ixautomation --destroy-all-vm'
-      }
-    }
-
  stage('Run Tests') {
             parallel {
                 stage('API 1.0') {
