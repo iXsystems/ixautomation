@@ -45,7 +45,8 @@ def exit_clean(MASTERWRKDIR):
     return 0
 
 
-def exit_fail(*args):
+def exit_fail(arg1, arg2):
+    print('## iXautomation got Interrupted, cleaning up')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
     sys.exit(1)
@@ -55,8 +56,9 @@ def exit_fail(*args):
 def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
     if ipnc is None:
         create_workdir()
-        signal.signal(signal.SIGINT, exit_fail)
         signal.signal(signal.SIGTERM, exit_fail)
+        signal.signal(signal.SIGHUP, exit_fail)
+        signal.signal(signal.SIGINT, exit_fail)
         vm_setup()
         vm_select_iso(MASTERWRKDIR, systype, workspace)
         vm_install(MASTERWRKDIR, systype, workspace)
