@@ -29,6 +29,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -47,6 +48,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -65,6 +67,7 @@ pipeline {
                         label "QA"
                     }
                     steps {
+						throttle(['QA-TEST'])
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
