@@ -47,19 +47,19 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             # add 1 to iso_cnt to look in the full range.
             if int(iso_selection) in range(0, int(iso_cnt + 1)):
                 iso_name = iso_list[int(iso_selection)]
-                # Confirm our user's ISO selection with another prompt
-                ask = f'You have selected {iso_name}, is this correct?(Y/n): '
-                confirm = input(ask)
-                if confirm in ["Y", "y", "Yes", "yes", "YES"]:
-                    break
+                break
             else:
                 print("Invalid selection..")
                 sleep(2)
-    iso_file = iso_dir + iso_name
+    new_iso = f"{VM}.iso"
+    os.chdir(iso_dir)
+    os.rename(iso_name, new_iso)
+    os.chdir(workspace)
+    iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", "\(").replace(")", "\)")
     run("vm iso %s" % iso_path, shell=True)
     run("vm create -t %s %s" % (systype, VM), shell=True)
-    run("vm install %s %s" % (VM, iso_name), shell=True)
+    run("vm install %s %s" % (VM, new_iso), shell=True)
 
 
 def vm_start(MASTERWRKDIR):

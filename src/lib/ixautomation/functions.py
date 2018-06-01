@@ -22,7 +22,8 @@ def create_workdir():
     return MASTERWRKDIR
 
 
-def cleanup_workdir():
+def cleanup_workdir(MASTERWRKDIR):
+    VM = MASTERWRKDIR.split('/')[-1]
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:
@@ -34,18 +35,19 @@ def cleanup_workdir():
     if "on %s /" % MASTERWRKDIR not in mounted.stdout.read():
         run("chflags -R noschg  " + MASTERWRKDIR, shell=True)
         run("rm -rf " + MASTERWRKDIR, shell=True)
+    os.remove(f'/usr/local/ixautomation/vms/.iso/{VM}.iso')
 
 
 def exit_clean(MASTERWRKDIR):
     vm_destroy(MASTERWRKDIR)
-    cleanup_workdir()
+    cleanup_workdir(MASTERWRKDIR)
     sys.exit(0)
     return 0
 
 
 def exit_fail(*args):
     vm_destroy(MASTERWRKDIR)
-    cleanup_workdir()
+    cleanup_workdir(MASTERWRKDIR)
     sys.exit(1)
     return 1
 
