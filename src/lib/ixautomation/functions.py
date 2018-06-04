@@ -2,6 +2,7 @@
 
 import os
 import signal
+import atexit
 import sys
 from subprocess import Popen, run, PIPE
 from shutil import copyfile
@@ -39,23 +40,40 @@ def cleanup_workdir(MASTERWRKDIR):
 
 
 def exit_clean(MASTERWRKDIR):
+    global terminated
+    terminated = False
+    print('## iXautomation is stopping! cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
+    print("Gracefully cleaned and stopped")
     sys.exit(0)
-    return 0
 
 
 def exit_fail(arg1, arg2):
-    print('## iXautomation got Interrupted, cleaning up')
+    global terminated
+    terminated = False
+    print('## iXautomation got terminated! cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
+    print("Gracefully cleaned and stopped")
     sys.exit(1)
-    return 1
+
+
+def get_terinated():
+    if terminated is True:
+        print('## iXautomation got cancel! cleaning up time!')
+        vm_destroy(MASTERWRKDIR)
+        cleanup_workdir(MASTERWRKDIR)
+        print("Gracefully cleaned and stopped")
+        sys.exit(1)
 
 
 def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
+    global terminated
+    terminated = True
     if ipnc is None:
         create_workdir()
+        atexit.register(get_terinated)
         signal.signal(signal.SIGTERM, exit_fail)
         signal.signal(signal.SIGHUP, exit_fail)
         signal.signal(signal.SIGINT, exit_fail)
@@ -81,6 +99,7 @@ def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
     elif test == "webui-tests":
         jenkins_webui_tests(workspace, ip)
     # clean up vm if --keep-alive is not specify
+    terminated = False
     if keep_alive is False:
         exit_clean(MASTERWRKDIR)
 
