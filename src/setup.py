@@ -34,6 +34,8 @@ data_files = [
      ['lib/ixautomation/functions_vm.py']),
     ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
      ['lib/ixautomation/functions.py']),
+    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
+     ['lib/ixautomation/freenas-11.2-userboot.so']),
 ]
 
 setup(
