@@ -38,7 +38,7 @@ def cleanup_workdir(MASTERWRKDIR):
     if "on %s /" % MASTERWRKDIR not in mounted.stdout.read():
         run("chflags -R noschg  " + MASTERWRKDIR, shell=True)
         run("rm -rf " + MASTERWRKDIR, shell=True)
-    os.remove(f'/usr/local/ixautomation/vms/.iso/{VM}.iso')
+    os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
 
 
 def exit_clean(MASTERWRKDIR):
@@ -80,7 +80,8 @@ def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
         signal.signal(signal.SIGHUP, exit_fail)
         signal.signal(signal.SIGINT, exit_fail)
         vm_setup()
-        vm_select_iso(MASTERWRKDIR, systype, workspace)
+        global select_iso
+        select_iso = vm_select_iso(MASTERWRKDIR, systype, workspace)
         vm_install(MASTERWRKDIR, systype, workspace)
         netcard = "vtnet0"
         ip = vm_boot(MASTERWRKDIR, systype, workspace, netcard)

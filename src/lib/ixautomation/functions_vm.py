@@ -51,7 +51,8 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
             else:
                 print("Invalid selection..")
                 sleep(2)
-    new_iso = f"{VM}.iso"
+    name_iso = iso_name.replace('.iso', '').partition('_')[0]
+    new_iso = f"{name_iso}_{VM}.iso"
     os.chdir(iso_dir)
     os.rename(iso_name, new_iso)
     os.chdir(workspace)
@@ -60,6 +61,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     run("vm iso %s" % iso_path, shell=True)
     run("vm create -t %s %s" % (systype, VM), shell=True)
     run("vm install %s %s" % (VM, new_iso), shell=True)
+    return new_iso
 
 
 def vm_start(MASTERWRKDIR):
