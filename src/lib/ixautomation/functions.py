@@ -18,7 +18,7 @@ def create_workdir():
     global tempdir
     tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
     global MASTERWRKDIR
-    MASTERWRKDIR = builddir + '/' + tempdir
+    MASTERWRKDIR = f'{builddir}/{tempdir}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
     os.makedirs(MASTERWRKDIR)
@@ -30,14 +30,15 @@ def cleanup_workdir(MASTERWRKDIR):
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:
-        if "on %s /" % MASTERWRKDIR in line:
-            run("umount -f " + line.split()[2], shell=True)
+        if f"on {MASTERWRKDIR} /" in line:
+            mountpoint = line.split()[2]
+            run(f"umount -f {mountpoint}", shell=True)
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     # Should be done with unmounts
-    if "on %s /" % MASTERWRKDIR not in mounted.stdout.read():
-        run("chflags -R noschg  " + MASTERWRKDIR, shell=True)
-        run("rm -rf " + MASTERWRKDIR, shell=True)
+    if f"on {MASTERWRKDIR} /" not in mounted.stdout.read():
+        run(f"chflags -R noschg  {MASTERWRKDIR}", shell=True)
+        run(f"rm -rf {MASTERWRKDIR}", shell=True)
     os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
 
 
@@ -108,9 +109,9 @@ def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
 
 
 def jenkins_api_tests(workspace, systype, ip, netcard):
-    apipath = "%s/tests" % (workspace)
+    apipath = f"{workspace}/tests"
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
-        copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
+        copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
           f"--password testing --interface {netcard}"
@@ -119,9 +120,9 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
 
 
 def jenkins_api2_tests(workspace, systype, ip, netcard):
-    apipath = "%s/tests" % (workspace)
+    apipath = f"{workspace}/tests"
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
-        copyfile("/usr/local/etc/ixautomation.conf", apipath + "/config.py")
+        copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
           f"--password testing --interface {netcard} --api 2.0"
@@ -155,7 +156,7 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     os.chdir(middlewared_test_path)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
-    target.writelines('hostname = %s\n' % ip)
+    target.writelines(f'hostname = {ip}\n')
     target.writelines('api = /api/v2.0/\n')
     target.writelines('username = root\n')
     target.writelines('password = testing\n')
@@ -172,9 +173,9 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
 
 
 def jenkins_webui_tests(workspace, ip):
-    webUIpath = "%s/tests/" % workspace
+    webUIpath = f"{workspace}/tests/"
     os.chdir(webUIpath)
-    cmd1 = "python3.6 -u runtest.py --ip %s" % ip
+    cmd1 = f"python3.6 -u runtest.py --ip {ip}"
     run(cmd1, shell=True)
     os.chdir(workspace)
 
