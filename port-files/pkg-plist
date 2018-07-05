@@ -1,6 +1,6 @@
 bin/ixautomation
 etc/init.d/ixautomation
-%%ETCDIR%%.conf.dist
+%%ETCDIR%%/ixautomation.conf.dist
 etc/rc.d/ixautomation
 etc/sudoers.d/ixautomation
 ixautomation/vms/.config/system.conf
