@@ -85,7 +85,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     # change workspace to test dirctory
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = f'expect install.exp f"{VM}" "{vm_output}"'
+    expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
