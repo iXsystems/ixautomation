@@ -24,6 +24,8 @@ data_files = [
      ['etc/rc.d/ixautomation']),
     ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix),
      ['etc/sudoers.d/ixautomation']),
+    ('{prefix}/ixautomation/virtualenv'.format(prefix=sys.prefix),
+     []),
     ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix),
      ['ixautomation/vms/.config/system.conf']),
     ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
