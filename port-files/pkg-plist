@@ -14,3 +14,4 @@ lib/ixautomation/functions_vm.py
 %%PYTHON_SITELIBDIR%%/ixautomation-0.10-py%%PYTHON_VER%%.egg-info/dependency_links.txt
 %%PYTHON_SITELIBDIR%%/ixautomation-0.10-py%%PYTHON_VER%%.egg-info/requires.txt
 %%PYTHON_SITELIBDIR%%/ixautomation-0.10-py%%PYTHON_VER%%.egg-info/top_level.txt
+@dir ixautomation/virtualenv
