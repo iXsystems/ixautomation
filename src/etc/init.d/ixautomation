@@ -1,45 +1,41 @@
 #!/sbin/openrc-run
-
+  
 name="ixautomation"
-description="iXSystems automation framework"
+description="iXsystems automation framework"
 
-start_pre()
+depend()
 {
-  if service ipfw status | grep -q started; then
-    sysctl net.link.bridge.ipfw=1
-  fi
-  ixautomation_bridge="ixautomation"
-  if [ -z "$ixautomation_iface" ] ; then
-    eerror "Failed to find an interface with internet access for bridge.  Please define an interface with ixautomation_iface= in /etc/rc.conf."
-  fi
-  if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
-    if ! ifconfig | grep member | grep ${ixautomation_iface} >/dev/null 2>/dev/null ; then
-      einfo "Adding "${ixautomation_iface}" to ixautomation bridge"
-    else
-      eerror "Warning ${ixautomation_iface} is already in a bridge.  Please remove ${ixautomation_iface} from the bridge, or define an unused interface with ixautomation_iface in /etc/rc.conf."
-      exit 1
-    fi
-  fi
+  provide ixautomation
+  need dnsmasq
 }
 
 start()
 {
+  kldstat | grep -q ipfw_nat
+  if [ $? -eq 1 ] ; then
+    kldload ipfw_nat >/dev/null 2>/dev/null
+    service ipfw restart >/dev/null 2>/dev/null
+  fi
+  sysctl net.inet.ip.forwarding | grep -q 1
+  if [ $? -eq 1 ] ; then
+    sysctl net.inet.ip.forwarding=1 >/dev/null 2>/dev/null
+  fi
   ixautomation_bridge="ixautomation"
   if ! ifconfig ${ixautomation_bridge} >/dev/null 2>/dev/null ; then
     bridge=$(ifconfig bridge create)
     ifconfig ${bridge} name ${ixautomation_bridge} >/dev/null
+    ifconfig ${ixautomation_bridge} 10.0.9.1 netmask 255.255.255.0 >/dev/null 2>/dev/null
   fi
-  if ! ifconfig ${ixautomation_bridge} | grep -q "tap" >/dev/null 2>/dev/null ; then
-    tap=$(ifconfig tap create)
-    ifconfig ${ixautomation_bridge} addm ${tap}
+  sysctl net.link.bridge.ipfw | grep -q 1
+  if [ $? -eq 1 ] ; then
+    sysctl net.link.bridge.ipfw=1 >/dev/null 2>/dev/null
   fi
-  if ! ifconfig ${ixautomation_bridge} | grep -q "member: ${ixautomation_iface}" ; then
-     ifconfig ${ixautomation_bridge} addm ${ixautomation_iface}
-  fi
-  if ! ifconfig ${ixautomation_bridge} | grep -q "member: ${ixautomation_iface}" ; then
-     eerror "Warning ${ixautomation_iface} is already in a bridge.  Please remove ${ixautomation_iface} from the bridge, or define an unused interface with ixautomation_iface in /etc/rc.conf."
-    exit 1
-  fi
+  einfo "Created ixautomation bridge"
+  inet=`netstat -nr | grep default | awk '{ print $4 }'`
+  ipfw nat 9999 config if ${inet} >/dev/null 2>/dev/null
+  ipfw add 9001 nat 9999 ip from 10.0.9.0/24 to any out via ${inet} >/dev/null 2>/dev/null
+  ipfw add 9002 nat 9999 ip from any to any in via ${inet} >/dev/null 2>/dev/null
+  ipfw add 9003 allow all from any to any >/dev/null 2>/dev/null
+  einfo "NAT has been enabled for ixautomation bridge"
+  vm init >/dev/null 2>/dev/null
 }
-
-
