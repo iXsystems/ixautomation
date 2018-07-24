@@ -16,7 +16,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
         sysname = "FreeNAS"
     elif systype == "trueos":
         sysname = "TrueOS"
-    iso_dir = "%s/tests/iso/" % (workspace)
+    iso_dir = f"{workspace}/tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
     # List ISOs in iso_dir and allow the user to select the target
@@ -26,7 +26,7 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     iso_cnt = len(iso_list)
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
     if iso_cnt is 0:
-        print('Please put a %s ISO in "%s"' % (sysname, iso_dir))
+        print(f'Please put a {sysname} ISO in "{iso_dir}"')
         sys.exit(1)
     # Our to-be-determined file name of the ISO to test; must be inside iso_dir
     iso_name = ""
@@ -38,10 +38,10 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
         # Otherwise, loop until we get a valid user selection
         count = 0
         while True:
-            print("Please select which ISO to test (0-%s): " % iso_cnt)
+            print(f"Please select which ISO to test (0-{iso_cnt}): ")
             for iso in iso_list:
                 # Listing ISOs
-                print(" %s - %s" % (count, iso))
+                print(f" {count} - {iso}")
                 count += 1
             iso_selection = input("Enter your selection and press [ENTER]: ")
             # add 1 to iso_cnt to look in the full range.
@@ -58,34 +58,34 @@ def vm_select_iso(MASTERWRKDIR, systype, workspace):
     os.chdir(workspace)
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", "\(").replace(")", "\)")
-    run("vm iso %s" % iso_path, shell=True)
-    run("vm create -t %s %s" % (systype, VM), shell=True)
-    run("vm install %s %s" % (VM, new_iso), shell=True)
+    run(f"vm iso {iso_path}", shell=True)
+    run(f"vm create -t {systype} {VM}", shell=True)
+    run(f"vm install {VM} {new_iso}", shell=True)
     return new_iso
 
 
 def vm_start(MASTERWRKDIR):
     VM = MASTERWRKDIR.split('/')[-1]
-    run("vm start " + VM, shell=True)
+    run(f"vm start {VM}", shell=True)
     sleep(5)
 
 
 def vm_stop(MASTERWRKDIR):
     VM = MASTERWRKDIR.split('/')[-1]
-    run("yes | vm stop " + VM, shell=True)
+    run(f"yes | vm stop {VM}", shell=True)
     sleep(10)
 
 
 def vm_install(MASTERWRKDIR, systype, workspace):
     VM = MASTERWRKDIR.split('/')[-1]
-    testworkspace = workspace + '/tests'
+    testworkspace = f'{workspace}/tests'
     # Get console device for newly created VM
     sleep(3)
-    vm_output = "/tmp/%sconsole.log" % VM
+    vm_output = f"/tmp/{VM}console.log"
     # change workspace to test dirctory
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = 'expect install.exp "%s" "%s"' % (VM, vm_output)
+    expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
@@ -97,38 +97,37 @@ def vm_install(MASTERWRKDIR, systype, workspace):
 def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     vm_start(MASTERWRKDIR)
     VM = MASTERWRKDIR.split('/')[-1]
-    testworkspace = workspace + '/tests'
+    testworkspace = f'{workspace}/tests'
     sleep(3)
     # change workspace to test dirctory
     os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
-    vm_output = "/tmp/%sconsole.log" % VM
-    expectcnd = 'expect boot.exp "%s" "%s"' % (VM, vm_output)
+    vm_output = f"/tmp/{VM}console.log"
+    expectcnd = f'expect boot.exp "{VM}" "{vm_output}"'
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
     os.system('clear')
     os.chdir(workspace)
-    cmd = "cat '%s' | grep -A 5 '%s: f' | grep -a 'inet '" % (vm_output,
-                                                              netcard)
+    cmd = f"cat '{vm_output}' | grep -A 5 '{netcard}: ' | grep -a 'inet '"
     cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
     inetcnsl = cnsl.stdout.readlines()
     if len(inetcnsl) != 0:
         FNASTESTIP = inetcnsl[0].strip().split()[1]
         if systype == 'freenas':
-            print("FNASTESTIP=%s" % FNASTESTIP)
+            print(f"FNASTESTIP={FNASTESTIP}")
     else:
         FNASTESTIP = "0.0.0.0"
         if systype == 'freenas':
-            print("FNASTESTIP=%s" % FNASTESTIP)
+            print(f"FNASTESTIP={FNASTESTIP}")
             print("ERROR: No ip address assigned to VM. FNASTESTIP not set.")
     return FNASTESTIP
 
 
 def vm_destroy(MASTERWRKDIR):
     VM = MASTERWRKDIR.split('/')[-1]
-    run("yes | vm poweroff " + VM, shell=True)
+    run(f"yes | vm poweroff {VM}", shell=True)
     sleep(5)
-    run("yes | vm destroy " + VM, shell=True)
+    run(f"yes | vm destroy {VM}", shell=True)
 
 
 def vm_stop_all():
@@ -138,7 +137,7 @@ def vm_stop_all():
 def vm_destroy_all():
     # Remove all vm directory only
     vm_dir = "/usr/local/ixautomation/vms/*"
-    run("rm -rf " + vm_dir, shell=True)
+    run(f"rm -rf {vm_dir}", shell=True)
     # Remove all iso
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
-    run("rm -rf " + iso_dir, shell=True)
+    run(f"rm -rf {iso_dir}", shell=True)
