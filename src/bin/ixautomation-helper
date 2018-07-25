@@ -4,8 +4,8 @@ zfs destroy tank/usr/jails/selenium
 rm /etc/conf.d/jail.selenium
 sysctl security.jail.allow_raw_sockets=1
 zfs create tank/usr/jails/selenium
-fetch http://ftp.freebsd.org/pub/FreeBSD/releases/amd64/11.2-RELEASE/base.txz
-tar -xf base.txz -C /usr/jails/selenium
+pkg-static -r /usr/jails/selenium install -fy -g FreeBSD-*
+pkg-static -r /usr/jails/selenium install -fy selenium geckodriver firefox
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_rootdir="/usr/jails/selenium"
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_hostname="selenium"
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_devfs_enable="YES"
@@ -18,9 +18,6 @@ sysrc -f /etc/conf.d/jail.selenium jail_selenium_exec_poststart0="ifconfig epair
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_exec_afterstart0="/bin/sh /etc/rc"
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_exec_poststop0="ifconfig ixautomation deletem epair0a"
 sysrc -f /etc/conf.d/jail.selenium jail_selenium_exec_poststop1="ifconfig epair0a destroy"
-rm base.txz
 service jail start
 jexec selenium ifconfig epair0b up
-jexec selenium dhclient epair0b
-jexec selenium env ASSUME_ALWAYS_YES=YES pkg bootstrap 
-jexec selenium pkg install -fy selenium geckodriver firefox
+jexec selenium dhcpcd epair0b
