@@ -21,7 +21,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${PY_FLAVOR} \
 		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/sshpass:security/sshpass \
-		bhyve-firmware>=0:sysutils/bhyve-firmware
+		bhyve-firmware>=0:sysutils/bhyve-firmware \
+		dnsmasq>=0:dns/dnsmasq
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
