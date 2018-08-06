@@ -18,6 +18,8 @@ data_files = [
     # ('{prefix}/bin'.format(prefix=sys.prefix), ['bin/ixautomation']),
     ('{prefix}/etc/init.d'.format(prefix=sys.prefix),
      ['etc/init.d/ixautomation']),
+    ('{prefix}/etc/init.d'.format(prefix=sys.prefix),
+     ['etc/init.d/ixautomation-nat']),
     ('{prefix}/etc'.format(prefix=sys.prefix),
      ['etc/ixautomation.conf.dist']),
     ('{prefix}/etc/rc.d'.format(prefix=sys.prefix),
