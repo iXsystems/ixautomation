@@ -22,6 +22,8 @@ data_files = [
      ['etc/init.d/ixautomation-nat']),
     ('{prefix}/etc'.format(prefix=sys.prefix),
      ['etc/ixautomation.conf.dist']),
+    ('{prefix}/etc'.format(prefix=sys.prefix),
+     ['etc/dnsmasq.conf']),
     ('{prefix}/etc/rc.d'.format(prefix=sys.prefix),
      ['etc/rc.d/ixautomation']),
     ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix),
