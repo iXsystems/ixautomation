@@ -1,0 +1,55 @@
+pipeline {
+  agent {
+    label 'zfs'
+  }
+
+  stages {
+
+    stage('clean') {
+      steps {
+        sh 'killall expect || true'
+        sh 'bhyvectl --destroy --vm=freebsd-ztest || true'
+        sh 'ifconfig tap1 destroy || true'
+        sh 'zfs destroy tank/ztest || true'
+        sh 'rm -rf /usr/vms/vmimages || true'
+        sh 'cd /usr/src/release && make clean'
+        sh 'cd /usr/src/release && make cleandir'
+      }
+    }
+    
+    
+    stage('pull') {
+      steps {
+        sh 'cd /usr/src && git stash || true'
+        sh 'cd /usr/src && git pull'
+        sh 'cd /usr/src && git stash pop || true'
+      }
+    }
+    
+    stage('build') {
+      steps {
+        sh 'cd /usr/src && make WITH_META_MODE=yes WITH_CCACHE_BUILD=yes buildworld -j $(sysctl -n hw.ncpu)'
+        sh 'cd /usr/src && make WITH_META_MODE=yes WITH_CCACHE_BUILD=yes buildkernel -j $(sysctl -n hw.ncpu)'
+      }
+    }
+    
+    stage('deploy') {
+      steps {
+          sh 'cd /usr/src/release && make vm-release -j $(sysctl -n hw.ncpu) DESTDIR=/usr/vms WITH_VMIMAGES=yes VMFORMATS=raw NOPKG=yes NOPORTS=yes NOSRC=yes'
+          sh 'cd /usr/src/release && make vm-install -j $(sysctl -n hw.ncpu) DESTDIR=/usr/vms WITH_VMIMAGES=yes VMFORMATS=raw NOPKG=yes NOPORTS=yes NOSRC=yes'
+      }
+    }
+    
+    stage('tests') {
+      steps {
+          sh 'ifconfig tap create'
+          sh 'ifconfig tap1 mtu 9000'
+          sh 'ifconfig bridge0 addm tap1'
+          sh 'zfs create -V 10g tank/ztest'
+          sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /usr/vms/vmimages/FreeBSD-12.0-ALPHA2-amd64.raw freebsd-ztest &'
+          sh 'expect /root/bhyve-bootup.exp /dev/nmdm0B /tmp/bhyve-bootup.out'
+      }
+    }
+    
+  }
+}
