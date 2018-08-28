@@ -9,14 +9,15 @@ pipeline {
       steps {
         sh 'killall expect || true'
         sh 'bhyvectl --destroy --vm=freebsd-ztest || true'
+        sh 'ifconfig bridge0 deletem tap1 || true'
         sh 'ifconfig tap1 destroy || true'
         sh 'zfs destroy tank/ztest || true'
-        sh 'rm -rf /usr/vms/vmimages || true'
-        sh 'cd /usr/src/release && make clean'
-        sh 'cd /usr/src/release && make cleandir'
+        sh 'zfs destroy tank/scratch || true'
+        sh 'rm /ztest.ufs || true'
+        sh 'rm /ztest.img || true'
+
       }
     }
-    
     
     stage('pull') {
       steps {
@@ -35,18 +36,66 @@ pipeline {
     
     stage('deploy') {
       steps {
-          sh 'cd /usr/src/release && make vm-release -j $(sysctl -n hw.ncpu) DESTDIR=/usr/vms WITH_VMIMAGES=yes VMFORMATS=raw NOPKG=yes NOPORTS=yes NOSRC=yes'
-          sh 'cd /usr/src/release && make vm-install -j $(sysctl -n hw.ncpu) DESTDIR=/usr/vms WITH_VMIMAGES=yes VMFORMATS=raw NOPKG=yes NOPORTS=yes NOSRC=yes'
+        sh 'zfs create tank/scratch'
+        sh 'zfs set mountpoint=/scratch tank/scratch'
+        sh 'cd /usr/src && make installworld DESTDIR=/scratch'
+        sh 'cd /usr/src && make installkernel DESTDIR=/scratch'
+        sh 'cd /usr/src && make distribution DESTDIR=/scratch'
+sh '''cat <<EOF | tee /scratch/etc/fstab
+# Device        Mountpoint      FStype  Options Dump    Pass#
+/dev/gpt/swapfs none            swap    sw      0       0
+/dev/gpt/rootfs /               ufs     rw      1       1
+EOF'''
+        sh 'chroot /scratch echo abcd1234 | chroot /scratch pw mod user root -h 0'
+        sh 'touch /scratch/etc/rc.conf'
+        sh 'sysrc -f /scratch/etc/rc.conf ifconfig_vtnet0="inet 10.215.2.134/25 mtu 1500"'
+        sh 'sysrc -f /scratch/etc/rc.conf defaultrouter="10.215.2.129"'
+        sh 'sysrc -f /scratch/etc/rc.conf sshd_enable="YES"'
+sh '''cat <<EOF | tee /scratch/etc/resolv.conf
+nameserver 10.20.20.2
+EOF
+cat <<EOF | tee /etc/ssh/sshd_config
+PermitRootLogin yes
+EOF'''
+sh '''cat <<EOF | tee /scratch/etc/rc.local
+env ASSUME_ALWAYS_YES=YES pkg bootstrap
+echo "Ready for Testing"
+EOF'''
+        sh 'chmod +x /scratch/etc/rc.local'
+        sh 'makefs -d 6144 -t ffs -s 16g -o version=2,bsize=32768,fsize=4096 -Z /ztest.ufs /scratch'
+sh '''mkimg -s gpt -f raw \
+        -b /scratch/boot/pmbr \
+        -p freebsd-boot/bootfs:=/scratch/boot/gptboot \
+        -p freebsd-swap/swapfs::1G \
+        -p freebsd-ufs/rootfs:=/ztest.ufs \
+        -o /ztest.img'''
+sh '''cat <<EOF | tee /root/bhyve-bootup.exp
+#!/usr/bin/env expect
+
+set nullmodem [lindex \\$argv 0];
+set logfilepath [lindex \\$argv 1];
+log_file \\$logfilepath
+set timeout 1800
+set PID [spawn cu -l \\$nullmodem]
+send_user "Spawned PID: \\$PID \n"
+
+expect {
+  "Ready for Testing" {
+    sleep .5
+    exit
+  }
+}
+EOF'''
       }
     }
     
     stage('tests') {
       steps {
           sh 'ifconfig tap create'
-          sh 'ifconfig tap1 mtu 9000'
+          sh 'ifconfig tap1 mtu 1500'
           sh 'ifconfig bridge0 addm tap1'
           sh 'zfs create -V 10g tank/ztest'
-          sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /usr/vms/vmimages/FreeBSD-12.0-ALPHA2-amd64.raw freebsd-ztest &'
+          sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /ztest.img freebsd-ztest &'
           sh 'expect /root/bhyve-bootup.exp /dev/nmdm0B /tmp/bhyve-bootup.out'
       }
     }
