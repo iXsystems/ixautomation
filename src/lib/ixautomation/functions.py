@@ -2,10 +2,9 @@
 
 import os
 import signal
-import atexit
 import sys
 import shutil
-from subprocess import Popen, run, PIPE
+from subprocess import Popen, call, run, PIPE
 from shutil import copyfile
 import random
 import string
@@ -40,11 +39,11 @@ def cleanup_workdir(MASTERWRKDIR):
         run(f"chflags -R noschg  {MASTERWRKDIR}", shell=True)
         run(f"rm -rf {MASTERWRKDIR}", shell=True)
     os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
+    if VM in os.listdir("/usr/local/ixautomation/virtualenv"):
+        shutil.rmtree(virtualenv_tmp_path)
 
 
 def exit_clean(MASTERWRKDIR):
-    global terminated
-    terminated = False
     print('## iXautomation is stopping! cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
@@ -53,8 +52,6 @@ def exit_clean(MASTERWRKDIR):
 
 
 def exit_fail(arg1, arg2):
-    global terminated
-    terminated = False
     print('## iXautomation got terminated! cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
@@ -62,21 +59,9 @@ def exit_fail(arg1, arg2):
     sys.exit(1)
 
 
-def get_terinated():
-    if terminated is True:
-        print('## iXautomation got cancel! cleaning up time!')
-        vm_destroy(MASTERWRKDIR)
-        cleanup_workdir(MASTERWRKDIR)
-        print("Gracefully cleaned and stopped")
-        sys.exit(1)
-
-
 def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
-    global terminated
-    terminated = True
     if ipnc is None:
         create_workdir()
-        atexit.register(get_terinated)
         signal.signal(signal.SIGTERM, exit_fail)
         signal.signal(signal.SIGHUP, exit_fail)
         signal.signal(signal.SIGINT, exit_fail)
@@ -103,7 +88,6 @@ def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
     elif test == "webui-tests":
         jenkins_webui_tests(workspace, ip)
     # clean up vm if --keep-alive is not specify
-    terminated = False
     if keep_alive is False:
         exit_clean(MASTERWRKDIR)
 
@@ -114,7 +98,7 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
         copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
-          f"--password testing --interface {netcard}"
+        f"--password testing --interface {netcard}"
     run(cmd, shell=True)
     os.chdir(workspace)
 
@@ -125,7 +109,7 @@ def jenkins_api2_tests(workspace, systype, ip, netcard):
         copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
-          f"--password testing --interface {netcard} --api 2.0"
+        f"--password testing --interface {netcard} --api 2.0"
     run(cmd, shell=True)
     os.chdir(workspace)
 
@@ -146,12 +130,14 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     run(f'{virtualenv_pip} install pytest', shell=True)
     run(f'{virtualenv_pip} install requests', shell=True)
     os.chdir(middlewared_path)
-    run(f"{virtualenv_python} setup_client.py install", shell=True)
+    # call(f"{virtualenv_python} setup_client.py install", shell=True)
+    install_setup_client = f"{virtualenv_python} setup_client.py install"
+    os.system(install_setup_client)
     if os.path.exists(ixautomationconfig):
         copyfile(ixautomationconfig, apiconfig)
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
-          f"--password testing --interface {netcard} --test network"
+        f"--password testing --interface {netcard} --test network"
     run(cmd, shell=True)
     os.chdir(middlewared_test_path)
     target = open('target.conf', 'w')
@@ -165,11 +151,9 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
            "functional/test_0001_authentication.py"
     run(cmd4, shell=True)
     cmd5 = f"{virtualenv_python} -m pytest -sv functional " \
-           "--junitxml=results/middlewared.xml"
+        "--junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
-    # remove virtualenv after test are done
-    shutil.rmtree(virtualenv_tmp_path)
 
 
 def jenkins_webui_tests(workspace, ip):
