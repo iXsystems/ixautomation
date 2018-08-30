@@ -72,8 +72,20 @@ def vm_start(MASTERWRKDIR):
 
 def vm_stop(MASTERWRKDIR):
     VM = MASTERWRKDIR.split('/')[-1]
-    run(f"yes | vm stop {VM}", shell=True)
-    sleep(10)
+    run(f"yes | vm poweroff {VM}", shell=True)
+    wait_text = f"Waitting for VM {VM} to stop "
+    print(wait_text, end='', flush=True)
+    while True:
+        if not os.path.exists("dev/vmm"):
+            print('.')
+            break
+        elif VM in os.listdir("/dev/vmm"):
+            print('.', end='', flush=True)
+            sleep(1)
+        else:
+            print('.')
+            break
+    print(f"VM {VM} successfully stop")
 
 
 def vm_install(MASTERWRKDIR, systype, workspace):
@@ -90,7 +102,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     # Reset/clear to get native term dimensions
     os.system('clear')
     os.chdir(workspace)
-    print("Success: Shutting down the installation VM..")
+    print("Installation successfully completed")
     vm_stop(MASTERWRKDIR)
 
 
