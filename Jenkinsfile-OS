@@ -11,11 +11,10 @@ pipeline {
         sh 'bhyvectl --destroy --vm=freebsd-ztest || true'
         sh 'ifconfig bridge0 deletem tap1 || true'
         sh 'ifconfig tap1 destroy || true'
-        sh 'zfs destroy tank/ztest || true'
-        sh 'zfs destroy tank/scratch || true'
-        sh 'rm /ztest.ufs || true'
-        sh 'rm /ztest.img || true'
-
+        sh 'umount -f /scratch || true'
+        sh 'rm -rf /scratch || true'
+        sh 'zfs destroy -f tank/ztest-os || true'
+        sh 'zfs destroy -f tank/ztest-data || true'
       }
     }
     
@@ -36,14 +35,22 @@ pipeline {
     
     stage('deploy') {
       steps {
-        sh 'zfs create tank/scratch'
-        sh 'zfs set mountpoint=/scratch tank/scratch'
+        sh 'zfs create -V 16g tank/ztest-os'
+        sh 'zfs create -V 50g tank/ztest-data'
+        sh 'gpart create -s gpt /dev/zvol/tank/ztest-os'
+        sh 'gpart add -s 512K -t freebsd-boot -l bootcode0 /dev/zvol/tank/ztest-os'
+        sh 'gpart add -a 4k -t freebsd-swap -s 2G -l swap0 /dev/zvol/tank/ztest-os'
+        sh 'gpart add -a 1m -t freebsd-zfs -l rootfs /dev/zvol/tank/ztest-os'
+        sh 'gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 /dev/zvol/tank/ztest-os'
+        sh 'newfs /dev/zvol/tank/ztest-osp3'
+        sh 'mkdir /scratch || true'
+        sh 'mount /dev/zvol/tank/ztest-osp3 /scratch'
         sh 'cd /usr/src && make installworld DESTDIR=/scratch'
         sh 'cd /usr/src && make installkernel DESTDIR=/scratch'
         sh 'cd /usr/src && make distribution DESTDIR=/scratch'
 sh '''cat <<EOF | tee /scratch/etc/fstab
 # Device        Mountpoint      FStype  Options Dump    Pass#
-/dev/gpt/swapfs none            swap    sw      0       0
+/dev/gpt/swap0 none            swap    sw      0       0
 /dev/gpt/rootfs /               ufs     rw      1       1
 EOF'''
         sh 'chroot /scratch echo abcd1234 | chroot /scratch pw mod user root -h 0'
@@ -59,16 +66,11 @@ PermitRootLogin yes
 EOF'''
 sh '''cat <<EOF | tee /scratch/etc/rc.local
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
+pkg install -fy jenkins
 echo "Ready for Testing"
 EOF'''
         sh 'chmod +x /scratch/etc/rc.local'
-        sh 'makefs -d 6144 -t ffs -s 16g -o version=2,bsize=32768,fsize=4096 -Z /ztest.ufs /scratch'
-sh '''mkimg -s gpt -f raw \
-        -b /scratch/boot/pmbr \
-        -p freebsd-boot/bootfs:=/scratch/boot/gptboot \
-        -p freebsd-swap/swapfs::1G \
-        -p freebsd-ufs/rootfs:=/ztest.ufs \
-        -o /ztest.img'''
+        sh 'umount -f /scratch || true'
 sh '''cat <<EOF | tee /root/bhyve-bootup.exp
 #!/usr/bin/env expect
 
@@ -94,8 +96,7 @@ EOF'''
           sh 'ifconfig tap create'
           sh 'ifconfig tap1 mtu 1500'
           sh 'ifconfig bridge0 addm tap1'
-          sh 'zfs create -V 10g tank/ztest'
-          sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /ztest.img freebsd-ztest &'
+          sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /dev/zvol/tank/ztest-os freebsd-ztest &'
           sh 'expect /root/bhyve-bootup.exp /dev/nmdm0B /tmp/bhyve-bootup.out'
       }
     }
