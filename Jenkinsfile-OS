@@ -60,13 +60,11 @@ EOF'''
         sh 'sysrc -f /scratch/etc/rc.conf sshd_enable="YES"'
 sh '''cat <<EOF | tee /scratch/etc/resolv.conf
 nameserver 10.20.20.2
-EOF
-cat <<EOF | tee /scratch/etc/ssh/sshd_config
-PermitRootLogin yes
 EOF'''
+        sh 'echo "PermitRootLogin yes" >> /scratch/etc/ssh/sshd_config'
 sh '''cat <<EOF | tee /scratch/etc/rc.local
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
-pkg install -fy jenkins
+pkg install -fy openjdk8
 echo "Ready for Testing"
 EOF'''
         sh 'chmod +x /scratch/etc/rc.local'
@@ -88,16 +86,20 @@ expect {
   }
 }
 EOF'''
-      }
-    }
-    
-    stage('tests') {
-      steps {
           sh 'ifconfig tap create'
           sh 'ifconfig tap1 mtu 1500'
           sh 'ifconfig bridge0 addm tap1'
           sh 'sh /usr/share/examples/bhyve/vmrun.sh -C /dev/nmdm0A -d /dev/zvol/tank/ztest-os freebsd-ztest &'
           sh 'expect /root/bhyve-bootup.exp /dev/nmdm0B /tmp/bhyve-bootup.out'
+      }
+    }
+    
+    stage('tests') {
+    agent {
+    label 'ztest'
+    }
+      steps {
+          sh 'uname -a'
       }
     }
     
