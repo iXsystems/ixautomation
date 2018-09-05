@@ -61,7 +61,7 @@ EOF'''
 sh '''cat <<EOF | tee /scratch/etc/resolv.conf
 nameserver 10.20.20.2
 EOF
-cat <<EOF | tee /etc/ssh/sshd_config
+cat <<EOF | tee /scratch/etc/ssh/sshd_config
 PermitRootLogin yes
 EOF'''
 sh '''cat <<EOF | tee /scratch/etc/rc.local
