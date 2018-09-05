@@ -66,6 +66,7 @@ EOF'''
 sh '''cat <<EOF | tee /scratch/etc/rc.local
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 pkg install -fy openjdk8
+ln -s /usr/local/openjdk8/bin/java /usr/local/bin/java
 echo "Ready for Testing"
 EOF'''
         sh 'chmod +x /scratch/etc/rc.local'
