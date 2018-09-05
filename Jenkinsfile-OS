@@ -8,6 +8,7 @@ pipeline {
     stage('clean') {
       steps {
         sh 'killall expect || true'
+        sh 'killall cu || true
         sh 'bhyvectl --destroy --vm=freebsd-ztest || true'
         sh 'ifconfig bridge0 deletem tap1 || true'
         sh 'ifconfig tap1 destroy || true'
