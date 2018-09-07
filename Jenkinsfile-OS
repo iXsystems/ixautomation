@@ -67,7 +67,7 @@ sh '''cat <<EOF | tee /scratch/etc/rc.local
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 pkg install -fy openjdk8
 ln -s /usr/local/openjdk8/bin/java /usr/local/bin/java
-zpool create vtbd1
+zpool create ztest vtbd1
 echo "Ready for Testing"
 EOF'''
         sh 'chmod +x /scratch/etc/rc.local'
@@ -97,7 +97,7 @@ EOF'''
           -s 3,virtio-blk,/dev/zvol/tank/ztest-os \
           -s 4,virtio-blk,/dev/zvol/tank/ztest-data \
           -s 5,virtio-net,tap1 \
-          -s 31,lpc -l com1,stdio \
+          -s 31,lpc -l com1,/dev/nmdm0A \
           -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd \
           freebsd-ztest &'''
           sh 'expect /root/bhyve-bootup.exp /dev/nmdm0B /tmp/bhyve-bootup.out'
