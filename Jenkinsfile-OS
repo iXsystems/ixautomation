@@ -65,7 +65,7 @@ EOF'''
         sh 'echo "PermitRootLogin yes" >> /scratch/etc/ssh/sshd_config'
 sh '''cat <<EOF | tee /scratch/etc/rc.local
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
-pkg install -fy openjdk8
+pkg install -fy openjdk8 git-lite
 ln -s /usr/local/openjdk8/bin/java /usr/local/bin/java
 zpool create ztest vtbd1
 echo "Ready for Testing"
