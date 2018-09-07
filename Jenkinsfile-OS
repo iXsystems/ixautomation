@@ -109,7 +109,7 @@ EOF'''
     label 'ztest'
     }
       steps {
-          sh 'uname -a'
+          sh 'ztest /ztest/'
       }
     }
     
@@ -118,7 +118,7 @@ EOF'''
     label 'zfs'
     }
       steps {
-          sh 'ztest /ztest/'
+          sh 'sleep 60'
       }
     }
     
