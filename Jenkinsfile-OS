@@ -110,6 +110,10 @@ EOF'''
     }
       steps {
           sh 'ztest /ztest/'
+          sh 'ztest /ztest/'
+          sh 'ztest /ztest/'
+          sh 'ztest /ztest/'
+          sh 'ztest /ztest/'
       }
     }
     
