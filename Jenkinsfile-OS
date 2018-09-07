@@ -92,7 +92,7 @@ EOF'''
           sh 'ifconfig tap create'
           sh 'ifconfig tap1 mtu 1500'
           sh 'ifconfig bridge0 addm tap1'
-          sh '''bhyve -c 2 -m 4G -w -H \
+          sh '''bhyve -c 4 -m 32G -w -H \
           -s 0,hostbridge \
           -s 3,virtio-blk,/dev/zvol/tank/ztest-os \
           -s 4,virtio-blk,/dev/zvol/tank/ztest-data \
