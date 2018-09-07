@@ -119,7 +119,7 @@ EOF'''
     
     stage('cooldown') {
     agent {
-    label 'zfs'
+    label 'ZTEST-COOLDOWN'
     }
       steps {
           sh 'sleep 60'
