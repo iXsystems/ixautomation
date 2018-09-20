@@ -17,7 +17,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}selenium>=0:www/py-selenium@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ws4py>=0:www/py-ws4py@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}virtualenv>=0:devel/py-virtualenv@${PY_FLAVOR} \
 		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/sshpass:security/sshpass \

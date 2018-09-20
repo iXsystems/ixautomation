@@ -3,14 +3,13 @@
 import os
 import signal
 import sys
-import shutil
 from subprocess import Popen, call, run, PIPE
-from shutil import copyfile
+from shutil import copyfile, copytree, rmtree
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
-
+from time import sleep
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
@@ -39,8 +38,6 @@ def cleanup_workdir(MASTERWRKDIR):
         run(f"chflags -R noschg  {MASTERWRKDIR}", shell=True)
         run(f"rm -rf {MASTERWRKDIR}", shell=True)
     os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
-    if VM in os.listdir("/usr/local/ixautomation/virtualenv"):
-        shutil.rmtree(virtualenv_tmp_path)
 
 
 def exit_clean(MASTERWRKDIR):
@@ -115,31 +112,21 @@ def jenkins_api2_tests(workspace, systype, ip, netcard):
 
 
 def jenkins_middleware_tests(workspace, systype, ip, netcard):
-    middlewared_path = f"{workspace}/src/middlewared"
-    middlewared_test_path = f"{middlewared_path}/middlewared/pytest"
-    virtualenv_path = '/usr/local/ixautomation/virtualenv'
-    global virtualenv_tmp_path
-    virtualenv_tmp_path = f'{virtualenv_path}/{tempdir}'
-    virtualenv_pip = f'{virtualenv_tmp_path}/bin/pip'
-    virtualenv_python = f'{virtualenv_tmp_path}/bin/python'
+    middlewared = f"{workspace}/src/middlewared"
+    middlewared_pytest = f"{middlewared}/middlewared/pytest"
+    middlewared_client = f"{middlewared}/middlewared/client"
+    os.makedirs(f"{middlewared_pytest}/middlewared")
+    copytree(middlewared_client, f"{middlewared_pytest}/middlewared/client")
     ixautomationconfig = "/usr/local/etc/ixautomation.conf"
     apipath = f"{workspace}/tests"
     apiconfig = f"{apipath}/config.py"
-    os.chdir(virtualenv_path)
-    run(f'virtualenv-3.6 {tempdir}', shell=True)
-    run(f'{virtualenv_pip} install pytest', shell=True)
-    run(f'{virtualenv_pip} install requests', shell=True)
-    os.chdir(middlewared_path)
-    # call(f"{virtualenv_python} setup_client.py install", shell=True)
-    install_setup_client = f"{virtualenv_python} setup_client.py install"
-    os.system(install_setup_client)
     if os.path.exists(ixautomationconfig):
         copyfile(ixautomationconfig, apiconfig)
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --test network"
     run(cmd, shell=True)
-    os.chdir(middlewared_test_path)
+    os.chdir(middlewared_pytest)
     target = open('target.conf', 'w')
     target.writelines('[Target]\n')
     target.writelines(f'hostname = {ip}\n')
@@ -150,11 +137,10 @@ def jenkins_middleware_tests(workspace, systype, ip, netcard):
     cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" " \
            "functional/test_0001_authentication.py"
     run(cmd4, shell=True)
-    cmd5 = f"{virtualenv_python} -m pytest -sv functional " \
-        "--junitxml=results/middlewared.xml"
+    cmd5 = "pytest-3.6 -sv functional --junitxml=results/middlewared.xml"
     run(cmd5, shell=True)
     os.chdir(workspace)
-
+    rmtree(f"{middlewared_pytest}/middlewared")
 
 def jenkins_webui_tests(workspace, ip):
     webUIpath = f"{workspace}/tests/"

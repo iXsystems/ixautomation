@@ -153,5 +153,3 @@ def vm_destroy_all():
     # Remove all iso
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
     run(f"rm -rf {iso_dir}", shell=True)
-    virtualenv_dir = "/usr/local/ixautomation/virtualenv/*"
-    run(f"rm -rf {virtualenv_dir}", shell=True)
