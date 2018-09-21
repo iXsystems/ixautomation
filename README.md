@@ -1,7 +1,7 @@
 Jenkins automation testing framework for iX projects
 ===========
 
-The scripts in this repo will allow you to test iX projects, either as an automated job from Jenkins or manually.
+The scripts in this repository will allow you to test iX projects, either as an automated job from Jenkins or manually.
 
 It includes support to test the following projects:
 
@@ -15,7 +15,7 @@ Recommended hardware:
 * CPU: 1 Cores or more
 * Memory: 16GB
 * Disk: 100GB
-* Wired ethernet connection for vm-bhyve bridge
+* Wired Ethernet connection for vm-bhyve bridge
 
 Required OS:
 
@@ -25,7 +25,7 @@ Jenkins Requirements:
 * One master node
 * Slave nodes for running ixautomation
 
-Required Jenkins Plugins:
+Required Jenkins Plugging:
 
 * [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
 * [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
@@ -41,7 +41,7 @@ Install the framework on TrueOS
 sudo pkg install py36-ixautomation
 ```
 
-Specify a connected ethernet interface with access to DHCP for VMs ( Substitue re0 with your interface )
+Specify a connected Ethernet interface with access to DHCP for VMs ( Substitute re0 with your interface )
 
 ```
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
@@ -59,10 +59,10 @@ Start the ixautomation service
 service ixautomation start
 ```
 
-Set location of git repo with tests
+Set location of git repository with tests
 
 ```
-## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+## When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
 FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
@@ -108,13 +108,6 @@ For a real machine add the driver card to use.
 
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2:re0
-```
-
-Middleware Tests
-============
-In order to run VM tests remove --ip
-```
-sudo ixautomation --run middleware-tests --systype freenas --ip 192.168.0.2
 ```
 
 Selenium Tests
