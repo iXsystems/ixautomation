@@ -24,11 +24,11 @@ Usage for {app}:
 
 Available Commands:
 
---run                     - Runs option givin
+--run                     - Runs option giving
         vm-tests          - Start (freenas, or trueos) in a VM using vm-bhyve
         api-tests         - Start VM with Python API 1.0 tests (FreeNAS only)
         api2-tests        - Start VM with Python API 2.0 tests (FreeNAS only)
-        webui-tests       - Runs FreeNAS web UI tests using webdriver
+        webui-tests       - Runs FreeNAS web UI tests using WebDriver
 
 --systype                 - Use by run to see what system we need to run
         freenas           - FreeNAS to be run
@@ -37,17 +37,17 @@ Available Commands:
 --ip                      - IP and network card of the machine targeted
         0.0.0.0:card or 0.0.0.0
 
---destroy-all-vm          - Stop all vm running, remove vm directory and iso
+--destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
 --keep-alive              - Keep the Bhyve alive and running
 """
 
-# if have no argumment stop
+# if have no argument stop
 if len(argument) == 1:
     print(UsageMSG)
     exit()
 
-# list of argument that chould be use.
+# list of argument that should be use.
 optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]
 systypelist = ["freenas", "trueos"]
 runlist = ["vm-tests", "api-tests", "api2-tests", "webui-tests"]

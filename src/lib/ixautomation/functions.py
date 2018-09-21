@@ -33,7 +33,7 @@ def cleanup_workdir(MASTERWRKDIR):
             run(f"umount -f {mountpoint}", shell=True)
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
-    # Should be done with unmounts
+    # Should be done with unmount
     if f"on {MASTERWRKDIR} /" not in mounted.stdout.read():
         run(f"chflags -R noschg  {MASTERWRKDIR}", shell=True)
         run(f"rm -rf {MASTERWRKDIR}", shell=True)
@@ -41,7 +41,7 @@ def cleanup_workdir(MASTERWRKDIR):
 
 
 def exit_clean(MASTERWRKDIR):
-    print('## iXautomation is stopping! Cleaning up time!')
+    print('## iXautomation is stopping! Clean up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
     sys.exit(0)
@@ -49,7 +49,7 @@ def exit_clean(MASTERWRKDIR):
 
 def exit_fail(arg1, arg2):
     os.system('reset')
-    print('## iXautomation got terminated! Cleaning up time!')
+    print('## iXautomation got terminated! Clean up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
     sys.exit(1)

@@ -94,7 +94,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     # Get console device for newly created VM
     sleep(3)
     vm_output = f"/tmp/{VM}console.log"
-    # change workspace to test dirctory
+    # change workspace to test directory
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
     expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
@@ -112,7 +112,7 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     VM = MASTERWRKDIR.split('/')[-1]
     testworkspace = f'{workspace}/tests'
     sleep(3)
-    # change workspace to test dirctory
+    # change workspace to test directory
     os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = f"/tmp/{VM}console.log"
