@@ -94,12 +94,13 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     # Get console device for newly created VM
     sleep(3)
     vm_output = f"/tmp/{VM}console.log"
-    # change workspace to test dirctory
+    # change workspace to test directory
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
     expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
+    os.system('reset')
     os.system('clear')
     os.chdir(workspace)
     print("Installation successfully completed")
@@ -111,13 +112,14 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     VM = MASTERWRKDIR.split('/')[-1]
     testworkspace = f'{workspace}/tests'
     sleep(3)
-    # change workspace to test dirctory
+    # change workspace to test directory
     os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${VM}/console | cut -d/ -f3`
     vm_output = f"/tmp/{VM}console.log"
     expectcnd = f'expect boot.exp "{VM}" "{vm_output}"'
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
+    os.system('reset')
     os.system('clear')
     os.chdir(workspace)
     cmd = f"cat '{vm_output}' | grep -A 5 '{netcard}: ' | grep -a 'inet '"
@@ -153,5 +155,3 @@ def vm_destroy_all():
     # Remove all iso
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
     run(f"rm -rf {iso_dir}", shell=True)
-    virtualenv_dir = "/usr/local/ixautomation/virtualenv/*"
-    run(f"rm -rf {virtualenv_dir}", shell=True)

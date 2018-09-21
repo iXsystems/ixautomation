@@ -4,14 +4,12 @@
 # License: BSD
 
 import sys
-
 from setuptools import setup
 
+
 # silence pyflakes, __VERSION__ is properly assigned below...
-__VERSION__ = '0.10'
-# for line in file('networkmgr').readlines():
-#    if (line.startswith('__VERSION__')):
-#        exec(line.strip())
+__VERSION__ = '18.09.20'
+
 PROGRAM_VERSION = __VERSION__
 
 data_files = [
@@ -28,8 +26,6 @@ data_files = [
      ['etc/rc.d/ixautomation']),
     ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix),
      ['etc/sudoers.d/ixautomation']),
-    ('{prefix}/ixautomation/virtualenv'.format(prefix=sys.prefix),
-     []),
     ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix),
      ['ixautomation/vms/.config/system.conf']),
     ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
