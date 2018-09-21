@@ -4,7 +4,7 @@ import os
 import signal
 import sys
 from subprocess import Popen, call, run, PIPE
-from shutil import copyfile, copytree, rmtree
+from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
@@ -41,18 +41,17 @@ def cleanup_workdir(MASTERWRKDIR):
 
 
 def exit_clean(MASTERWRKDIR):
-    print('## iXautomation is stopping! cleaning up time!')
+    print('## iXautomation is stopping! Cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
-    print("Gracefully cleaned and stopped")
     sys.exit(0)
 
 
 def exit_fail(arg1, arg2):
-    print('## iXautomation got terminated! cleaning up time!')
+    os.system('reset')
+    print('## iXautomation got terminated! Cleaning up time!')
     vm_destroy(MASTERWRKDIR)
     cleanup_workdir(MASTERWRKDIR)
-    print("Gracefully cleaned and stopped")
     sys.exit(1)
 
 
@@ -80,8 +79,6 @@ def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
         jenkins_api_tests(workspace, systype, ip, netcard)
     elif test == "api2-tests":
         jenkins_api2_tests(workspace, systype, ip, netcard)
-    elif test == "middlewared-tests":
-        jenkins_middleware_tests(workspace, systype, ip, netcard)
     elif test == "webui-tests":
         jenkins_webui_tests(workspace, ip)
     # clean up vm if --keep-alive is not specify
@@ -110,37 +107,6 @@ def jenkins_api2_tests(workspace, systype, ip, netcard):
     run(cmd, shell=True)
     os.chdir(workspace)
 
-
-def jenkins_middleware_tests(workspace, systype, ip, netcard):
-    middlewared = f"{workspace}/src/middlewared"
-    middlewared_pytest = f"{middlewared}/middlewared/pytest"
-    middlewared_client = f"{middlewared}/middlewared/client"
-    os.makedirs(f"{middlewared_pytest}/middlewared")
-    copytree(middlewared_client, f"{middlewared_pytest}/middlewared/client")
-    ixautomationconfig = "/usr/local/etc/ixautomation.conf"
-    apipath = f"{workspace}/tests"
-    apiconfig = f"{apipath}/config.py"
-    if os.path.exists(ixautomationconfig):
-        copyfile(ixautomationconfig, apiconfig)
-    os.chdir(apipath)
-    cmd = f"python3.6 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --test network"
-    run(cmd, shell=True)
-    os.chdir(middlewared_pytest)
-    target = open('target.conf', 'w')
-    target.writelines('[Target]\n')
-    target.writelines(f'hostname = {ip}\n')
-    target.writelines('api = /api/v2.0/\n')
-    target.writelines('username = root\n')
-    target.writelines('password = testing\n')
-    target.close()
-    cmd4 = "sed -i '' \"s|'freenas'|'testing'|g\" " \
-           "functional/test_0001_authentication.py"
-    run(cmd4, shell=True)
-    cmd5 = "pytest-3.6 -sv functional --junitxml=results/middlewared.xml"
-    run(cmd5, shell=True)
-    os.chdir(workspace)
-    rmtree(f"{middlewared_pytest}/middlewared")
 
 def jenkins_webui_tests(workspace, ip):
     webUIpath = f"{workspace}/tests/"

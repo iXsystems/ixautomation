@@ -100,6 +100,7 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
     run(expctcmd, shell=True)
     # Reset/clear to get native term dimensions
+    os.system('reset')
     os.system('clear')
     os.chdir(workspace)
     print("Installation successfully completed")
@@ -118,6 +119,7 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     expectcnd = f'expect boot.exp "{VM}" "{vm_output}"'
     run(expectcnd, shell=True)
     # Reset/clear to get native term dimensions
+    os.system('reset')
     os.system('clear')
     os.chdir(workspace)
     cmd = f"cat '{vm_output}' | grep -A 5 '{netcard}: ' | grep -a 'inet '"
