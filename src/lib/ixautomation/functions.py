@@ -3,13 +3,13 @@
 import os
 import signal
 import sys
-from subprocess import Popen, call, run, PIPE
+from subprocess import Popen, run, PIPE
 from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
-from time import sleep
+
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
@@ -24,7 +24,6 @@ def create_workdir():
 
 
 def cleanup_workdir(MASTERWRKDIR):
-    VM = MASTERWRKDIR.split('/')[-1]
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:
