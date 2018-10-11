@@ -99,12 +99,18 @@ def vm_install(MASTERWRKDIR, systype, workspace):
     # Run our expect/tcl script to automate the installation dialog
     expctcmd = f'expect install.exp "{VM}" "{vm_output}"'
     run(expctcmd, shell=True)
-    # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
-    os.chdir(workspace)
-    print("Installation successfully completed")
-    vm_stop(MASTERWRKDIR)
+    console_file = open(vm_output, 'r')
+    if 'The FreeNAS installation on vtbd0 succeeded!' in console_file.read():
+        # Reset/clear to get native term dimensions
+        os.system('reset')
+        os.system('clear')
+        os.chdir(workspace)
+        print("Installation successfully completed")
+        vm_stop(MASTERWRKDIR)
+        return True
+    else:
+        print("\nInstallation failed")
+        return False
 
 
 def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
@@ -118,14 +124,14 @@ def vm_boot(MASTERWRKDIR, systype, workspace, netcard):
     vm_output = f"/tmp/{VM}console.log"
     expectcnd = f'expect boot.exp "{VM}" "{vm_output}"'
     run(expectcnd, shell=True)
-    # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
-    os.chdir(workspace)
     cmd = f"cat '{vm_output}' | grep -A 5 '{netcard}: ' | grep -a 'inet '"
     cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
     inetcnsl = cnsl.stdout.readlines()
     if len(inetcnsl) != 0:
+        # Reset/clear to get native term dimensions
+        os.system('reset')
+        os.system('clear')
+        os.chdir(workspace)
         FNASTESTIP = inetcnsl[0].strip().split()[1]
         if systype == 'freenas':
             print(f"FNASTESTIP={FNASTESTIP}")
