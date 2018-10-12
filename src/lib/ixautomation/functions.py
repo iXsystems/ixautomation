@@ -62,7 +62,7 @@ def exit_fail(msg):
     sys.exit(1)
 
 
-def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
+def jenkins_vm_tests(workspace, systype, sysname, ipnc, test, keep_alive):
     if ipnc is None:
         create_workdir()
         signal.signal(signal.SIGTERM, exit_terminated)

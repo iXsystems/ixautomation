@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.6
 
-# When running outside of jenkins set WORKSPACE to the path of the local git repository containing tests
+# When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
 # FreeNAS = "/home/eturgeon/projects/freenas/freenas"
 # TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 # WebUI = "/home/eturgeon/projects/freenas/webui"
