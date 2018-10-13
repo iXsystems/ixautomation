@@ -15,6 +15,13 @@ curentUser = getpass.getuser()
 argument = sys.argv
 app = argument[0]
 
+# list of argument that should be use.
+optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]
+sys_dict = {"freenas": "FreeNAS", "trueos": "TrueOS", "trueview": "TrueView"}
+systypelist = list(sys_dict.keys())
+runlist = ["vm-tests", "api-tests", "api2-tests", "webui-tests"]
+
+# verify it root user
 if os.getuid() != 0:
     print(f"You need root privileged to run {app}")
     sys.exit(1)
@@ -26,20 +33,23 @@ Available Commands:
 
 --run                     - Runs option giving
         vm-tests          - Start (freenas, or trueos) in a VM using vm-bhyve
-        api-tests         - Start VM with Python API 1.0 tests (FreeNAS only)
-        api2-tests        - Start VM with Python API 2.0 tests (FreeNAS only)
+        api-tests         - Start VM with REST API 1.0 tests for FreeNAS
+                            or REST API tests for TrueView
+        api2-tests        - Start VM with REST API 2.0 tests (FreeNAS only)
         webui-tests       - Runs FreeNAS web UI tests using WebDriver
+        websocket-tests   - Start VM with WebSocket tests for TrueView
 
 --systype                 - Use by run to see what system we need to run
         freenas           - FreeNAS to be run
         trueos            - TrueOS to be run
+        trueview          - TrueView to be run
 
 --ip                      - IP and network card of the machine targeted
         0.0.0.0:card or 0.0.0.0
 
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
---keep-alive              - Keep the Bhyve alive and running
+--keep-alive              - Keep Bhyve VM alive and running
 """
 
 # if have no argument stop
@@ -47,13 +57,7 @@ if len(argument) == 1:
     print(UsageMSG)
     exit()
 
-# list of argument that should be use.
-optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]
-systypelist = ["freenas", "trueos"]
-runlist = ["vm-tests", "api-tests", "api2-tests", "webui-tests"]
-
 # look if all the argument are there.
-
 try:
     myopts, args = getopt.getopt(argument[1:], 'rsi', optionlist)
 except getopt.GetoptError as e:
@@ -81,6 +85,11 @@ for output, arg in myopts:
     elif output == '--ip':
         ipnc = arg
 
+try:
+    ipnc
+except NameError:
+    ipnc = None
+
 if run not in runlist:
     print(f"{run} is not a valid --run option")
     print(UsageMSG)
@@ -91,56 +100,26 @@ if systype not in systypelist:
     print(UsageMSG)
     sys.exit(1)
 
+# look for workspace
 try:
     workspace = os.environ["WORKSPACE"]
 except KeyError:
-    if os.path.exists(ixautomationconfig):
-        ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
-        find_line = False
-        for line in ixautomationcfglist:
-            linelist = line.rstrip().split('=')
-            if run == "webui-tests":
-                if "WebUI" in linelist[0] and "#" not in linelist[0]:
-                    workspace = linelist[1].replace('"', '').strip()
-                    find_line = True
-                    break
-            else:
-                if systype == 'freenas':
-                    if "FreeNAS" in linelist[0] and "#" not in linelist[0]:
-                        workspace = linelist[1].replace('"', '').strip()
-                        find_line = True
-                        break
-                elif systype == 'trueos':
-                    if "TrueOS" in linelist[0] and "#" not in linelist[0]:
-                        workspace = linelist[1].replace('"', '').strip()
-                        find_line = True
-                        break
-
-        if find_line is False:
-            if run == "webui-tests":
-                print(f"Please setup WebUI path in {ixautomationconfig}")
-                sys.exit(1)
-            else:
-                if systype == 'freenas':
-                    print(f"Please setup FreeNAS path in {ixautomationconfig}")
-                    sys.exit(1)
-                elif systype == 'trueos':
-                    print(f"Please setup TrueOS path in {ixautomationconfig}")
-                    sys.exit(1)
-    else:
+    if not os.path.exists(ixautomationconfig):
         print(f"Please add {ixautomationconfig}")
         sys.exit(1)
 
-try:
-    ipnc
-except NameError:
-    ipnc = None
+    syscfg = "WebUI" if run == "webui-tests" else sys_dict[systype]
 
-if run == "vm-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
-elif run == "api-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
-elif run == "api2-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
-elif run == "webui-tests":
-    jenkins_vm_tests(workspace, systype, ipnc, run, keep_alive)
+    # loop true ixautomation config list to find syscfg
+    ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
+    for line in ixautomationcfglist:
+        linelist = line.rstrip().split('=')
+        if syscfg in linelist[0] and "#" not in linelist[0]:
+            workspace = linelist[1].replace('"', '').strip()
+            break
+    else:
+        print(f"Please setup {syscfg} path in {ixautomationconfig}")
+        sys.exit(1)
+
+sysname = sys_dict[systype]
+jenkins_vm_tests(workspace, systype, sysname, ipnc, run, keep_alive)

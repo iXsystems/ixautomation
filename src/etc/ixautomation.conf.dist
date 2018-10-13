@@ -1,17 +1,16 @@
 #!/usr/bin/env python3.6
 
-## When running outside of jenkins set WORKSPACE to the path of the local git repo containing tests
+# When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
 # FreeNAS = "/home/eturgeon/projects/freenas/freenas"
 # TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 # WebUI = "/home/eturgeon/projects/freenas/webui"
+# TrueView = "/home/eturgeon/projects/ixsystem/TrueView-qt-spog"
 
 ###########################################################################
 # FreeNAS specific settings for API tests
 ###########################################################################
 
-## Set this be the network information assigned to the bridged interface
-## BRIDGETEST need to be uncomment to run some test in ix network
-# BRIDGETEST = True
+# Set this be the network information assigned to the bridged interface
 # BRIDGEIP = ""
 # BRIDGENETMASK = ""
 # BRIDGEGW = ""
@@ -20,35 +19,35 @@ BRIDGEHOST = "test01"
 # BRIDGEHOST_B = ""
 # BRIDGEDOMAIN = ""
 
-## Set the account information for dns testing we do with noip.com
-## If this is NOT set, the test will be skipped
+# Set the account information for DNS testing we do with noip.com
+# If this is NOT set, the test will be skipped
 # NOIPUSERNAME = ""
 # NOIPPASSWORD = ""
 # NOIPHOST = ""
 
-## Set this to the IP address to use in VirtualBox for testing
+# Set this to the IP address to use in VirtualBox for testing
 # FNASTESTIP = ""
 
-## Set this to the information to use for testing jails
+# Set this to the information to use for testing jails
 # JAILIP = ""
 # JAILNETMASK = ""
 # JAILGW = ""
 
-## Set this to be the AD information for joining an Active Directory
+# Set this to be the AD information for joining an Active Directory
 # ADUSERNAME = ""
 # ADPASSWORD = ""
 
-## Set this information to use for testing AFP/OSX filesharing
+# Set this information to use for testing AFP/OSX file sharing
 # OSX_HOST = ""
 # OSX_USERNAME = ""
 # OSX_PASSWORD = "" # Leave this unset to default to SSH keys
 
-## Set this information to test filesharing and others on BSD
+# Set this information to test file sharing and others on BSD
 # BSD_HOST = ""
 # BSD_USERNAME = ""
 # BSD_PASSWORD = "" # Leave this unset to default to SSH keys
 
-## Set this to be the information required for testing LDAP
+# Set this to be the information required for testing LDAP
 # LDAPHOSTNAME = ""
 # LDAPBASEDN = ""
 # LDAPBINDDN = ""

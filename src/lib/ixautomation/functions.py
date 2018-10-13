@@ -3,13 +3,13 @@
 import os
 import signal
 import sys
-from subprocess import Popen, call, run, PIPE
+from subprocess import Popen, run, PIPE
 from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
-from time import sleep
+
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
@@ -24,7 +24,6 @@ def create_workdir():
 
 
 def cleanup_workdir(MASTERWRKDIR):
-    VM = MASTERWRKDIR.split('/')[-1]
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:
@@ -47,7 +46,7 @@ def exit_clean(MASTERWRKDIR):
     sys.exit(0)
 
 
-def exit_fail(arg1, arg2):
+def exit_terminated(arg1, arg2):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
     vm_destroy(MASTERWRKDIR)
@@ -55,18 +54,30 @@ def exit_fail(arg1, arg2):
     sys.exit(1)
 
 
-def jenkins_vm_tests(workspace, systype, ipnc, test, keep_alive):
+def exit_fail(msg):
+    os.system('reset')
+    print(f'## {msg} Clean up time!')
+    vm_destroy(MASTERWRKDIR)
+    cleanup_workdir(MASTERWRKDIR)
+    sys.exit(1)
+
+
+def jenkins_vm_tests(workspace, systype, sysname, ipnc, test, keep_alive):
     if ipnc is None:
         create_workdir()
-        signal.signal(signal.SIGTERM, exit_fail)
-        signal.signal(signal.SIGHUP, exit_fail)
-        signal.signal(signal.SIGINT, exit_fail)
+        signal.signal(signal.SIGTERM, exit_terminated)
+        signal.signal(signal.SIGHUP, exit_terminated)
+        signal.signal(signal.SIGINT, exit_terminated)
         vm_setup()
         global select_iso
         select_iso = vm_select_iso(MASTERWRKDIR, systype, workspace)
-        vm_install(MASTERWRKDIR, systype, workspace)
+        install = vm_install(MASTERWRKDIR, systype, workspace)
+        if install is False:
+            exit_fail('iXautomation stop on installation failure!')
         netcard = "vtnet0"
         ip = vm_boot(MASTERWRKDIR, systype, workspace, netcard)
+        if ip == '0.0.0.0':
+            exit_fail('iXautomation stop because IP is 0.0.0.0!')
     else:
         if ":" in ipnc:
             ipnclist = ipnc.split(":")
