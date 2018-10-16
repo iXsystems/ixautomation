@@ -8,96 +8,111 @@ from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
-from functions_vm import vm_boot, vm_install, vm_stop_all, vm_destroy_all
+from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
-    global tempdir
-    tempdir = ''.join(random.choices(string.ascii_uppercase, k=4))
-    global MASTERWRKDIR
-    MASTERWRKDIR = f'{builddir}/{tempdir}'
+    tmp = ''.join(random.choices(string.ascii_uppercase, k=4))
+    global vm
+    vm = tmp
+    global tmp_vm_dir
+    tmp_vm_dir = f'{builddir}/{vm}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
-    os.makedirs(MASTERWRKDIR)
-    return MASTERWRKDIR
+    os.makedirs(tmp_vm_dir)
+    return tmp_vm_dir
 
 
-def cleanup_workdir(MASTERWRKDIR):
+def cleanup_workdir(tmp_vm_dir):
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     for line in mounted.stdout:
-        if f"on {MASTERWRKDIR} /" in line:
+        if f"on {tmp_vm_dir} /" in line:
             mountpoint = line.split()[2]
             run(f"umount -f {mountpoint}", shell=True)
     mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
                     universal_newlines=True)
     # Should be done with unmount
-    if f"on {MASTERWRKDIR} /" not in mounted.stdout.read():
-        run(f"chflags -R noschg  {MASTERWRKDIR}", shell=True)
-        run(f"rm -rf {MASTERWRKDIR}", shell=True)
+    if f"on {tmp_vm_dir} /" not in mounted.stdout.read():
+        run(f"chflags -R noschg  {tmp_vm_dir}", shell=True)
+        run(f"rm -rf {tmp_vm_dir}", shell=True)
     os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
 
 
-def exit_clean(MASTERWRKDIR):
+def exit_clean(tmp_vm_dir):
     print('## iXautomation is stopping! Clean up time!')
-    vm_destroy(MASTERWRKDIR)
-    cleanup_workdir(MASTERWRKDIR)
+    vm_destroy(vm)
+    cleanup_workdir(tmp_vm_dir)
     sys.exit(0)
 
 
 def exit_terminated(arg1, arg2):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
-    vm_destroy(MASTERWRKDIR)
-    cleanup_workdir(MASTERWRKDIR)
+    vm_destroy(vm)
+    cleanup_workdir(tmp_vm_dir)
     sys.exit(1)
 
 
 def exit_fail(msg):
     os.system('reset')
     print(f'## {msg} Clean up time!')
-    vm_destroy(MASTERWRKDIR)
-    cleanup_workdir(MASTERWRKDIR)
+    vm_destroy(vm)
+    cleanup_workdir(tmp_vm_dir)
     sys.exit(1)
 
 
-def jenkins_vm_tests(workspace, systype, sysname, ipnc, test, keep_alive):
+def set_sig():
+    signal.signal(signal.SIGTERM, exit_terminated)
+    signal.signal(signal.SIGHUP, exit_terminated)
+    signal.signal(signal.SIGINT, exit_terminated)
+
+
+def start_vm(workspace, systype, sysname):
+    create_workdir()
+    set_sig()
+    vm_setup()
+    global select_iso
+    select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace)
+    install = vm_install(tmp_vm_dir, vm, systype, workspace)
+    if install is False:
+        exit_fail('iXautomation stop on installation failure!')
+    ip = vm_boot(tmp_vm_dir, vm, systype, workspace, "vtnet0")
+    if ip == '0.0.0.0':
+        exit_fail('iXautomation stop because IP is 0.0.0.0!')
+
+    return {'ip': ip, 'netcard': "vtnet0", 'iso': select_iso}
+
+
+def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
+    # ipnc is None start a vm
     if ipnc is None:
-        create_workdir()
-        signal.signal(signal.SIGTERM, exit_terminated)
-        signal.signal(signal.SIGHUP, exit_terminated)
-        signal.signal(signal.SIGINT, exit_terminated)
-        vm_setup()
-        global select_iso
-        select_iso = vm_select_iso(MASTERWRKDIR, systype, workspace)
-        install = vm_install(MASTERWRKDIR, systype, workspace)
-        if install is False:
-            exit_fail('iXautomation stop on installation failure!')
-        netcard = "vtnet0"
-        ip = vm_boot(MASTERWRKDIR, systype, workspace, netcard)
-        if ip == '0.0.0.0':
-            exit_fail('iXautomation stop because IP is 0.0.0.0!')
+        vm_info = start_vm(workspace, systype, sysname)
+        ip = vm_info['ip']
+        netcard = vm_info['netcard']
     else:
-        if ":" in ipnc:
-            ipnclist = ipnc.split(":")
-            ip = ipnclist[0]
-            netcard = ipnclist[1]
-        else:
-            ip = ipnc
-            netcard = "vtnet0"
-    if test == "api-tests":
-        jenkins_api_tests(workspace, systype, ip, netcard)
-    elif test == "api2-tests":
-        jenkins_api2_tests(workspace, systype, ip, netcard)
-    elif test == "webui-tests":
-        jenkins_webui_tests(workspace, ip)
-    # clean up vm if --keep-alive is not specify
+        ipnclist = ipnc.split(":")
+        ip = ipnclist[0]
+        netcard = "vtnet0" if len(ipnclist) == 1 else ipnclist[1]
+
+    if test != 'vmtest':
+        run_test(workspace, test, systype, ip, netcard)
+
     if keep_alive is False:
-        exit_clean(MASTERWRKDIR)
+        exit_clean(tmp_vm_dir)
 
 
-def jenkins_api_tests(workspace, systype, ip, netcard):
+def run_test(workspace, test, systype, ip, netcard):
+    if test == "api-tests":
+        api_tests(workspace, systype, ip, netcard)
+    elif test == "api2-tests":
+        api2_tests(workspace, systype, ip, netcard)
+    elif test == "webui-tests":
+        webui_tests(workspace, ip)
+
+
+def api_tests(workspace, systype, ip, netcard):
     apipath = f"{workspace}/tests"
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
         copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
@@ -108,7 +123,7 @@ def jenkins_api_tests(workspace, systype, ip, netcard):
     os.chdir(workspace)
 
 
-def jenkins_api2_tests(workspace, systype, ip, netcard):
+def api2_tests(workspace, systype, ip, netcard):
     apipath = f"{workspace}/tests"
     if os.path.exists("/usr/local/etc/ixautomation.conf"):
         copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
@@ -119,7 +134,7 @@ def jenkins_api2_tests(workspace, systype, ip, netcard):
     os.chdir(workspace)
 
 
-def jenkins_webui_tests(workspace, ip):
+def webui_tests(workspace, ip):
     webUIpath = f"{workspace}/tests/"
     os.chdir(webUIpath)
     cmd1 = f"python3.6 -u runtest.py --ip {ip}"
@@ -127,8 +142,8 @@ def jenkins_webui_tests(workspace, ip):
     os.chdir(workspace)
 
 
-def jenkins_vm_destroy_all():
+def destroy_all_vm():
     vm_stop_all()
-    vm_destroy_all()
+    clean_all_vm()
     sys.exit(0)
     return 0
