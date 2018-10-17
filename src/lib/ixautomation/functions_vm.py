@@ -112,7 +112,7 @@ def vm_install(tmp_vm_dir, vm, systype, workspace):
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, systype, workspace, netcard):
+def vm_boot(tmp_vm_dir, vm, systype, workspace):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -122,23 +122,25 @@ def vm_boot(tmp_vm_dir, vm, systype, workspace, netcard):
     vm_output = f"/tmp/{vm}console.log"
     expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
     run(expectcnd, shell=True)
-    cmd = f"cat '{vm_output}' | grep -A 5 '{netcard}: ' | grep -a 'inet '"
-    cnsl = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
-    inetcnsl = cnsl.stdout.readlines()
-    if len(inetcnsl) != 0:
-        # Reset/clear to get native term dimensions
-        os.system('reset')
-        os.system('clear')
-        os.chdir(workspace)
-        FNASTESTIP = inetcnsl[0].strip().split()[1]
-        if systype == 'freenas':
+    console_file = open(vm_output, 'r')
+    if systype == 'freenas':
+        for line in reversed(console_file.readlines()):
+            if 'http://' in line:
+                # Reset/clear to get native term dimensions
+                os.system('reset')
+                os.system('clear')
+                os.chdir(workspace)
+                FNASTESTIP = line.rstrip().split('//')[1]
+                print(f"FNASTESTIP={FNASTESTIP}")
+                break
+        else:
+            FNASTESTIP = "0.0.0.0"
             print(f"FNASTESTIP={FNASTESTIP}")
+        return FNASTESTIP
+
     else:
         FNASTESTIP = "0.0.0.0"
-        if systype == 'freenas':
-            print(f"FNASTESTIP={FNASTESTIP}")
-            print("ERROR: No ip address assigned to vm. FNASTESTIP not set.")
-    return FNASTESTIP
+        return FNASTESTIP
 
 
 def vm_destroy(vm):
