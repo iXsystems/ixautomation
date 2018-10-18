@@ -31,6 +31,7 @@ pipeline {
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api-tests --systype freenas'
+                        archiveArtifacts artifacts: 'tests/artifacts/*' fingerprint: true
                         junit 'tests/results/*.xml'
                     }
                 }
@@ -49,6 +50,7 @@ pipeline {
                         copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api2-tests --systype freenas'
+                        archiveArtifacts artifacts: 'tests/artifacts/*' fingerprint: true
                         junit 'tests/results/*.xml'
                     }
                     post {
@@ -84,7 +86,7 @@ pipeline {
                                     }
                                     dir("${env.WORKSPACE}@5@tmp") {
                                             deleteDir()
-                                    }           
+                                    }
                                 }
                             }
                         }
