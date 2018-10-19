@@ -6,7 +6,7 @@ import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import jenkins_vm_tests, jenkins_vm_destroy_all
+from functions import start_automation, destroy_all_vm
 
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -74,7 +74,7 @@ keep_alive = False
 
 for output, arg in myopts:
     if output == "--destroy-all-vm":
-        jenkins_vm_destroy_all()
+        destroy_all_vm()
         sys.exit(0)
     elif output == "--keep-alive":
         keep_alive = True
@@ -122,4 +122,4 @@ except KeyError:
         sys.exit(1)
 
 sysname = sys_dict[systype]
-jenkins_vm_tests(workspace, systype, sysname, ipnc, run, keep_alive)
+start_automation(workspace, systype, sysname, ipnc, run, keep_alive)

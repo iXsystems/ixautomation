@@ -32,6 +32,8 @@ data_files = [
      ['ixautomation/vms/.templates/freenas.conf']),
     ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
      ['ixautomation/vms/.templates/trueos.conf']),
+    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
+     ['ixautomation/vms/.templates/trueview.conf']),
     ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
      ['lib/ixautomation/functions_vm.py']),
     ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
