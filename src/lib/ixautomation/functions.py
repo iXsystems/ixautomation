@@ -69,7 +69,7 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(workspace, systype, sysname):
+def start_vm(workspace, systype, sysname, keep_alive):
     create_workdir()
     set_sig()
     vm_setup()
@@ -79,7 +79,7 @@ def start_vm(workspace, systype, sysname):
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
     ip = vm_boot(tmp_vm_dir, vm, systype, workspace)
-    if ip == '0.0.0.0':
+    if ip == '0.0.0.0' and keep_alive is False:
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
 
     return {'ip': ip, 'netcard': "vtnet0", 'iso': select_iso}
@@ -88,7 +88,7 @@ def start_vm(workspace, systype, sysname):
 def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
     # ipnc is None start a vm
     if ipnc is None:
-        vm_info = start_vm(workspace, systype, sysname)
+        vm_info = start_vm(workspace, systype, sysname, keep_alive)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
@@ -99,7 +99,7 @@ def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
     if test != 'vmtest':
         run_test(workspace, test, systype, ip, netcard)
 
-    if keep_alive is False:
+    if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
