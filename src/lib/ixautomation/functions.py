@@ -99,7 +99,7 @@ def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
     if test != 'vmtest':
         run_test(workspace, test, systype, ip, netcard)
 
-    if keep_alive is False or ipnc is None:
+    if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
