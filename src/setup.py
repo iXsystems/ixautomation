@@ -8,38 +8,46 @@ from setuptools import setup
 
 
 # silence pyflakes, __VERSION__ is properly assigned below...
-__VERSION__ = '18.09.20'
+__VERSION__ = '18.11.05'
 
 PROGRAM_VERSION = __VERSION__
 
+prefix = sys.prefix
+
+init_list = [
+    'etc/init.d/ixautomation',
+    'etc/init.d/ixautomation-nat'
+]
+
+etc_list = [
+    'etc/ixautomation.conf.dist',
+    'etc/dnsmasq.conf'
+]
+
+dot_config_list = [
+    'ixautomation/vms/.config/system.conf'
+]
+
+dot_templates_list = [
+    'ixautomation/vms/.templates/freenas.conf',
+    'ixautomation/vms/.templates/trueos.conf',
+    'ixautomation/vms/.templates/trueview.conf'
+]
+
+lib_ixautomation_list = [
+    'lib/ixautomation/functions_vm.py',
+    'lib/ixautomation/functions.py',
+    'lib/ixautomation/freenas-11.2-userboot.so'
+]
+
 data_files = [
-    # ('{prefix}/bin'.format(prefix=sys.prefix), ['bin/ixautomation']),
-    ('{prefix}/etc/init.d'.format(prefix=sys.prefix),
-     ['etc/init.d/ixautomation']),
-    ('{prefix}/etc/init.d'.format(prefix=sys.prefix),
-     ['etc/init.d/ixautomation-nat']),
-    ('{prefix}/etc'.format(prefix=sys.prefix),
-     ['etc/ixautomation.conf.dist']),
-    ('{prefix}/etc'.format(prefix=sys.prefix),
-     ['etc/dnsmasq.conf']),
-    ('{prefix}/etc/rc.d'.format(prefix=sys.prefix),
-     ['etc/rc.d/ixautomation']),
-    ('{prefix}/etc/sudoers.d'.format(prefix=sys.prefix),
-     ['etc/sudoers.d/ixautomation']),
-    ('{prefix}/ixautomation/vms/.config/'.format(prefix=sys.prefix),
-     ['ixautomation/vms/.config/system.conf']),
-    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
-     ['ixautomation/vms/.templates/freenas.conf']),
-    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
-     ['ixautomation/vms/.templates/trueos.conf']),
-    ('{prefix}/ixautomation/vms/.templates'.format(prefix=sys.prefix),
-     ['ixautomation/vms/.templates/trueview.conf']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
-     ['lib/ixautomation/functions_vm.py']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
-     ['lib/ixautomation/functions.py']),
-    ('{prefix}/lib/ixautomation'.format(prefix=sys.prefix),
-     ['lib/ixautomation/freenas-11.2-userboot.so']),
+    (f'{prefix}/etc/init.d', init_list),
+    (f'{prefix}/etc', etc_list),
+    (f'{prefix}/etc/rc.d', ['etc/rc.d/ixautomation']),
+    (f'{prefix}/etc/sudoers.d', ['etc/sudoers.d/ixautomation']),
+    (f'{prefix}/ixautomation/vms/.config/', dot_config_list),
+    (f'{prefix}/ixautomation/vms/.templates', dot_templates_list),
+    (f'{prefix}/lib/ixautomation', lib_ixautomation_list)
 ]
 
 setup(
