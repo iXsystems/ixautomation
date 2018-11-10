@@ -75,10 +75,10 @@ def start_vm(workspace, systype, sysname, keep_alive):
     vm_setup()
     global select_iso
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace)
-    install = vm_install(tmp_vm_dir, vm, systype, workspace)
+    install = vm_install(tmp_vm_dir, vm, systype, sysname, workspace)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    ip = vm_boot(tmp_vm_dir, vm, systype, workspace)
+    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, workspace)
     if ip == '0.0.0.0' and keep_alive is False:
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
 

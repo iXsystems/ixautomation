@@ -14,6 +14,7 @@ loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
 app = argument[0]
+sys.stdout.flush()
 
 # list of argument that should be use.
 optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]

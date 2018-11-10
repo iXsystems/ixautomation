@@ -2,7 +2,7 @@
 
 import os
 import sys
-from subprocess import run, Popen, PIPE
+from subprocess import run, PIPE, STDOUT, CompletedProcess
 from time import sleep
 
 
@@ -81,7 +81,7 @@ def vm_stop(vm):
     print(f"vm {vm} successfully stop")
 
 
-def vm_install(tmp_vm_dir, vm, systype, workspace):
+def vm_install(tmp_vm_dir, vm, systype, sysname, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
     sleep(3)
@@ -90,29 +90,21 @@ def vm_install(tmp_vm_dir, vm, systype, workspace):
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
     expctcmd = f'expect install.exp "{vm}" "{vm_output}"'
-    run(expctcmd, shell=True)
-    console_file = open(vm_output, 'r')
-    if systype == 'trueview':
+    process = run(expctcmd, shell=True, close_fds=True)
+    # console_file = open(vm_output, 'r')
+    if process.returncode == 0:
         os.system('reset')
         os.system('clear')
         os.chdir(workspace)
-        print("Installation successfully completed")
-        vm_stop(vm)
-        return True
-    elif 'The FreeNAS installation on vtbd0 succeeded!' in console_file.read():
-        # Reset/clear to get native term dimensions
-        os.system('reset')
-        os.system('clear')
-        os.chdir(workspace)
-        print("Installation successfully completed")
+        print(f"{sysname} installation successfully completed")
         vm_stop(vm)
         return True
     else:
-        print("\nInstallation failed")
+        print(f"\n{sysname} installation failed")
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, systype, workspace):
+def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -123,24 +115,26 @@ def vm_boot(tmp_vm_dir, vm, systype, workspace):
     expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r')
-    if systype == 'freenas':
-        for line in reversed(console_file.readlines()):
-            if 'http://' in line:
-                # Reset/clear to get native term dimensions
-                os.system('reset')
-                os.system('clear')
-                os.chdir(workspace)
-                FNASTESTIP = line.rstrip().split('//')[1]
-                print(f"FNASTESTIP={FNASTESTIP}")
-                break
-        else:
-            FNASTESTIP = "0.0.0.0"
-            print(f"FNASTESTIP={FNASTESTIP}")
-        return FNASTESTIP
-
+    for line in reversed(console_file.readlines()):
+        if systype == 'freenas' and 'http://' in line:
+            # Reset/clear to get native term dimensions
+            os.system('reset')
+            os.system('clear')
+            os.chdir(workspace)
+            VMIP = line.rstrip().split('//')[1]
+            print(f"{sysname}_IP={VMIP}")
+            return VMIP
+        elif systype == 'trueview' and 'IP Addresss:' in line:
+            os.system('reset')
+            os.system('clear')
+            os.chdir(workspace)
+            VMIP = line.split(':')[1].rstrip()
+            print(f"{sysname}_IP={VMIP}")
+            return VMIP
     else:
-        FNASTESTIP = "0.0.0.0"
-        return FNASTESTIP
+        VMIP = "0.0.0.0"
+        print(f"{sysname}_IP={VMIP}")
+        return VMIP
 
 
 def vm_destroy(vm):
