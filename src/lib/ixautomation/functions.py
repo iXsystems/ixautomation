@@ -10,6 +10,8 @@ import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso
 from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 
+ixautomation_config = '/usr/local/etc/ixautomation.conf'
+
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
@@ -69,26 +71,26 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(workspace, systype, sysname, keep_alive):
+def start_vm(wrkspc, systype, sysname, keep_alive):
     create_workdir()
     set_sig()
     vm_setup()
     global select_iso
-    select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace)
-    install = vm_install(tmp_vm_dir, vm, systype, sysname, workspace)
+    select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
+    install = vm_install(tmp_vm_dir, vm, systype, sysname, wrkspc)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, workspace)
+    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc)
     if ip == '0.0.0.0' and keep_alive is False:
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
 
     return {'ip': ip, 'netcard': "vtnet0", 'iso': select_iso}
 
 
-def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
+def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip):
     # ipnc is None start a vm
     if ipnc is None:
-        vm_info = start_vm(workspace, systype, sysname, keep_alive)
+        vm_info = start_vm(wrkspc, systype, sysname, keep_alive)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
@@ -96,50 +98,79 @@ def start_automation(workspace, systype, sysname, ipnc, test, keep_alive):
         ip = ipnclist[0]
         netcard = "vtnet0" if len(ipnclist) == 1 else ipnclist[1]
 
-    if test != 'vmtest':
-        run_test(workspace, test, systype, ip, netcard)
+    if tst != 'vmtest':
+        run_test(wrkspc, tst, systype, ip, netcard, srvr_ip)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
-def run_test(workspace, test, systype, ip, netcard):
+def run_test(wrkspc, test, systype, ip, netcard, server_ip):
     if test == "api-tests":
-        api_tests(workspace, systype, ip, netcard)
+        api_tests(wrkspc, systype, ip, netcard, server_ip)
+    elif test == "websocket-tests":
+        websocket_tests(wrkspc, systype, ip, netcard, server_ip)
     elif test == "api2-tests":
-        api2_tests(workspace, systype, ip, netcard)
+        api2_tests(wrkspc, systype, ip, netcard)
     elif test == "webui-tests":
-        webui_tests(workspace, ip)
+        webui_tests(wrkspc, ip)
 
 
-def api_tests(workspace, systype, ip, netcard):
-    apipath = f"{workspace}/tests"
-    if os.path.exists("/usr/local/etc/ixautomation.conf"):
-        copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
+def api_tests(wrkspc, systype, ip, netcard, server_ip):
+    if systype == 'trueview':
+        apipath = f"{wrkspc}/tests/api"
+        if server_ip is not None:
+            server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
+        else:
+            server_cfg = ''
+        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg}"
+        print(cmd)
+    else:
+        apipath = f"{wrkspc}/tests"
+        cmd = f"python3.6 runtest.py --ip {ip} " \
+            f"--password testing --interface {netcard}"
+        if os.path.exists(ixautomation_config):
+            copyfile(ixautomation_config, f"{apipath}/config.py")
     os.chdir(apipath)
-    cmd = f"python3.6 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard}"
     run(cmd, shell=True)
-    os.chdir(workspace)
+    os.chdir(wrkspc)
 
 
-def api2_tests(workspace, systype, ip, netcard):
-    apipath = f"{workspace}/tests"
-    if os.path.exists("/usr/local/etc/ixautomation.conf"):
-        copyfile("/usr/local/etc/ixautomation.conf", f"{apipath}/config.py")
+def websocket_tests(wrkspc, systype, ip, netcard, server_ip):
+    if systype == 'trueview':
+        apipath = f"{wrkspc}/tests/websocket"
+        if server_ip is not None:
+            server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
+        else:
+            server_cfg = ''
+        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg}"
+        print(cmd)
+    else:
+        apipath = f"{wrkspc}/tests"
+        cmd = f"python3.6 runtest.py --ip {ip} " \
+            f"--password testing --interface {netcard}"
+    os.chdir(apipath)
+    run(cmd, shell=True)
+    os.chdir(wrkspc)
+
+
+def api2_tests(wrkspc, systype, ip, netcard):
+    apipath = f"{wrkspc}/tests"
+    if os.path.exists(ixautomation_config):
+        copyfile(ixautomation_config, f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --api 2.0"
     run(cmd, shell=True)
-    os.chdir(workspace)
+    os.chdir(wrkspc)
 
 
-def webui_tests(workspace, ip):
-    webUIpath = f"{workspace}/tests/"
+def webui_tests(wrkspc, ip):
+    webUIpath = f"{wrkspc}/tests/"
     os.chdir(webUIpath)
     cmd1 = f"python3.6 -u runtest.py --ip {ip}"
     run(cmd1, shell=True)
-    os.chdir(workspace)
+    os.chdir(wrkspc)
 
 
 def destroy_all_vm():

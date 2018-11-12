@@ -2,7 +2,7 @@
 
 import os
 import sys
-from subprocess import run, PIPE, STDOUT, CompletedProcess
+from subprocess import run
 from time import sleep
 
 
