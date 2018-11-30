@@ -114,8 +114,9 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
     vm_output = f"/tmp/{vm}console.log"
     expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
     run(expectcnd, shell=True)
-    console_file = open(vm_output, 'r')
-    for line in reversed(console_file.readlines()):
+    console_file = open(vm_output, 'r').readlines()
+    reversed_console = reversed(console_file)
+    for line in reversed_console:
         if systype == 'freenas' and 'http://' in line:
             # Reset/clear to get native term dimensions
             os.system('reset')
@@ -124,11 +125,12 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             VMIP = line.rstrip().split('//')[1]
             print(f"{sysname}_IP={VMIP}")
             return VMIP
-        elif systype == 'trueview' and 'IP Addresss:' in line:
+        elif systype == 'trueview' and 'IP Address:' in line:
+            print(line)
             os.system('reset')
             os.system('clear')
             os.chdir(workspace)
-            VMIP = line.split(':')[1].rstrip()
+            VMIP = line.split(':')[1].strip()
             print(f"{sysname}_IP={VMIP}")
             return VMIP
     else:
