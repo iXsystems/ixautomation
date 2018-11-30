@@ -124,18 +124,20 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             os.chdir(workspace)
             VMIP = line.rstrip().split('//')[1]
             print(f"{sysname}_IP={VMIP}")
+            print(f"{sysname}_VM_NAME={vm}")
             return VMIP
         elif systype == 'trueview' and 'IP Address:' in line:
-            print(line)
             os.system('reset')
             os.system('clear')
             os.chdir(workspace)
             VMIP = line.split(':')[1].strip()
             print(f"{sysname}_IP={VMIP}")
+            print(f"{sysname}_VM_NAME={vm}")
             return VMIP
     else:
         VMIP = "0.0.0.0"
         print(f"{sysname}_IP={VMIP}")
+        print(f"{sysname}_VM_NAME={vm}")
         return VMIP
 
 
