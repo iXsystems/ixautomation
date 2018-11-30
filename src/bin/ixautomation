@@ -14,12 +14,30 @@ loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
 app = argument[0]
+sys.stdout.flush()
 
 # list of argument that should be use.
-optionlist = ["run=", "systype=", "ip=", "destroy-all-vm", "keep-alive"]
-sys_dict = {"freenas": "FreeNAS", "trueos": "TrueOS", "trueview": "TrueView"}
+optionlist = [
+    "run=",
+    "systype=",
+    "ip=",
+    "server-ip=",
+    "destroy-all-vm",
+    "keep-alive"
+]
+sys_dict = {
+    "freenas": "FreeNAS",
+    "trueos": "TrueOS",
+    "trueview": "TrueView"
+}
 systypelist = list(sys_dict.keys())
-runlist = ["vm-tests", "api-tests", "api2-tests", "webui-tests"]
+runlist = [
+    "vm-tests",
+    "api-tests",
+    "api2-tests",
+    "websocket-tests",
+    "webui-tests"
+]
 
 # verify it root user
 if os.getuid() != 0:
@@ -31,25 +49,32 @@ Usage for {app}:
 
 Available Commands:
 
---run                     - Runs option giving
-        vm-tests          - Start (freenas, or trueos) in a VM using vm-bhyve
-        api-tests         - Start VM with REST API 1.0 tests for FreeNAS
+--run                     - Runs the given option
+          vm-tests        - Install (Freenas, TrueOS or TrueView) in a VM
+                            using vm-bhyve and reboot in the installation.
+          api-tests       - Start VM with REST API 1.0 tests for FreeNAS
                             or REST API tests for TrueView
-        api2-tests        - Start VM with REST API 2.0 tests (FreeNAS only)
-        webui-tests       - Runs FreeNAS web UI tests using WebDriver
-        websocket-tests   - Start VM with WebSocket tests for TrueView
+          api2-tests      - Start VM with REST API 2.0 tests (FreeNAS only)
+          webui-tests     - Runs FreeNAS web UI tests using WebDriver
+          websocket-tests - Start VM with WebSocket tests for TrueView
 
 --systype                 - Use by run to see what system we need to run
-        freenas           - FreeNAS to be run
-        trueos            - TrueOS to be run
-        trueview          - TrueView to be run
+          freenas         - FreeNAS to be run
+          trueos          - TrueOS to be run
+          trueview        - TrueView to be run
 
---ip                      - IP and network card of the machine targeted
-        0.0.0.0:card or 0.0.0.0
+--ip                      - IP and network card of the machine targeted to
+                            run test against.
+          0.0.0.0
+          0.0.0.0:card
+
+--server-ip               - IP of the targeted FreeNAS for TrueView
+          0.0.0.0
 
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
---keep-alive              - Keep Bhyve VM alive and running
+--keep-alive              - Keep Bhyve VM alive and running without it VM
+                            is destroy when ixautomation stop.
 """
 
 # if have no argument stop
@@ -84,11 +109,18 @@ for output, arg in myopts:
         systype = arg
     elif output == '--ip':
         ipnc = arg
+    elif output == '--server-ip':
+        server_ip = arg
 
 try:
     ipnc
 except NameError:
     ipnc = None
+
+try:
+    server_ip
+except NameError:
+    server_ip = None
 
 if run not in runlist:
     print(f"{run} is not a valid --run option")
@@ -122,4 +154,4 @@ except KeyError:
         sys.exit(1)
 
 sysname = sys_dict[systype]
-start_automation(workspace, systype, sysname, ipnc, run, keep_alive)
+start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip)
