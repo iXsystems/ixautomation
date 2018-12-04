@@ -83,7 +83,8 @@ def start_vm(wrkspc, systype, sysname, keep_alive):
     ip = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc)
     if ip == '0.0.0.0' and keep_alive is False:
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
-
+    elif ip == '' and keep_alive is False:
+        exit_fail('iXautomation stop because IP is None!')
     return {'ip': ip, 'netcard': "vtnet0", 'iso': select_iso}
 
 
