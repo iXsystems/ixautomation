@@ -147,6 +147,15 @@ def vm_destroy(vm):
     run(f"yes | vm destroy {vm}", shell=True)
 
 
+def clean_vm(vm):
+    # Remove vm directory only
+    vm_dir = f"/usr/local/ixautomation/vms/{vm}"
+    run(f"rm -rf {vm_dir}", shell=True)
+    # Remove vm iso
+    iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm}.iso"
+    run(f"rm -rf {iso_dir}", shell=True)
+
+
 def vm_stop_all():
     run("vm stopall", shell=True)
 

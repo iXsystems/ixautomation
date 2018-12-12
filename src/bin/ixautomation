@@ -23,7 +23,7 @@ optionlist = [
     "ip=",
     "server-ip=",
     "destroy-all-vm",
-    "destroy-vm="
+    "destroy-vm=",
     "keep-alive"
 ]
 sys_dict = {
