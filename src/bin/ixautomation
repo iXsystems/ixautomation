@@ -6,7 +6,7 @@ import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import start_automation, destroy_all_vm
+from functions import start_automation, destroy_all_vm, destroy_vm
 
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -23,6 +23,7 @@ optionlist = [
     "ip=",
     "server-ip=",
     "destroy-all-vm",
+    "destroy-vm=",
     "keep-alive"
 ]
 sys_dict = {
@@ -71,6 +72,9 @@ Available Commands:
 --server-ip               - IP of the targeted FreeNAS for TrueView
           0.0.0.0
 
+--destroy-vm              - Stop VM running, the remove VM directory
+          ABCD            - VM name to stop
+
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
 --keep-alive              - Keep Bhyve VM alive and running without it VM
@@ -100,6 +104,9 @@ keep_alive = False
 for output, arg in myopts:
     if output == "--destroy-all-vm":
         destroy_all_vm()
+        sys.exit(0)
+    elif output == "--destroy-vm":
+        destroy_vm(arg)
         sys.exit(0)
     elif output == "--keep-alive":
         keep_alive = True

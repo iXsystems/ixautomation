@@ -7,7 +7,7 @@ from subprocess import Popen, run, PIPE
 from shutil import copyfile
 import random
 import string
-from functions_vm import vm_destroy, vm_setup, vm_select_iso
+from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
 from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
@@ -175,7 +175,18 @@ def webui_tests(wrkspc, ip):
 
 
 def destroy_all_vm():
+    print(f'Stop all VM')
     vm_stop_all()
+    print(f"Removing all VM's files and all ISO's")
     clean_all_vm()
+    sys.exit(0)
+    return 0
+
+
+def destroy_vm(vm):
+    print(f'Poweroff and destroy {vm} VM')
+    vm_destroy(vm)
+    print(f'Removing {vm} VM files and {vm} ISO')
+    clean_vm(vm)
     sys.exit(0)
     return 0
