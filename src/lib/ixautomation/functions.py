@@ -40,6 +40,7 @@ def cleanup_workdir(tmp_vm_dir):
         run(f"chflags -R noschg  {tmp_vm_dir}", shell=True)
         run(f"rm -rf {tmp_vm_dir}", shell=True)
     os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
+    os.remove(f"/tmp/{vm}console.log")
 
 
 def exit_clean(tmp_vm_dir):
