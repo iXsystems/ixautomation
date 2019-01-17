@@ -125,12 +125,12 @@ def api_tests(wrkspc, systype, ip, netcard, server_ip):
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
         else:
             server_cfg = ''
-        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg}"
+        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg} --vm-name {vm}"
         print(cmd)
     else:
         apipath = f"{wrkspc}/tests"
         cmd = f"python3.6 runtest.py --ip {ip} " \
-            f"--password testing --interface {netcard}"
+            f"--password testing --interface {netcard} --vm-name {vm}"
         if os.path.exists(ixautomation_config):
             copyfile(ixautomation_config, f"{apipath}/config.py")
     os.chdir(apipath)
@@ -145,12 +145,12 @@ def websocket_tests(wrkspc, systype, ip, netcard, server_ip):
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
         else:
             server_cfg = ''
-        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg}"
+        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg} --vm-name {vm}"
         print(cmd)
     else:
         apipath = f"{wrkspc}/tests"
         cmd = f"python3.6 runtest.py --ip {ip} " \
-            f"--password testing --interface {netcard}"
+            f"--password testing --interface {netcard} --vm-name {vm}"
     os.chdir(apipath)
     run(cmd, shell=True)
     os.chdir(wrkspc)
@@ -162,7 +162,7 @@ def api2_tests(wrkspc, systype, ip, netcard):
         copyfile(ixautomation_config, f"{apipath}/config.py")
     os.chdir(apipath)
     cmd = f"python3.6 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --api 2.0"
+        f"--password testing --interface {netcard} --api 2.0 --vm-name {vm}"
     run(cmd, shell=True)
     os.chdir(wrkspc)
 
