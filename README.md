@@ -37,12 +37,28 @@ The scripts in this repository will allow you to start Bhyve VM and run tests fo
 
 
 ### Install the framework on TrueOS, Project Trident and GhostBSD
-============
 
 **From package:**
 
 ```
 sudo pkg install py36-ixautomation
+```
+
+**From ports:**
+
+```
+sudo git clone --depth 1 https://github.com/trueos/trueos-ports.git /usr/ports
+cd /usr/ports/sysutils/py-ixautomation
+sudo make install clean
+```
+
+**From GitHub:**
+
+```
+pkg install py36-pytest py36-requests py36-selenium py36-websocket-client py36-unittest-xml-reporting ix-bhyve expect sshpass bhyve-firmware dnsmasq
+git clone --depth 1 https://github.com/ixsystems/ixautomation.git
+cd ixautomation/src
+sudo python3.6 setup.py install
 ```
 
 
