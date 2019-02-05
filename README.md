@@ -1,7 +1,7 @@
 Jenkins automation testing framework for iX projects
 ===========
 
-The scripts in this repository will allow you to test iX projects, either as an automated job from Jenkins or manually.
+The scripts in this repository will allow you to start Bhyve vm and run tests for some iX projects, either as an automated job from Jenkins or manually.
 
 It includes support to test the following projects:
 
@@ -12,14 +12,16 @@ Requirements
 ============
 
 Recommended hardware:
-* CPU: 1 Cores or more
+* CPU: 4 Cores or more
 * Memory: 16GB
 * Disk: 100GB
 * Wired Ethernet connection for vm-bhyve bridge
 
 Required OS:
 
-* [TrueOS Unstable](http://download.trueos.org/unstable/amd64/)
+* [TrueOS Unstable](https://pkg.trueos.org/iso/unstable)
+* [Project Trident](https://project-trident.org/download/)
+* [GhostBSD](http://www.ghostbsd.org/download)
 
 Jenkins Requirements:
 * One master node
@@ -34,8 +36,10 @@ Required Jenkins Plugging:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Install the framework on TrueOS
+Install the framework on TrueOS, Project Trident and GhostBSD
 ============
+
+From package:
 
 ```
 sudo pkg install py36-ixautomation
@@ -59,7 +63,10 @@ Start the ixautomation service
 service ixautomation start
 ```
 
-Set location of git repository with tests
+To use manualy
+============
+
+Set location of the git repository with the tests in /user/local/etc/ixautomation.conf
 
 ```
 ## When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
@@ -67,7 +74,7 @@ FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
 ```
-
+Put the iso to run with the VM in freenas/tests/iso/
 
 VM Tests
 ============
@@ -78,12 +85,22 @@ sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
 ```
 
-Shutdown, and cleanup all running vms
+To keep the vm runing use --keep-alive option
+```
+sudo ixautomation --run vm-tests --systype freenas --keep-alive
+```
+
+To Shutdown, and cleanup all running vms
 ```
 sudo ixautomation --destroy-all-vm
 ```
 
-ReST API Tests
+To Shutdown, and cleanup a VM
+```
+sudo ixautomation --destroy-vm ABCD
+```
+
+FreeNAS REST API Tests
 ============
 Run API test with VM tests
 
