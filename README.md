@@ -121,47 +121,51 @@ sudo ixautomation --destroy-vm ABCD
 
 #### FreeNAS REST API tests
 
-Run API 1.0 tests with VM tests
+Creating a VM and run API 1.0 tests
 
 ```
 sudo ixautomation --run api-tests --systype freenas
 ```
 
-Run API 2.0 tests with VM tests
+Creating a VM and run API 2.0 tests
 
 ```
 sudo ixautomation --run api2-tests --systype freenas
 ```
 
-Run API test on a VM or a real machine
+Run API test on a Bhyve VM
 
 ```
-sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
+sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.10
 ```
-For a real machine add the driver card to use.
+For a VM or a real machine add the interface to use
 
 ```
-sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2:re0
+sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.10:re0
 ```
 
 #### TrueView API Tests
 
-Run REST API tests with VM tests
+Creating a VM and run REST API tests with a FreeNAS
 
 ```
-sudo ixautomation --run api-tests --systype trueview --server-ip 192.168.0.214
+sudo ixautomation --run api-tests --systype trueview --server-ip 192.168.0.11
 ```
 
-Run WebSocket API tests with VM tests
+Creating a VM and run WebSocket API tests with a FreeNAS
 
 ```
-sudo ixautomation --run websocket-tests --systype freenas --server-ip 192.168.0.214
+sudo ixautomation --run websocket-tests --systype trueview --server-ip 192.168.0.11
 ```
 
+Run REST API tests on a VM or a real machine with a FreeNAS
+```
+sudo ixautomation --run api-tests --systype trueview --ip 192.168.0.10 --server-ip 192.168.0.11
+```
 
 #### Selenium Tests
 
 In order to run VM tests remove --ip
 ```
-sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
+sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.10
 ```
