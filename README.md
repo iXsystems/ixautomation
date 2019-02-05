@@ -60,7 +60,7 @@ git clone --depth 1 https://github.com/ixsystems/ixautomation.git
 cd ixautomation/src
 sudo python3.6 setup.py install
 ```
-
+**Note:** ix-bhyve is a clone of vm-bhyve ixautomation should also work with vm-bhyve
 
 ### Setting iXautomation
 
@@ -109,12 +109,12 @@ To keep the vm runing use --keep-alive option
 sudo ixautomation --run vm-tests --systype freenas --keep-alive
 ```
 
-To Shutdown, and cleanup all running vms
+To shutdown, and cleanup all running vms
 ```
 sudo ixautomation --destroy-all-vm
 ```
 
-To Shutdown, and cleanup a VM
+To shutdown, and cleanup a VM
 ```
 sudo ixautomation --destroy-vm ABCD
 ```
