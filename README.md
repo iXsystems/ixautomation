@@ -11,13 +11,13 @@ It includes support to test the following projects:
 
 ### Requirements
 
-** Recommended hardware: **
+**Recommended hardware:**
 * CPU: 4 Cores or more
 * Memory: 16GB
 * Disk: 100GB
 * Wired Ethernet connection for vm-bhyve bridge
 
-** Required OS: **
+**Required OS:**
 
 * [TrueOS Unstable](https://pkg.trueos.org/iso/unstable)
 * [Project Trident](https://project-trident.org/download/)
