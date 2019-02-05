@@ -18,6 +18,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_list = os.listdir(iso_dir)
     if ".keepme" in iso_list:
         iso_list.remove(".keepme")
+    iso_list.sort()
     iso_cnt = len(iso_list)
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
     if iso_cnt is 0:
