@@ -149,13 +149,13 @@ sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2:re0
 Run REST API tests with VM tests
 
 ```
-sudo ixautomation --run api-tests --systype trueview
+sudo ixautomation --run api-tests --systype trueview --server-ip 192.168.0.214
 ```
 
 Run WebSocket API tests with VM tests
 
 ```
-sudo ixautomation --run websocket-tests --systype freenas
+sudo ixautomation --run websocket-tests --systype freenas --server-ip 192.168.0.214
 ```
 
 
