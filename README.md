@@ -1,9 +1,9 @@
 Jenkins automation testing framework for iX projects
 ===========
 
-The scripts in this repository will allow you to start Bhyve vm and run tests for some iX projects, either as an automated job from Jenkins or manually.
+The scripts in this repository will allow you to start Bhyve VM and run tests for some iX projects, either as an automated job from Jenkins or manually.
 
-It includes support to test the following projects:
+**It includes support to test the following projects:**
 
  * FreeNAS
  * TrueOS
@@ -48,7 +48,7 @@ sudo pkg install py36-ixautomation
 
 ### Setting iXautomation
 
-Specify a connected Ethernet interface with access to DHCP for VMs ( Substitute re0 with your interface )
+Specify a connected Ethernet interface with access to DHCP for VMs ( Substitute `re0` with your interface )
 
 ```
 sysrc -f /etc/rc.conf ixautomation_iface="re0"
@@ -75,6 +75,7 @@ Set location of the git repository with the tests in **/user/local/etc/ixautomat
 FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
+TrueView = "/home/eturgeon/projects/ixsystems/TrueView-qt-spog"
 ```
 Put the iso to run with the VM in **freenas/tests/iso/**
 
