@@ -6,28 +6,28 @@ The scripts in this repository will allow you to start Bhyve vm and run tests fo
 It includes support to test the following projects:
 
  * FreeNAS
- * TrueOS Server
+ * TrueOS
+ * TrueView
 
-Requirements
-============
+### Requirements
 
-Recommended hardware:
+** Recommended hardware: **
 * CPU: 4 Cores or more
 * Memory: 16GB
 * Disk: 100GB
 * Wired Ethernet connection for vm-bhyve bridge
 
-Required OS:
+** Required OS: **
 
 * [TrueOS Unstable](https://pkg.trueos.org/iso/unstable)
 * [Project Trident](https://project-trident.org/download/)
 * [GhostBSD](http://www.ghostbsd.org/download)
 
-Jenkins Requirements:
+**Jenkins Requirements:**
 * One master node
 * Slave nodes for running ixautomation
 
-Required Jenkins Plugging:
+**Required Jenkins Plugging:**
 
 * [Log parser](https://wiki.jenkins.io/display/JENKINS/Log+Parser+Plugin)
 * [Workspace Whitespace Replacement](https://wiki.jenkins.io/display/JENKINS/Workspace+Whitespace+Replacement+Plugin)
@@ -36,14 +36,17 @@ Required Jenkins Plugging:
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-Install the framework on TrueOS, Project Trident and GhostBSD
+### Install the framework on TrueOS, Project Trident and GhostBSD
 ============
 
-From package:
+**From package:**
 
 ```
 sudo pkg install py36-ixautomation
 ```
+
+
+### Setting iXautomation
 
 Specify a connected Ethernet interface with access to DHCP for VMs ( Substitute re0 with your interface )
 
@@ -63,10 +66,9 @@ Start the ixautomation service
 service ixautomation start
 ```
 
-To use manualy
-============
+### To use manually
 
-Set location of the git repository with the tests in /user/local/etc/ixautomation.conf
+Set location of the git repository with the tests in **/user/local/etc/ixautomation.conf**
 
 ```
 ## When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
@@ -74,15 +76,15 @@ FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
 ```
-Put the iso to run with the VM in freenas/tests/iso/
+Put the iso to run with the VM in **freenas/tests/iso/**
 
-VM Tests
-============
+#### Start VM and clean
 Create a VM, and test install using vm-bhyve
 
 ```
 sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
+sudo ixautomation --run vm-tests --systype trueview
 ```
 
 To keep the vm runing use --keep-alive option
@@ -100,23 +102,21 @@ To Shutdown, and cleanup a VM
 sudo ixautomation --destroy-vm ABCD
 ```
 
-FreeNAS REST API Tests
-============
-Run API test with VM tests
+#### FreeNAS REST API tests
 
-API 1.0
+Run API 1.0 tests with VM tests
 
 ```
 sudo ixautomation --run api-tests --systype freenas
 ```
 
-API 2.0
+Run API 2.0 tests with VM tests
 
 ```
 sudo ixautomation --run api2-tests --systype freenas
 ```
 
-Run API test from VM or real machine
+Run API test on a VM or a real machine
 
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2
@@ -127,8 +127,23 @@ For a real machine add the driver card to use.
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.2:re0
 ```
 
-Selenium Tests
-============
+#### TrueView API Tests
+
+Run REST API tests with VM tests
+
+```
+sudo ixautomation --run api-tests --systype trueview
+```
+
+Run WebSocket API tests with VM tests
+
+```
+sudo ixautomation --run websocket-tests --systype freenas
+```
+
+
+#### Selenium Tests
+
 In order to run VM tests remove --ip
 ```
 sudo ixautomation --run webui-test --systype freenas --ip 192.168.0.2
