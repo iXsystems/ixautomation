@@ -134,6 +134,10 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             VMIP = line.split(':')[1].strip()
             print(f"{sysname}_IP={VMIP}")
             print(f"{sysname}_VM_NAME={vm}")
+            vm_config = f"VM_NAME={vm}\nIP={VMIP}"
+            file = open(f'{testworkspace}/vm_config', 'w')
+            file.writelines(vm_config)
+            file.close()
             return VMIP
     else:
         VMIP = "0.0.0.0"
