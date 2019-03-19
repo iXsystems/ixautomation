@@ -21,7 +21,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_list.sort()
     iso_cnt = len(iso_list)
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
-    if iso_cnt is 0:
+    if iso_cnt == 0:
         print(f'Please put a {sysname} ISO in "{iso_dir}"')
         sys.exit(1)
     # Our to-be-determined file name of the ISO to test; must be inside iso_dir
@@ -118,7 +118,7 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
     console_file = open(vm_output, 'r').readlines()
     reversed_console = reversed(console_file)
     for line in reversed_console:
-        if systype == 'freenas' and 'http://' in line:
+        if 'freenas' in systype and 'http://' in line:
             # Reset/clear to get native term dimensions
             os.system('reset')
             os.system('clear')
@@ -126,6 +126,11 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             VMIP = line.rstrip().split('//')[1]
             print(f"{sysname}_IP={VMIP}")
             print(f"{sysname}_VM_NAME={vm}")
+            if 'webui' in systype:
+                vm_config = f"VM_NAME={vm}\nIP={VMIP}"
+                file = open(f'{testworkspace}/vm_config', 'w')
+                file.writelines(vm_config)
+                file.close()
             return VMIP
         elif systype == 'trueview' and 'IP Address:' in line:
             os.system('reset')

@@ -30,6 +30,7 @@ dot_config_list = [
 
 dot_templates_list = [
     'ixautomation/vms/.templates/freenas.conf',
+    'ixautomation/vms/.templates/freenas_webui.conf',
     'ixautomation/vms/.templates/trueos.conf',
     'ixautomation/vms/.templates/trueview.conf'
 ]
