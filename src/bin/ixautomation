@@ -36,7 +36,6 @@ runlist = [
     "vm-tests",
     "api-tests",
     "api2-tests",
-    "rest-tests",
     "websocket-tests",
     "webui-tests",
     "webui-vm-only"
@@ -57,7 +56,6 @@ Available Commands:
                             using vm-bhyve and reboot in the installation.
           api-tests       - Start VM with REST API 1.0 tests for FreeNAS
           api2-tests      - Start VM with REST API 2.0 tests (FreeNAS only)
-          rest-tests      - Start VM with REST API tests for TrueView
           webui-tests     - Runs FreeNAS web UI tests using WebDriver
           webui-vm-only
           websocket-tests - Start VM with WebSocket tests for TrueView

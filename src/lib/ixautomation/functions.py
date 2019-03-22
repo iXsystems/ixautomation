@@ -110,8 +110,6 @@ def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip):
 def run_test(wrkspc, test, systype, ip, netcard, server_ip):
     if test == "api-tests":
         api_tests(wrkspc, systype, ip, netcard, server_ip)
-    elif test == "rest-tests":
-        api_tests(wrkspc, systype, ip, netcard, server_ip)
     elif test == "websocket-tests":
         websocket_tests(wrkspc, systype, ip, netcard, server_ip)
     elif test == "api2-tests":
@@ -122,7 +120,7 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
     if systype == 'trueview':
-        apipath = f"{wrkspc}/tests/rest"
+        apipath = f"{wrkspc}/tests/api"
         if server_ip is not None:
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
         else:
