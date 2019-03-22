@@ -38,7 +38,8 @@ runlist = [
     "api2-tests",
     "rest-tests",
     "websocket-tests",
-    "webui-tests"
+    "webui-tests",
+    "webui-vm-only"
 ]
 
 # verify it root user
@@ -58,6 +59,7 @@ Available Commands:
           api2-tests      - Start VM with REST API 2.0 tests (FreeNAS only)
           rest-tests      - Start VM with REST API tests for TrueView
           webui-tests     - Runs FreeNAS web UI tests using WebDriver
+          webui-vm-only
           websocket-tests - Start VM with WebSocket tests for TrueView
 
 --systype                 - Use by run to see what system we need to run
@@ -148,7 +150,7 @@ except KeyError:
         print(f"Please add {ixautomationconfig}")
         sys.exit(1)
 
-    syscfg = "WebUI" if run == "webui-tests" else sys_dict[systype]
+    syscfg = "WebUI" if "webui-" in run else sys_dict[systype]
 
     # loop true ixautomation config list to find syscfg
     ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
@@ -162,4 +164,5 @@ except KeyError:
         sys.exit(1)
 
 sysname = sys_dict[systype]
+systype = f"{systype}_webui" if "webui-" in run else systype
 start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip)
