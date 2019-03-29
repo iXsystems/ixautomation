@@ -21,9 +21,6 @@ pipeline {
                         label "QA"
                     }
                     steps {
-                        def dateFormat = new SimpleDateFormat("yyyyMMdd")
-                        def date = new Date()
-                        def currentData = new dateFormat.format(date)
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -31,7 +28,7 @@ pipeline {
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
                         echo '*** Grabbing FreeNAS 12 ISO ***'
-                        sh 'cd ${WORKSPACE}/tests/iso; fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/FreeNAS-12-snapshot-x64-${currentData}.iso'
+                        sh 'cd ${WORKSPACE}/tests/iso; currentData=$(date "+%Y%m%d"); fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/FreeNAS-12-snapshot-x64-${currentData}.iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
@@ -43,9 +40,6 @@ pipeline {
                         label "QA"
                     }
                     steps {
-                        def dateFormat = new SimpleDateFormat("yyyyMMdd")
-                        def date = new Date()
-                        def currentData = new dateFormat.format(date)
                         sh 'rm -rf freenas || true'
                         sh 'rm -rf webui || true'
                         sh 'rm -rf tests || true'
@@ -53,7 +47,7 @@ pipeline {
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
                         echo '*** Grabbing FreeNAS 12 ISO ***'
-                        sh 'cd ${WORKSPACE}/tests/iso; fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/FreeNAS-12-snapshot-x64-${currentData}.iso'
+                        sh 'cd ${WORKSPACE}/tests/iso; currentData=$(date "+%Y%m%d"); fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/FreeNAS-12-snapshot-x64-${currentData}.iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api2-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
