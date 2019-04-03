@@ -29,7 +29,7 @@ pipeline {
         sh 'cd ${WORKSPACE}/tests/iso; ISO=$(curl http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/ | grep \'iso<\' | cut -d \'"\' -f 14); fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/${ISO}'
         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
         sh 'ixautomation --run api-tests --systype freenas'
-        archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
+        archiveArtifacts artifacts: 'tests/artifacts/*', fingerprint: true
         junit 'tests/results/*.xml'
       }
       post {
