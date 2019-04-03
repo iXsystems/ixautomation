@@ -26,7 +26,7 @@ pipeline {
         sh 'mkdir tests || true'
         sh 'cp -R freenas/tests/ tests/'
         echo '*** Grabbing FreeNAS 12 ISO ***'
-        sh 'cd ${WORKSPACE}/tests/iso; ISO=$(curl http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/ | grep 'iso<' | cut -d '"' -f 14); fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/${ISO}'
+        sh 'cd ${WORKSPACE}/tests/iso; ISO=$(curl http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/ | grep \'iso<\' | cut -d \'"\' -f 14); fetch http://cdn1.tn.ixsystems.com/pkg.trueos.org/iso/freenas/12/snapshot/${ISO}'
         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
         sh 'ixautomation --run api-tests --systype freenas'
         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
