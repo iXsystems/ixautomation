@@ -27,8 +27,8 @@ pipeline {
                         sh 'git clone --depth=1 git://10.20.21.137/freenas'
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
-                        echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
-                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
+                        echo '*** Grabbing artifact from FreeNAS - 11.3 - Nightlies ***'
+                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - 11.3 - Nightlies', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
@@ -46,8 +46,8 @@ pipeline {
                         sh 'git clone --depth=1 git://10.20.21.137/freenas'
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
-                        echo '*** Grabbing artifact from FreeNAS - Master - Incremental ***'
-                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - Master - Incremental Build', selector: lastSuccessful(), target: 'tests/iso'
+                        echo '*** Grabbing artifact from FreeNAS - 11.3 - Nightlies ***'
+                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - 11.3 - Nightlies', selector: lastSuccessful(), target: 'tests/iso'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api2-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
