@@ -14,7 +14,7 @@ pipeline {
       }
     }
 
- stage('Run Tests') {
+    stage('Run Tests') {
             parallel {
                 stage('API 1.0') {
                     agent {
@@ -27,8 +27,8 @@ pipeline {
                         sh 'git clone --depth=1 git://10.20.21.137/freenas'
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
-                        echo '*** Grabbing artifact from FreeNAS - 11.3 - Nightlies ***'
-                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - 11.3 - Nightlies', selector: lastSuccessful(), target: 'tests/iso'
+                        echo '*** Grabbing FreeNAS - 11.3 - Nightlies ***'
+                        sh 'cd ${WORKSPACE}/tests/iso; ISO=$(curl https://download.freenas.org/11.3/MASTER/latest/x64/ | grep \'iso<\' | cut -d \'"\' -f 2); fetch https://download.freenas.org/11.3/MASTER/latest/x64/${ISO}'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
@@ -46,8 +46,8 @@ pipeline {
                         sh 'git clone --depth=1 git://10.20.21.137/freenas'
                         sh 'mkdir tests || true'
                         sh 'cp -R freenas/tests/ tests/'
-                        echo '*** Grabbing artifact from FreeNAS - 11.3 - Nightlies ***'
-                        copyArtifacts filter: '**/*.iso', fingerprintArtifacts: true, flatten: true, projectName: 'FreeNAS - 11.3 - Nightlies', selector: lastSuccessful(), target: 'tests/iso'
+                        echo '*** Grabbing FreeNAS - 11.3 - Nightlies ***'
+                        sh 'cd ${WORKSPACE}/tests/iso; ISO=$(curl https://download.freenas.org/11.3/MASTER/latest/x64/ | grep \'iso<\' | cut -d \'"\' -f 2); fetch https://download.freenas.org/11.3/MASTER/latest/x64/${ISO}'
                         sh 'find ${WORKSPACE}/tests/iso | grep NOGRUB.iso | xargs -I {} rm {}'
                         sh 'ixautomation --run api2-tests --systype freenas'
                         archiveArtifacts artifacts: 'tests/artifacts/*/*', fingerprint: true
@@ -57,36 +57,35 @@ pipeline {
                         always {
                             script {
                                 cleanWs notFailBuild: true
-                                    dir("${env.WORKSPACE}") {
+                                dir("${env.WORKSPACE}") {
+                                    deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@tmp") {
                                         deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@tmp") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@2") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@2@tmp") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@3") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@3@tmp") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@4") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@4@tmp") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@5") {
-                                            deleteDir()
-                                    }
-                                    dir("${env.WORKSPACE}@5@tmp") {
-                                            deleteDir()
-                                    }
+                                }
+                                dir("${env.WORKSPACE}@2") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@2@tmp") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@3") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@3@tmp") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@4") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@4@tmp") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@5") {
+                                        deleteDir()
+                                }
+                                dir("${env.WORKSPACE}@5@tmp") {
+                                        deleteDir()
                                 }
                             }
                         }
@@ -94,4 +93,5 @@ pipeline {
                 }
             }
         }
+    }
 }
