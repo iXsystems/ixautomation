@@ -8,7 +8,7 @@ from setuptools import setup
 
 
 # silence pyflakes, __VERSION__ is properly assigned below...
-__VERSION__ = '19.02.06'
+__VERSION__ = '19.04.25'
 
 PROGRAM_VERSION = __VERSION__
 
