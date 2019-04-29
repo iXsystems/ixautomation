@@ -119,7 +119,7 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
 
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
-    if systype == 'trueview':
+    if systype == 'truecommand':
         apipath = f"{wrkspc}/tests/api"
         if server_ip is not None:
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
@@ -139,7 +139,7 @@ def api_tests(wrkspc, systype, ip, netcard, server_ip):
 
 
 def websocket_tests(wrkspc, systype, ip, netcard, server_ip):
-    if systype == 'trueview':
+    if systype == 'truecommand':
         apipath = f"{wrkspc}/tests/websocket"
         if server_ip is not None:
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip

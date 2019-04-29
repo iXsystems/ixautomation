@@ -33,7 +33,7 @@ dot_templates_list = [
     'ixautomation/vms/.templates/freenas11_2.conf',
     'ixautomation/vms/.templates/freenas_webui.conf',
     'ixautomation/vms/.templates/trueos.conf',
-    'ixautomation/vms/.templates/trueview.conf'
+    'ixautomation/vms/.templates/truecommand.conf'
 ]
 
 lib_ixautomation_list = [

@@ -4,7 +4,7 @@
 # FreeNAS = "/home/eturgeon/projects/freenas/freenas"
 # TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 # WebUI = "/home/eturgeon/projects/freenas/webui"
-# TrueView = "/home/eturgeon/projects/ixsystems/TrueView-qt-spog"
+# TrueCommand = "/home/eturgeon/projects/ixsystems/TrueCommand"
 
 ###########################################################################
 # FreeNAS specific settings for API tests
