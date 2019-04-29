@@ -7,7 +7,7 @@ The scripts in this repository will allow you to start Bhyve VM and run tests fo
 
  * FreeNAS
  * TrueOS
- * TrueView
+ * TrueCommand
 
 ### Requirements
 
@@ -91,7 +91,7 @@ Set location of the git repository with the tests in **/user/local/etc/ixautomat
 FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
 TrueOS = "/home/eturgeon/projects/trueos/trueos-server"
 WebUI = "/home/eturgeon/projects/ixsystems/webui"
-TrueView = "/home/eturgeon/projects/ixsystems/TrueView-qt-spog"
+TrueCommand = "/home/eturgeon/projects/ixsystems/TrueCommand-qt-spog"
 ```
 Put the iso to run with the VM in **freenas/tests/iso/**
 
@@ -101,7 +101,7 @@ Create a VM, and test the installation using vm-bhyve.
 ```
 sudo ixautomation --run vm-tests --systype freenas
 sudo ixautomation --run vm-tests --systype trueos
-sudo ixautomation --run vm-tests --systype trueview
+sudo ixautomation --run vm-tests --systype truecommand
 ```
 
 To keep the vm running use --keep-alive option.
@@ -144,23 +144,23 @@ For a VM or a real machine add the interface to use.
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.10:re0
 ```
 
-#### TrueView API Tests
+#### TrueCommand API Tests
 
 Creating a VM and run REST API tests with a FreeNAS.
 
 ```
-sudo ixautomation --run api-tests --systype trueview --server-ip 192.168.0.11
+sudo ixautomation --run api-tests --systype truecommand --server-ip 192.168.0.11
 ```
 
 Creating a VM and run WebSocket API tests with a FreeNAS.
 
 ```
-sudo ixautomation --run websocket-tests --systype trueview --server-ip 192.168.0.11
+sudo ixautomation --run websocket-tests --systype truecommand --server-ip 192.168.0.11
 ```
 
 Run REST API tests on a VM or a real machine with a FreeNAS.
 ```
-sudo ixautomation --run api-tests --systype trueview --ip 192.168.0.10 --server-ip 192.168.0.11
+sudo ixautomation --run api-tests --systype truecommand --ip 192.168.0.10 --server-ip 192.168.0.11
 ```
 
 #### Selenium Tests
