@@ -13,6 +13,43 @@ from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
 
 
+def ssh_cmd(command, username, passwrd, host):
+    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
+    cmd += [
+        "ssh",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "VerifyHostKeyDNS=no",
+        f"{username}@{host}",
+    ]
+    cmd += command.split()
+    run(cmd, stdout=PIPE, universal_newlines=True)
+
+
+def get_file(file, destination, username, passwrd, host):
+    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
+    cmd += [
+        "scp",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "VerifyHostKeyDNS=no",
+        f"{username}@{host}:{file}",
+        destination
+    ]
+    process = run(cmd, stdout=PIPE, universal_newlines=True)
+    output = process.stdout
+    if process.returncode != 0:
+        return {'result': False, 'output': output}
+    else:
+        return {'result': True, 'output': output}
+
+
 def create_workdir():
     builddir = "/tmp/ixautomation"
     tmp = ''.join(random.choices(string.ascii_uppercase, k=4))
@@ -116,6 +153,23 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
         api2_tests(wrkspc, systype, ip, netcard)
     elif test == "webui-tests":
         webui_tests(wrkspc, ip)
+    elif test == "kyua-tests":
+        kyua_tests(wrkspc, systype, ip, netcard)
+
+
+def kyua_tests(wrkspc, systype, ip, netcard):
+    apipath = f"{wrkspc}/tests"
+    if os.path.exists(ixautomation_config):
+        copyfile(ixautomation_config, f"{apipath}/config.py")
+    os.chdir(apipath)
+    # run ssh API to enable.
+    cmd = f"python3.6 runtest.py --ip {ip} " \
+        f"--password testing --interface {netcard} --api 2.0 --test ssh"
+    run(cmd, shell=True)
+    # install kyua
+    cmd = 'pkg install -y kyua'
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    os.chdir(wrkspc)
 
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
