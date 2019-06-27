@@ -26,7 +26,7 @@ def ssh_cmd(command, username, passwrd, host):
         f"{username}@{host}",
     ]
     cmd_list += command.split()
-    run(cmd_list, check=True)
+    run(cmd_list)
 
 
 def get_file(file, destination, username, passwrd, host):
