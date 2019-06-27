@@ -3,7 +3,7 @@
 import os
 import signal
 import sys
-from subprocess import Popen, run, PIPE
+from subprocess import Popen, run, PIPE, call
 from shutil import copyfile
 import random
 import string
@@ -26,7 +26,7 @@ def ssh_cmd(command, username, passwrd, host):
         f"{username}@{host}",
     ]
     cmd_list += command.split()
-    run(cmd_list)
+    run(cmd_list, check=True)
 
 
 def get_file(file, destination, username, passwrd, host):
@@ -170,6 +170,13 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     cmd = 'pkg update -f'
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = 'pkg install -y kyua'
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = "kyua test -k /usr/tests/Kyuafile"
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = "kyua report --verbose --results-filter passed,skipped,xfail," \
+        "broken,failed --output test-report.txt"
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = "kyua report-junit --output=test-report.xml"
     ssh_cmd(cmd, 'root', 'testing', ip)
     os.chdir(wrkspc)
 
