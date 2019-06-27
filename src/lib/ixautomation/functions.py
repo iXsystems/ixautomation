@@ -14,8 +14,8 @@ ixautomation_config = '/usr/local/etc/ixautomation.conf'
 
 
 def ssh_cmd(command, username, passwrd, host):
-    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
-    cmd += [
+    cmd_list = [] if passwrd is None else ["sshpass", "-p", passwrd]
+    cmd_list += [
         "ssh",
         "-o",
         "StrictHostKeyChecking=no",
@@ -25,8 +25,8 @@ def ssh_cmd(command, username, passwrd, host):
         "VerifyHostKeyDNS=no",
         f"{username}@{host}",
     ]
-    cmd += command.split()
-    run(cmd, stdout=PIPE, universal_newlines=True)
+    cmd_list += command.split()
+    run(cmd_list)
 
 
 def get_file(file, destination, username, passwrd, host):
@@ -167,6 +167,8 @@ def kyua_tests(wrkspc, systype, ip, netcard):
         f"--password testing --interface {netcard} --api 2.0 --test ssh"
     run(cmd, shell=True)
     # install kyua
+    cmd = 'pkg update -f'
+    ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = 'pkg install -y kyua'
     ssh_cmd(cmd, 'root', 'testing', ip)
     os.chdir(wrkspc)
