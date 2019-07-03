@@ -179,7 +179,7 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = "cd /usr/tests; kyua report --verbose " \
         "--results-filter passed,skipped,xfail," \
-        f"broken,failed.--output {root_report_txt}"
+        f"broken,failed --output {root_report_txt}"
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = f"cd /usr/tests; kyua report-junit --output={root_report_xml}"
     ssh_cmd(cmd, 'root', 'testing', ip)
