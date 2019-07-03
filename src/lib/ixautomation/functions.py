@@ -171,12 +171,13 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = 'pkg install -y kyua'
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "kyua test -k /usr/tests/Kyuafile"
+    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile"
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "kyua report --verbose --results-filter passed,skipped,xfail," \
-        "broken,failed --output test-report.txt"
+    cmd = "cd /usr/tests; kyua report --verbose " \
+        "--results-filter passed,skipped,xfail," \
+        f"broken,failed --output /root/test-report.txt"
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "kyua report-junit --output=test-report.xml"
+    cmd = f"cd /usr/tests; kyua report-junit --output=/root/test-report.xml"
     ssh_cmd(cmd, 'root', 'testing', ip)
     os.chdir(wrkspc)
 
