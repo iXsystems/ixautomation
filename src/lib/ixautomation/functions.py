@@ -158,11 +158,15 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
 
 
 def kyua_tests(wrkspc, systype, ip, netcard):
-    apipath = f"{wrkspc}/tests"
+    test_path = f"{wrkspc}/tests"
+    root_report_txt = '/root/test-report.txt'
+    root_report_xml = '/root/test-report.xml'
+    tests_report_txt = f'{test_path}/test-report.txt'
+    tests_report_xml = f'{test_path}/test-report.xml'
     if os.path.exists(ixautomation_config):
-        copyfile(ixautomation_config, f"{apipath}/config.py")
-    os.chdir(apipath)
-    # run ssh API to enable.
+        copyfile(ixautomation_config, f"{test_path}/config.py")
+    os.chdir(test_path)
+    # run ssh API to enable
     cmd = f"python3.6 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --api 2.0 --test ssh"
     run(cmd, shell=True)
@@ -171,15 +175,19 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = 'pkg install -y kyua'
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile"
+    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile usr.bin/cut"
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = "cd /usr/tests; kyua report --verbose " \
         "--results-filter passed,skipped,xfail," \
-        f"broken,failed --output /root/test-report.txt"
+        f"broken,failed.--output {root_report_txt}"
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = f"cd /usr/tests; kyua report-junit --output=/root/test-report.xml"
+    cmd = f"cd /usr/tests; kyua report-junit --output={root_report_xml}"
     ssh_cmd(cmd, 'root', 'testing', ip)
     os.chdir(wrkspc)
+    # get test-report.txt
+    get_file(root_report_txt, tests_report_txt, 'root', 'testing', ip)
+    # get test-report.xml
+    get_file(root_report_xml, tests_report_xml, 'root', 'testing', ip)
 
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
