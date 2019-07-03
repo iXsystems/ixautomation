@@ -175,7 +175,7 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = 'pkg install -y kyua'
     ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile usr.bin/cut"
+    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile"
     ssh_cmd(cmd, 'root', 'testing', ip)
     cmd = "cd /usr/tests; kyua report --verbose " \
         "--results-filter passed,skipped,xfail," \
