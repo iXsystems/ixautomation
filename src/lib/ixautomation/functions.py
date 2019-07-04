@@ -3,7 +3,7 @@
 import os
 import signal
 import sys
-from subprocess import Popen, run, PIPE
+from subprocess import Popen, run, PIPE, call
 from shutil import copyfile
 import random
 import string
@@ -11,6 +11,43 @@ from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
 from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
+
+
+def ssh_cmd(command, username, passwrd, host):
+    cmd_list = [] if passwrd is None else ["sshpass", "-p", passwrd]
+    cmd_list += [
+        "ssh",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "VerifyHostKeyDNS=no",
+        f"{username}@{host}",
+    ]
+    cmd_list += command.split()
+    run(cmd_list)
+
+
+def get_file(file, destination, username, passwrd, host):
+    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
+    cmd += [
+        "scp",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "VerifyHostKeyDNS=no",
+        f"{username}@{host}:{file}",
+        destination
+    ]
+    process = run(cmd, stdout=PIPE, universal_newlines=True)
+    output = process.stdout
+    if process.returncode != 0:
+        return {'result': False, 'output': output}
+    else:
+        return {'result': True, 'output': output}
 
 
 def create_workdir():
@@ -116,6 +153,41 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
         api2_tests(wrkspc, systype, ip, netcard)
     elif test == "webui-tests":
         webui_tests(wrkspc, ip)
+    elif test == "kyua-tests":
+        kyua_tests(wrkspc, systype, ip, netcard)
+
+
+def kyua_tests(wrkspc, systype, ip, netcard):
+    test_path = f"{wrkspc}/tests"
+    root_report_txt = '/root/test-report.txt'
+    root_report_xml = '/root/test-report.xml'
+    tests_report_txt = f'{test_path}/test-report.txt'
+    tests_report_xml = f'{test_path}/test-report.xml'
+    if os.path.exists(ixautomation_config):
+        copyfile(ixautomation_config, f"{test_path}/config.py")
+    os.chdir(test_path)
+    # run ssh API to enable
+    cmd = f"python3.6 runtest.py --ip {ip} " \
+        f"--password testing --interface {netcard} --api 2.0 --test ssh"
+    run(cmd, shell=True)
+    # install kyua
+    cmd = 'pkg update -f'
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = 'pkg install -y kyua'
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile"
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = "cd /usr/tests; kyua report --verbose " \
+        "--results-filter passed,skipped,xfail," \
+        f"broken,failed --output {root_report_txt}"
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    cmd = f"cd /usr/tests; kyua report-junit --output={root_report_xml}"
+    ssh_cmd(cmd, 'root', 'testing', ip)
+    os.chdir(wrkspc)
+    # get test-report.txt
+    get_file(root_report_txt, tests_report_txt, 'root', 'testing', ip)
+    # get test-report.xml
+    get_file(root_report_xml, tests_report_xml, 'root', 'testing', ip)
 
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
