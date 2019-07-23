@@ -143,7 +143,11 @@ For a VM or a real machine add the interface to use.
 ```
 sudo ixautomation --run api-tests --systype freenas --ip 192.168.0.10:re0
 ```
+Run Kyua test on a VM or a real machine
 
+```
+sudo ixautomation --run kyua-tests --systype freenas --ip 192.168.0.10
+```
 #### TrueCommand API Tests
 
 Creating a VM and run REST API tests with a FreeNAS.
