@@ -38,7 +38,8 @@ def create_ixautomation_interface():
     nics = Popen(ncard, shell=True, stdout=PIPE, close_fds=True,
                  universal_newlines=True)
     netcard = nics.stdout.readlines()[0].rstrip().split()
-    if "vm-ixautomation" not in netcard or "ixautomation" not in netcard:
+    print(netcard)
+    if "vm-ixautomation" not in netcard and "ixautomation" not in netcard:
         os.remove(f'/usr/local/ixautomation/vms/.config/system.conf')
         call('vm switch create ixautomation', shell=True)
         for line in netcard:
