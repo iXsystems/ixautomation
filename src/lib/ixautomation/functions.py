@@ -3,12 +3,13 @@
 import os
 import signal
 import sys
-from subprocess import Popen, run, PIPE, call
+from subprocess import Popen, run, PIPE
 from shutil import copyfile
 import random
 import string
 from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
 from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
+from functions_vm import vm_destroy_stopped_vm
 
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
 
@@ -253,7 +254,12 @@ def destroy_all_vm():
     print(f"Removing all VM's files and all ISO's")
     clean_all_vm()
     sys.exit(0)
-    return 0
+
+
+def destroy_stopped_vm():
+    print(f'Stop all VM not running')
+    vm_destroy_stopped_vm()
+    sys.exit(0)
 
 
 def destroy_vm(vm):
@@ -262,4 +268,3 @@ def destroy_vm(vm):
     print(f'Removing {vm} VM files and {vm} ISO')
     clean_vm(vm)
     sys.exit(0)
-    return 0
