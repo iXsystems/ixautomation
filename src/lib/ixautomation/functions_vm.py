@@ -2,7 +2,7 @@
 
 import os
 import sys
-from subprocess import run
+from subprocess import run, Popen, PIPE
 from time import sleep
 
 
@@ -156,8 +156,7 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
 
 def vm_destroy(vm):
     run(f"yes | vm poweroff {vm}", shell=True)
-    sleep(5)
-    run(f"yes | vm destroy {vm}", shell=True)
+    sleep(2)
 
 
 def clean_vm(vm):
@@ -184,3 +183,16 @@ def clean_all_vm():
     run(f"rm -rf {iso_dir}", shell=True)
     vm_log = f"/tmp/*console.log"
     run(f"rm -rf {vm_log}", shell=True)
+
+
+def vm_destroy_stopped_vm():
+    cmd = "vm list"
+    vm_list = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
+    new_vmlist = vm_list.stdout.read()
+    for line in new_vmlist.splitlines():
+        vm_info = line.split()
+        state = vm_info[7]
+        vm_name = vm_info[0]
+        if state == 'Stopped':
+            print(f'Removing {vm_name} VM files and {vm_name} ISO')
+            clean_vm(vm_name)
