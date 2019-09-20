@@ -77,8 +77,7 @@ def cleanup_workdir(tmp_vm_dir):
     if f"on {tmp_vm_dir} /" not in mounted.stdout.read():
         run(f"chflags -R noschg  {tmp_vm_dir}", shell=True)
         run(f"rm -rf {tmp_vm_dir}", shell=True)
-    os.remove(f'/usr/local/ixautomation/vms/.iso/{select_iso}')
-    os.remove(f"/tmp/{vm}console.log")
+    clean_vm(vm)
 
 
 def exit_clean(tmp_vm_dir):
