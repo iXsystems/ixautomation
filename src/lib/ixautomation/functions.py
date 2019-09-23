@@ -3,6 +3,7 @@
 import os
 import signal
 import sys
+import re
 from subprocess import Popen, run, PIPE, call
 import re
 from shutil import copyfile
