@@ -34,6 +34,7 @@ BRIDGEHOST = "test01"
 # JAILGW = ""
 
 # Set this to be the AD information for joining an Active Directory
+# AD_DOMAIN = ""
 # ADUSERNAME = ""
 # ADPASSWORD = ""
 
