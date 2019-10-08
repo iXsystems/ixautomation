@@ -135,7 +135,7 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
                 file.writelines(vm_config)
                 file.close()
             return VMIP
-        elif systype == 'truecommand' and 'IP Address:' in line:
+        elif systype == 'truecommand' and 'IPv4 (vtnet0):' in line:
             os.system('reset')
             os.system('clear')
             os.chdir(workspace)
