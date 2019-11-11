@@ -18,6 +18,7 @@
 BRIDGEHOST = "test01"
 # BRIDGEHOST_B = ""
 # BRIDGEDOMAIN = ""
+# gateway = ""
 
 # Set the account information for DNS testing we do with noip.com
 # If this is NOT set, the test will be skipped
