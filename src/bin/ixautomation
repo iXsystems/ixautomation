@@ -179,4 +179,7 @@ except KeyError:
 
 sysname = sys_dict[systype]
 systype = f"{systype}_webui" if "webui-" in run else systype
+
+# create ixautomation interface before starting automation
+create_ixautomation_interface()
 start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip)
