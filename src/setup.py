@@ -47,7 +47,7 @@ data_files = [
     (f'{prefix}/etc', etc_list),
     (f'{prefix}/etc/rc.d', ['etc/rc.d/ixautomation']),
     (f'{prefix}/etc/sudoers.d', ['etc/sudoers.d/ixautomation']),
-    (f'{prefix}/ixautomation/vms/.config/', dot_config_list),
+    # (f'{prefix}/ixautomation/vms/.config/', dot_config_list),
     (f'{prefix}/ixautomation/vms/.templates', dot_templates_list),
     (f'{prefix}/lib/ixautomation', lib_ixautomation_list)
 ]

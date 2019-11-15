@@ -7,8 +7,7 @@ import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import start_automation, destroy_all_vm, destroy_vm
-from functions import destroy_stopped_vm
-
+from functions import destroy_stopped_vm, create_ixautomation_interface
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
 loginUser = os.getlogin()
@@ -26,7 +25,8 @@ optionlist = [
     "destroy-all-vm",
     "destroy-stopped-vm",
     "destroy-vm=",
-    "keep-alive"
+    "keep-alive",
+    "start-interface"
 ]
 sys_dict = {
     "freenas": "FreeNAS",
@@ -86,6 +86,8 @@ Available Commands:
 
 --keep-alive              - Keep Bhyve VM alive and running without it VM
                             is destroy when ixautomation stop.
+
+--start-interface         - Start ixautomation switch interface
 """
 
 # if have no argument stop
@@ -107,6 +109,7 @@ if "--systype" not in myopts and "--run" in myopts:
     sys.exit(1)
 
 keep_alive = False
+start_interface = False
 
 for output, arg in myopts:
     if output == "--destroy-all-vm":
@@ -128,6 +131,10 @@ for output, arg in myopts:
         ipnc = arg
     elif output == '--server-ip':
         server_ip = arg
+    elif output == '--start-interface':
+        create_ixautomation_interface()
+        exit(0)
+
 
 try:
     ipnc
@@ -172,4 +179,7 @@ except KeyError:
 
 sysname = sys_dict[systype]
 systype = f"{systype}_webui" if "webui-" in run else systype
+
+# create ixautomation interface before starting automation
+create_ixautomation_interface()
 start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip)

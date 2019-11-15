@@ -3,7 +3,9 @@
 import os
 import signal
 import sys
-from subprocess import Popen, run, PIPE
+import re
+from subprocess import Popen, run, PIPE, call
+import re
 from shutil import copyfile
 import random
 import string
@@ -12,6 +14,48 @@ from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 from functions_vm import vm_destroy_stopped_vm
 
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
+
+notnics = [
+    "lo",
+    "fwe",
+    "fwip",
+    "tap",
+    "plip",
+    "pfsync",
+    "pflog",
+    "tun",
+    "sl",
+    "faith",
+    "ppp",
+    "wlan",
+    "brige",
+    "ixautomation",
+    "vm-ixautomation"
+]
+
+
+def create_ixautomation_interface():
+    ncard = 'ifconfig -l'
+    nics = Popen(ncard, shell=True, stdout=PIPE, close_fds=True,
+                 universal_newlines=True)
+    netcard = nics.stdout.readlines()[0].rstrip().split()
+    print(netcard)
+    if "vm-ixautomation" not in netcard and "ixautomation" not in netcard:
+        os.remove(f'/usr/local/ixautomation/vms/.config/system.conf')
+        call('vm switch create ixautomation', shell=True)
+        for line in netcard:
+            card = line.rstrip()
+            nc = re.sub(r'\d+', '', card)
+            if nc not in notnics:
+                call(f'vm switch add ixautomation {card}', shell=True)
+                taping = Popen('ifconfig tap create', shell=True, stdout=PIPE,
+                               close_fds=True, universal_newlines=True)
+                tap = taping.stdout.readlines()[0].rstrip()
+                call(f'ifconfig vm-ixautomation addm {tap}', shell=True)
+                print("ixautomation switch interface is ready")
+                break
+    else:
+        print("ixautomation switch interface already running")
 
 
 def ssh_cmd(command, username, passwrd, host):
