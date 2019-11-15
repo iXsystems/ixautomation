@@ -52,6 +52,7 @@ def create_ixautomation_interface():
                                close_fds=True, universal_newlines=True)
                 tap = taping.stdout.readlines()[0].rstrip()
                 call(f'ifconfig vm-ixautomation addm {tap}', shell=True)
+                print("ixautomation switch interface is ready")
                 break
     else:
         print("ixautomation switch interface already running")
