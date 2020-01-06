@@ -40,7 +40,8 @@ def create_ixautomation_interface():
                  universal_newlines=True)
     netcard = nics.stdout.readlines()[0].rstrip().split()
     if "vm-ixautomation" not in netcard and "ixautomation" not in netcard:
-        os.remove(f'/usr/local/ixautomation/vms/.config/system.conf')
+        if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
+            os.remove('/usr/local/ixautomation/vms/.config/system.conf')
         call('vm switch create ixautomation', shell=True)
         for line in netcard:
             card = line.rstrip()
