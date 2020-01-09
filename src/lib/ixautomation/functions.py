@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 import os
 import signal
@@ -211,7 +211,7 @@ def kyua_tests(wrkspc, systype, ip, netcard):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
     # run ssh API to enable
-    cmd = f"python3.6 runtest.py --ip {ip} " \
+    cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --api 2.0 --test ssh"
     run(cmd, shell=True)
     # install kyua
@@ -241,11 +241,11 @@ def api_tests(wrkspc, systype, ip, netcard, server_ip):
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
         else:
             server_cfg = ''
-        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg} --type html"
+        cmd = f"python3 runtests.py --ip {ip} {server_cfg} --type html"
         print(cmd)
     else:
 
-        cmd = f"python3.6 runtest.py --ip {ip} " \
+        cmd = f"python3 runtest.py --ip {ip} " \
             f"--password testing --interface {netcard} --vm-name {vm}"
         if os.path.exists(ixautomation_config):
             copyfile(ixautomation_config, f"{test_path}/config.py")
@@ -261,10 +261,10 @@ def websocket_tests(wrkspc, systype, ip, netcard, server_ip):
             server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
         else:
             server_cfg = ''
-        cmd = f"python3.6 runtests.py --ip {ip} {server_cfg} --type websocket"
+        cmd = f"python3 runtests.py --ip {ip} {server_cfg} --type websocket"
         print(cmd)
     else:
-        cmd = f"python3.6 runtest.py --ip {ip} " \
+        cmd = f"python3 runtest.py --ip {ip} " \
             f"--password testing --interface {netcard} --vm-name {vm}"
     os.chdir(test_path)
     run(cmd, shell=True)
@@ -276,7 +276,7 @@ def api2_tests(wrkspc, systype, ip, netcard):
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
-    cmd = f"python3.6 runtest.py --ip {ip} " \
+    cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --api 2.0 --vm-name {vm}"
     run(cmd, shell=True)
     os.chdir(wrkspc)
@@ -285,7 +285,7 @@ def api2_tests(wrkspc, systype, ip, netcard):
 def webui_tests(wrkspc, ip):
     webUIpath = f"{wrkspc}/tests/"
     os.chdir(webUIpath)
-    cmd1 = f"python3.6 -u runtest.py --ip {ip}"
+    cmd1 = f"python3 -u runtest.py --ip {ip}"
     run(cmd1, shell=True)
     os.chdir(wrkspc)
 
