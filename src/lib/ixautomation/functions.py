@@ -192,8 +192,6 @@ def run_test(wrkspc, test, systype, ip, netcard, server_ip):
         api_tests(wrkspc, systype, ip, netcard, server_ip)
     elif test == "api2-tests":
         api2_tests(wrkspc, systype, ip, netcard)
-    elif test == "webui-tests":
-        webui_tests(wrkspc, ip)
     elif test == "kyua-tests":
         kyua_tests(wrkspc, systype, ip, netcard)
 
@@ -250,14 +248,6 @@ def api2_tests(wrkspc, systype, ip, netcard):
     cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --api 2.0 --vm-name {vm}"
     run(cmd, shell=True)
-    os.chdir(wrkspc)
-
-
-def webui_tests(wrkspc, ip):
-    webUIpath = f"{wrkspc}/tests/"
-    os.chdir(webUIpath)
-    cmd1 = f"python3 -u runtest.py --ip {ip}"
-    run(cmd1, shell=True)
     os.chdir(wrkspc)
 
 
