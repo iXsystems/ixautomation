@@ -5,7 +5,6 @@ import signal
 import sys
 import re
 from subprocess import Popen, run, PIPE, call
-import re
 from shutil import copyfile
 import random
 import string
@@ -191,8 +190,6 @@ def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip):
 def run_test(wrkspc, test, systype, ip, netcard, server_ip):
     if test == "api-tests":
         api_tests(wrkspc, systype, ip, netcard, server_ip)
-    elif test == "websocket-tests":
-        websocket_tests(wrkspc, systype, ip, netcard, server_ip)
     elif test == "api2-tests":
         api2_tests(wrkspc, systype, ip, netcard)
     elif test == "webui-tests":
@@ -236,36 +233,10 @@ def kyua_tests(wrkspc, systype, ip, netcard):
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip):
     test_path = f"{wrkspc}/tests"
-    if systype == 'truecommand':
-        if server_ip is not None:
-            server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
-        else:
-            server_cfg = ''
-        cmd = f"python3 runtests.py --ip {ip} {server_cfg} --type html"
-        print(cmd)
-    else:
-
-        cmd = f"python3 runtest.py --ip {ip} " \
-            f"--password testing --interface {netcard} --vm-name {vm}"
-        if os.path.exists(ixautomation_config):
-            copyfile(ixautomation_config, f"{test_path}/config.py")
-    os.chdir(test_path)
-    run(cmd, shell=True)
-    os.chdir(wrkspc)
-
-
-def websocket_tests(wrkspc, systype, ip, netcard, server_ip):
-    test_path = f"{wrkspc}/tests"
-    if systype == 'truecommand':
-        if server_ip is not None:
-            server_cfg = """--servers-ip '{"server1": "%s"}'""" % server_ip
-        else:
-            server_cfg = ''
-        cmd = f"python3 runtests.py --ip {ip} {server_cfg} --type websocket"
-        print(cmd)
-    else:
-        cmd = f"python3 runtest.py --ip {ip} " \
-            f"--password testing --interface {netcard} --vm-name {vm}"
+    cmd = f"python3 runtest.py --ip {ip} " \
+        f"--password testing --interface {netcard} --vm-name {vm}"
+    if os.path.exists(ixautomation_config):
+        copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
     run(cmd, shell=True)
     os.chdir(wrkspc)

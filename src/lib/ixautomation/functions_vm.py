@@ -135,18 +135,6 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
                 file.writelines(vm_config)
                 file.close()
             return VMIP
-        elif systype == 'truecommand' and 'IPv4 (vtnet0):' in line:
-            os.system('reset')
-            os.system('clear')
-            os.chdir(workspace)
-            VMIP = line.split(':')[1].strip()
-            print(f"{sysname}_IP={VMIP}")
-            print(f"{sysname}_VM_NAME={vm}")
-            vm_config = f"VM_NAME={vm}\nIP={VMIP}"
-            file = open(f'{testworkspace}/vm_config', 'w')
-            file.writelines(vm_config)
-            file.close()
-            return VMIP
     else:
         VMIP = "0.0.0.0"
         print(f"{sysname}_IP={VMIP}")
