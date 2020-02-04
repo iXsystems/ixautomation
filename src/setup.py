@@ -24,16 +24,10 @@ etc_list = [
     'etc/dnsmasq.conf'
 ]
 
-dot_config_list = [
-    'ixautomation/vms/.config/system.conf'
-]
-
 dot_templates_list = [
     'ixautomation/vms/.templates/freenas.conf',
     'ixautomation/vms/.templates/freenas11_2.conf',
-    'ixautomation/vms/.templates/freenas_webui.conf',
-    'ixautomation/vms/.templates/trueos.conf',
-    'ixautomation/vms/.templates/truecommand.conf'
+    'ixautomation/vms/.templates/freenas_webui.conf'
 ]
 
 lib_ixautomation_list = [
@@ -47,7 +41,6 @@ data_files = [
     (f'{prefix}/etc', etc_list),
     (f'{prefix}/etc/rc.d', ['etc/rc.d/ixautomation']),
     (f'{prefix}/etc/sudoers.d', ['etc/sudoers.d/ixautomation']),
-    # (f'{prefix}/ixautomation/vms/.config/', dot_config_list),
     (f'{prefix}/ixautomation/vms/.templates', dot_templates_list),
     (f'{prefix}/lib/ixautomation', lib_ixautomation_list)
 ]
