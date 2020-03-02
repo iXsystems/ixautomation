@@ -121,7 +121,7 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
     console_file = open(vm_output, 'r').readlines()
     reversed_console = reversed(console_file)
     for line in reversed_console:
-        if 'freenas' in systype and 'http://' in line:
+        if 'freenas' in systype and 'http://' in line and '172.17' not in line:
             # Reset/clear to get native term dimensions
             os.system('reset')
             os.system('clear')
