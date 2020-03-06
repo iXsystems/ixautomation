@@ -27,7 +27,8 @@ optionlist = [
     "destroy-stopped-vm",
     "destroy-vm=",
     "keep-alive",
-    "start-interface"
+    "start-interface",
+    "scale"
 ]
 sys_dict = {
     "freenas": "FreeNAS",
@@ -61,13 +62,12 @@ Available Commands:
           kyua-tests      - Start VM and run FreeBSD kyua test
           webui-vm-only   - Instasll FreeNAS and boot FreeNAS for UI test
 
---systype                 - Use by run to see what system we need to run
-          freenas         - FreeNAS to be run
-
 --ip                      - IP and network card of the machine targeted to
                             run test against.
           0.0.0.0
           0.0.0.0:card
+
+--scale                   - To use to run scale test
 
 --server-ip               - IP of the targeted FreeNAS for TrueCommand
           0.0.0.0
@@ -97,18 +97,21 @@ except getopt.GetoptError as e:
 
 keep_alive = False
 start_interface = False
+ipnc = None
+server_ip = None
+scale = ''
 
 for output, arg in myopts:
-    if output == "--destroy-all-vm":
+    if output == '--destroy-all-vm':
         destroy_all_vm()
         sys.exit(0)
-    if output == "--destroy-stopped-vm":
+    if output == '--destroy-stopped-vm':
         destroy_stopped_vm()
         sys.exit(0)
-    elif output == "--destroy-vm":
+    elif output == '--destroy-vm':
         destroy_vm(arg)
         sys.exit(0)
-    elif output == "--keep-alive":
+    elif output == '--keep-alive':
         keep_alive = True
     elif output == '--run':
         run = arg
@@ -119,17 +122,8 @@ for output, arg in myopts:
     elif output == '--start-interface':
         create_ixautomation_interface()
         exit(0)
-
-
-try:
-    ipnc
-except NameError:
-    ipnc = None
-
-try:
-    server_ip
-except NameError:
-    server_ip = None
+    elif output == '--scale':
+        scale = ' --scale'
 
 if run not in runlist:
     print(f"{run} is not a valid --run option")
@@ -162,4 +156,4 @@ systype = f"{systype}_webui" if "webui-" in run else systype
 
 # create ixautomation interface before starting automation
 create_ixautomation_interface()
-start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip)
+start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip, scale)
