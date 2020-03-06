@@ -29,7 +29,8 @@ notnics = [
     "wlan",
     "brige",
     "ixautomation",
-    "vm-ixautomation"
+    "vm-ixautomation",
+    "wg"
 ]
 
 
