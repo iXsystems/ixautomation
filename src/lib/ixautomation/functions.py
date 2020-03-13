@@ -27,7 +27,7 @@ notnics = [
     "faith",
     "ppp",
     "wlan",
-    "brige",
+    "bridge",
     "ixautomation",
     "vm-ixautomation",
     "wg"
@@ -153,7 +153,7 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive):
+def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     create_workdir()
     set_sig()
     vm_setup()
@@ -167,19 +167,21 @@ def start_vm(wrkspc, systype, sysname, keep_alive):
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
     elif ip == '' and keep_alive is False:
         exit_fail('iXautomation stop because IP is None!')
-    return {'ip': ip, 'netcard': "vtnet0", 'iso': select_iso}
+    nic = 'enp0s7' if 'scale' in scale else 'vtnet0'
+    print(nic)
+    return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip, scale):
     # ipnc is None start a vm
     if ipnc is None:
-        vm_info = start_vm(wrkspc, systype, sysname, keep_alive)
+        vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
         ipnclist = ipnc.split(":")
         ip = ipnclist[0]
-        netcard = "vtnet0" if len(ipnclist) == 1 else ipnclist[1]
+        netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
 
     if tst != 'vmtest':
         run_test(wrkspc, tst, systype, ip, netcard, srvr_ip, scale)
@@ -234,6 +236,7 @@ def api_tests(wrkspc, systype, ip, netcard, server_ip, scale):
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --vm-name {vm}{scale}"
+    print(cmd)
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
