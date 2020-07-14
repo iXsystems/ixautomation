@@ -19,7 +19,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     if ".keepme" in iso_list:
         iso_list.remove(".keepme")
     iso_list.sort()
-    iso_cnt = len(iso_list)
+    iso_cnt = len(iso_list) - 1
     # Download the latest FreeNas ISO if no ISO found in $iso_dir
     if iso_cnt == 0:
         print(f'Please put a {sysname} ISO in "{iso_dir}"')
@@ -32,21 +32,22 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
         iso_name = iso_list[0]
     else:
         # Otherwise, loop until we get a valid user selection
-        count = 0
         while True:
+            count = 0
             print(f"Please select which ISO to test (0-{iso_cnt}): ")
             for iso in iso_list:
                 # Listing ISOs
                 print(f" {count} - {iso}")
                 count += 1
-            iso_selection = input("Enter your selection and press [ENTER]: ")
-            # add 1 to iso_cnt to look in the full range.
-            if int(iso_selection) in range(0, int(iso_cnt + 1)):
-                iso_name = iso_list[int(iso_selection)]
-                break
-            else:
+            try:
+                iso_selection = int(input("Enter your selection and press [ENTER]: "))
+                if iso_selection <= iso_cnt:
+                    iso_name = iso_list[int(iso_selection)]
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
                 print("Invalid selection..")
-                sleep(2)
     name_iso = iso_name.replace('.iso', '').partition('_')[0]
     new_iso = f"{name_iso}_{vm}.iso"
     os.chdir(iso_dir)
