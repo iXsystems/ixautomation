@@ -65,7 +65,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
 
 def vm_start(vm):
     run(f"vm start {vm}", shell=True)
-    sleep(5)
+    sleep(2)
 
 
 def vm_stop(vm):
@@ -80,6 +80,7 @@ def vm_stop(vm):
             print('.', end='', flush=True)
         sleep(1)
     print(f"vm {vm} successfully stop")
+    sleep(2)
 
 
 def vm_install(tmp_vm_dir, vm, systype, sysname, workspace):
