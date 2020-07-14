@@ -73,15 +73,12 @@ def vm_stop(vm):
     wait_text = f"Waitting for vm {vm} to stop "
     print(wait_text, end='', flush=True)
     while True:
-        if not os.path.exists("dev/vmm"):
+        if not os.path.exists(f"dev/vmm/{vm}"):
             print('.')
             break
-        elif vm in os.listdir("/dev/vmm"):
+        elif vm in os.listdir(f"/dev/vmm/{vm}"):
             print('.', end='', flush=True)
-            sleep(1)
-        else:
-            print('.')
-            break
+        sleep(1)
     print(f"vm {vm} successfully stop")
 
 
@@ -169,7 +166,7 @@ def clean_all_vm():
     # Remove all iso
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
     run(f"rm -rf {iso_dir}", shell=True)
-    vm_log = f"/tmp/*console.log"
+    vm_log = "/tmp/*console.log"
     run(f"rm -rf {vm_log}", shell=True)
 
 
