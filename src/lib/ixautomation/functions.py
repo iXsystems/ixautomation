@@ -42,18 +42,23 @@ def create_ixautomation_interface():
     if "vm-ixautomation" not in netcard and "ixautomation" not in netcard:
         if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
             os.remove('/usr/local/ixautomation/vms/.config/system.conf')
-        call('vm switch create ixautomation', shell=True)
-        for line in netcard:
-            card = line.rstrip()
-            nc = re.sub(r'\d+', '', card)
+        for nic in netcard:
+            nc = re.sub(r'\d+', '', nic)
             if nc not in notnics:
-                call(f'vm switch add ixautomation {card}', shell=True)
-                taping = Popen('ifconfig tap create', shell=True, stdout=PIPE,
-                               close_fds=True, universal_newlines=True)
-                tap = taping.stdout.readlines()[0].rstrip()
-                call(f'ifconfig vm-ixautomation addm {tap}', shell=True)
-                print("ixautomation switch interface is ready")
-                break
+                cmd = f'ifconfig {nic}'
+                nic_info = Popen(
+                    cmd,
+                    shell=True,
+                    stdout=PIPE,
+                    close_fds=True,
+                    universal_newlines=True
+                )
+                if 'status: active' in nic_info.stdout.read():
+                    break
+        # call(f'ifconfig {nic} -lro', shell=True)
+        call('vm switch create ixautomation', shell=True)
+        call(f'vm switch add ixautomation {nic}', shell=True)
+        print("ixautomation switch interface is ready")
     else:
         print("ixautomation switch interface already running")
 
@@ -256,15 +261,15 @@ def api2_tests(wrkspc, systype, ip, netcard):
 
 
 def destroy_all_vm():
-    print(f'Stop all VM')
+    print('Stop all VM')
     vm_stop_all()
-    print(f"Removing all VM's files and all ISO's")
+    print("Removing all VM's files and all ISO's")
     clean_all_vm()
     sys.exit(0)
 
 
 def destroy_stopped_vm():
-    print(f'Stop all VM not running')
+    print('Stop all VM not running')
     vm_destroy_stopped_vm()
     sys.exit(0)
 
