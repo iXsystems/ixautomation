@@ -33,6 +33,16 @@ notnics = [
     "wg"
 ]
 
+capabilities = {
+    'RXCSUM,': '-rxcsum',
+    'TXCSUM,': '-txcsum',
+    'TSO4,': '-tso4',
+    'TSO6,': '-tso6',
+    'LRO,': '-lro',
+    'RXCSUM_IPV6': '-rxcsum6',
+    'TXCSUM_IPV6': '-txcsum6'
+}
+
 
 def create_ixautomation_interface():
     ncard = 'ifconfig -l'
@@ -46,16 +56,21 @@ def create_ixautomation_interface():
             nc = re.sub(r'\d+', '', nic)
             if nc not in notnics:
                 cmd = f'ifconfig {nic}'
-                nic_info = Popen(
+                nic_output = Popen(
                     cmd,
                     shell=True,
                     stdout=PIPE,
                     close_fds=True,
                     universal_newlines=True
                 )
-                if 'status: active' in nic_info.stdout.read():
+                nic_info = nic_output.stdout.read()
+                if 'status: active' in nic_info:
+                    offload_options = ''
+                    for capability in list(capabilities.keys()):
+                        if capability in nic_info:
+                            offload_options += f' {capabilities[capability]}'
                     break
-        # call(f'ifconfig {nic} -lro', shell=True)
+        call(f'ifconfig {nic}{offload_options}', shell=True)
         call('vm switch create ixautomation', shell=True)
         call(f'vm switch add ixautomation {nic}', shell=True)
         print("ixautomation switch interface is ready")
