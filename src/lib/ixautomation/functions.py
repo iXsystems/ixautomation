@@ -117,9 +117,9 @@ def get_file(file, destination, username, passwrd, host):
 
 def create_workdir():
     builddir = "/tmp/ixautomation"
-    tmp = ''.join(random.choices(string.ascii_uppercase, k=4))
     global vm
-    vm = tmp
+    if vm is None:
+        vm = ''.join(random.choices(string.ascii_uppercase, k=4))
     global tmp_vm_dir
     tmp_vm_dir = f'{builddir}/{vm}'
     if not os.path.exists(builddir):
@@ -192,7 +192,9 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
-def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip, scale):
+def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip, scale, vm_name):
+    global vm
+    vm = vm_name
     # ipnc is None start a vm
     if ipnc is None:
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale)

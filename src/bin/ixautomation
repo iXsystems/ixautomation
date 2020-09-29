@@ -23,6 +23,7 @@ optionlist = [
     "run=",
     "ip=",
     "server-ip=",
+    "vm-name=",
     "destroy-all-vm",
     "destroy-stopped-vm",
     "destroy-vm=",
@@ -67,6 +68,8 @@ Available Commands:
           0.0.0.0
           0.0.0.0:card
 
+--vm-name vmname          - to create vm with a specific name
+
 --scale                   - To use to run scale test
 
 --server-ip               - IP of the targeted FreeNAS for TrueCommand
@@ -100,6 +103,7 @@ start_interface = False
 ipnc = None
 server_ip = None
 scale = ''
+vm_name = None
 
 for output, arg in myopts:
     if output == '--destroy-all-vm':
@@ -124,6 +128,8 @@ for output, arg in myopts:
         exit(0)
     elif output == '--scale':
         scale = ' --scale'
+    elif output == '--vm-name':
+        vm_name = arg
 
 if run not in runlist:
     print(f"{run} is not a valid --run option")
@@ -156,4 +162,4 @@ systype = f"{systype}_webui" if "webui-" in run else systype
 
 # create ixautomation interface before starting automation
 create_ixautomation_interface()
-start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip, scale)
+start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip, scale, vm_name)
