@@ -152,8 +152,8 @@ def clean_vm(vm):
     # Remove vm iso
     iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm}.iso"
     run(f"rm -rf {iso_dir}", shell=True)
-    vm_log = f"/tmp/{vm}console.log"
-    run(f"rm -rf {vm_log}", shell=True)
+    run(f"rm -rf /tmp/{vm}console.log", shell=True)
+    run(f"rm -rf /tmp/ixautomation/{vm}", shell=True)
 
 
 def vm_stop_all():
@@ -167,8 +167,8 @@ def clean_all_vm():
     # Remove all iso
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
     run(f"rm -rf {iso_dir}", shell=True)
-    vm_log = "/tmp/*console.log"
-    run(f"rm -rf {vm_log}", shell=True)
+    run("rm -rf /tmp/*console.log", shell=True)
+    run("rm -rf /tmp/ixautomation/*", shell=True)
 
 
 def vm_destroy_stopped_vm():

@@ -6,9 +6,7 @@
 import sys
 from setuptools import setup
 
-
-# silence pyflakes, __VERSION__ is properly assigned below...
-__VERSION__ = '20.03.16'
+__VERSION__ = '20.09.30'
 
 PROGRAM_VERSION = __VERSION__
 
@@ -48,9 +46,9 @@ data_files = [
 setup(
     name="ixautomation",
     version=PROGRAM_VERSION,
-    description="Ixsystems automation framwork",
+    description="iXsystems automation framework",
     license='BSD',
-    author='Ixsystems',
+    author='iXsystems',
     url='https://github/ixsystems/ixautomation/',
     package_dir={'': '.'},
     data_files=data_files,
