@@ -83,6 +83,8 @@ Available Commands:
           ABCD            - VM name to stop
 
 --start-interface         - Start ixautomation switch interface
+
+--keep-alive              - Keep the VM alive after test are done
 """
 
 # if have no argument stop
