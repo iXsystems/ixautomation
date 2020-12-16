@@ -42,7 +42,7 @@ runlist = [
     "kyua-tests",
     "websocket-tests",
     "webui-tests",
-    "webui-vm-only"
+    "webui-vm"
 ]
 
 # verify it root user
@@ -61,7 +61,7 @@ Available Commands:
           api-tests       - Start VM with REST API 1.0 tests for FreeNAS
           api2-tests      - Start VM with REST API 2.0 tests for FreeNAS
           kyua-tests      - Start VM and run FreeBSD kyua test
-          webui-vm-only   - Instasll FreeNAS and boot FreeNAS for UI test
+          webui-vm        - Instasll FreeNAS and boot FreeNAS for UI test
 
 --ip                      - IP and network card of the machine targeted to
                             run test against.

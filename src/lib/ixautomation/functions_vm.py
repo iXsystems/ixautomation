@@ -128,9 +128,11 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             print(f"{sysname}_IP={VMIP}")
             print(f"{sysname}_VM_NAME={vm}")
             if 'webui' in systype:
-                vm_config = f"VM_NAME={vm}\nIP={VMIP}"
-                file = open(f'{testworkspace}/vm_config', 'w')
-                file.writelines(vm_config)
+                nas_config = "[NAS_CONFIG]\n"
+                nas_config += f"ip = {VMIP}\n"
+                nas_config += "password = testing\n"
+                file = open(f'{testworkspace}/bdd/config.cfg', 'w')
+                file.writelines(nas_config)
                 file.close()
             return VMIP
     else:

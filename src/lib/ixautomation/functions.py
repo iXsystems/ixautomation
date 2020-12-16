@@ -192,7 +192,7 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
-def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip, scale, vm_name):
+def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr_ip, scale, vm_name):
     global vm
     vm = vm_name
     # ipnc is None start a vm
@@ -205,8 +205,8 @@ def start_automation(wrkspc, systype, sysname, ipnc, tst, keep_alive, srvr_ip, s
         ip = ipnclist[0]
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
 
-    if tst != 'vmtest':
-        run_test(wrkspc, tst, systype, ip, netcard, srvr_ip, scale)
+    if test_type != 'vmtest':
+        run_test(wrkspc, test_type, systype, ip, netcard, srvr_ip, scale)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
