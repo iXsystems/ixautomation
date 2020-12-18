@@ -6,7 +6,7 @@ import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import start_automation, destroy_all_vm, destroy_vm
+from functions import start_automation, destroy_all_vm, destroy_vm, reset_vm
 from functions import destroy_stopped_vm, create_ixautomation_interface
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
@@ -28,6 +28,7 @@ optionlist = [
     "destroy-stopped-vm",
     "destroy-vm=",
     "keep-alive",
+    "reset-vm=",
     "start-interface",
     "scale"
 ]
@@ -82,6 +83,9 @@ Available Commands:
 --destroy-vm              - Stop VM running, the remove VM directory
           ABCD            - VM name to stop
 
+--reset-vm                - Reset the NAS to the the first boot stat
+            0.0.0.0
+
 --start-interface         - Start ixautomation switch interface
 
 --keep-alive              - Keep the VM alive after test are done
@@ -117,6 +121,8 @@ for output, arg in myopts:
     elif output == '--destroy-vm':
         destroy_vm(arg)
         sys.exit(0)
+    elif output == "--reset-vm":
+        reset_vm(arg)
     elif output == '--keep-alive':
         keep_alive = True
     elif output == '--run':

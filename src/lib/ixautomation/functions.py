@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+import json
 import os
+import re
+import requests
 import signal
 import sys
-import re
-from subprocess import Popen, run, PIPE, call
+import time
+from subprocess import Popen, run, PIPE, call, DEVNULL
 from shutil import copyfile
 import random
 import string
@@ -297,3 +300,97 @@ def destroy_vm(vm):
     print(f'Removing {vm} VM files and {vm} ISO')
     clean_vm(vm)
     sys.exit(0)
+
+
+header = {'Content-Type': 'application/json', 'Vary': 'accept'}
+auth = ('root', 'testing')
+
+
+def get(test_url):
+    get_it = requests.get(
+        test_url,
+        headers=header,
+        auth=auth
+    )
+    return get_it
+
+
+def post(test_url, payload=None):
+    post_it = requests.post(
+        test_url,
+        headers=header,
+        auth=auth,
+        data=json.dumps(payload) if payload else None
+    )
+    return post_it
+
+
+def delete(test_url, payload=None):
+    delete_it = requests.delete(
+        test_url,
+        headers=header,
+        auth=auth,
+        data=json.dumps(payload) if payload else None
+    )
+    return delete_it
+
+
+def new_boot(api_url):
+    for num in range(1000):
+        if f'newboot{num}' not in get(f'{api_url}/bootenv/').text:
+            return f'newboot{num}'
+    else:
+        print('to many BE')
+        exit(1)
+
+
+def delete_old_new_boot_be(api_url, node, new_be):
+    bootenv_list = get(f'{api_url}/bootenv/').json()
+    for bootenv in bootenv_list:
+        if 'newboot' in bootenv['id'] and new_be != bootenv['id'] and not bootenv['activated']:
+            print(f'** Deleting {bootenv["id"]} boot environment on {node} **')
+            results = delete(f'{api_url}/bootenv/id/{bootenv["id"]}/')
+            job_id = results.json()
+            while True:
+                job_results = get(f'{api_url}/core/get_jobs/?id={job_id}')
+                if job_results.json()[0]['state'] in ('SUCCESS', 'FAILED'):
+                    break
+                time.sleep(1)
+
+
+def reset_vm(host):
+    api_url = f'http://{host}/api/v2.0'
+    be = new_boot(api_url)
+    time.sleep(0.5)
+    print(f'** Create {be} boot environment on {host} **')
+    post(f'{api_url}/bootenv/', {"name": be, "source": "Initial-Install"})
+    time.sleep(0.5)
+    print(f'** Activating {be} boot environment on {host} **')
+    post(f'{api_url}/bootenv/id/{be}/activate/')
+    time.sleep(0.5)
+    delete_old_new_boot_be(api_url, host, be)
+    print(f'** rebooting NAS {host} **')
+    post(f'{api_url}/system/reboot/')
+
+    process = run(['ping', '-c', '1', host], stdout=DEVNULL)
+    while process.returncode == 0:
+        time.sleep(5)
+        process = run(['ping', '-c', '1', host], stdout=DEVNULL)
+
+    process = run(['ping', '-c', '1', host], stdout=DEVNULL)
+    while process.returncode != 0:
+        time.sleep(5)
+        process = run(['ping', '-c', '1', host], stdout=DEVNULL)
+
+    node = api_url.partition('//')[2].partition('/api')[0]
+    status_code = 0
+    while status_code != 200:
+        try:
+            status_code = get(f'{api_url}/bootenv/').status_code
+        except requests.exceptions.ConnectionError:
+            time.sleep(0.5)
+            continue
+    results = get(f'{api_url}/bootenv/id/{be}/')
+    assert results.json()['activated'] is True, results.text
+    print(f'** Node {node} is online and ready **')
+    exit(0)
