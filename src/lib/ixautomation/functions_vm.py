@@ -127,13 +127,15 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             VMIP = line.rstrip().split('//')[1]
             print(f"{sysname}_IP={VMIP}")
             print(f"{sysname}_VM_NAME={vm}")
+            nas_config = "[NAS_CONFIG]\n"
+            nas_config += f"ip = {VMIP}\n"
+            nas_config += "password = testing\n"
             if 'webui' in systype:
-                nas_config = "[NAS_CONFIG]\n"
-                nas_config += f"ip = {VMIP}\n"
-                nas_config += "password = testing\n"
                 file = open(f'{testworkspace}/bdd/config.cfg', 'w')
-                file.writelines(nas_config)
-                file.close()
+            else:
+                file = open(f'{testworkspace}/config.cfg', 'w')
+            file.writelines(nas_config)
+            file.close()
             return VMIP
     else:
         VMIP = "0.0.0.0"
