@@ -195,7 +195,7 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
-def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr_ip, scale, vm_name):
+def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr_ip, scale, vm_name, dev_test):
     global vm
     vm = vm_name
     # ipnc is None start a vm
@@ -209,15 +209,15 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
 
     if test_type != 'vmtest':
-        run_test(wrkspc, test_type, systype, ip, netcard, srvr_ip, scale)
+        run_test(wrkspc, test_type, systype, ip, netcard, srvr_ip, scale, dev_test)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
-def run_test(wrkspc, test, systype, ip, netcard, server_ip, scale):
+def run_test(wrkspc, test, systype, ip, netcard, server_ip, scale, dev_test):
     if test == "api-tests":
-        api_tests(wrkspc, systype, ip, netcard, server_ip, scale)
+        api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
     elif test == "api2-tests":
         api2_tests(wrkspc, systype, ip, netcard)
     elif test == "kyua-tests":
@@ -257,10 +257,10 @@ def kyua_tests(wrkspc, systype, ip, netcard):
     get_file(root_report_xml, tests_report_xml, 'root', 'testing', ip)
 
 
-def api_tests(wrkspc, systype, ip, netcard, server_ip, scale):
+def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test):
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name {vm}{scale}"
+        f"--password testing --interface {netcard} --vm-name {vm}{scale}{dev_test}"
     print(cmd)
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")

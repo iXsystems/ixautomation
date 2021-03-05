@@ -30,7 +30,8 @@ optionlist = [
     "keep-alive",
     "reset-vm=",
     "start-interface",
-    "scale"
+    "scale",
+    "dev-test"
 ]
 sys_dict = {
     "freenas": "FreeNAS",
@@ -89,6 +90,9 @@ Available Commands:
 --start-interface         - Start ixautomation switch interface
 
 --keep-alive              - Keep the VM alive after test are done
+
+--dev-test                - Start API test with --dev-test to only run
+                            development API testing
 """
 
 # if have no argument stop
@@ -110,6 +114,7 @@ ipnc = None
 server_ip = None
 scale = ''
 vm_name = None
+dev_test = ''
 
 for output, arg in myopts:
     if output == '--destroy-all-vm':
@@ -138,6 +143,8 @@ for output, arg in myopts:
         scale = ' --scale'
     elif output == '--vm-name':
         vm_name = arg
+    elif output == '--dev-test':
+        dev_test = ' --dev-test'
 
 if run not in runlist:
     print(f"{run} is not a valid --run option")
@@ -170,4 +177,4 @@ systype = f"{systype}_webui" if "webui-" in run else systype
 
 # create ixautomation interface before starting automation
 create_ixautomation_interface()
-start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip, scale, vm_name)
+start_automation(workspace, systype, sysname, ipnc, run, keep_alive, server_ip, scale, vm_name, dev_test)
