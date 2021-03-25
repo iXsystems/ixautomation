@@ -35,7 +35,6 @@ lib_ixautomation_list = [
 ]
 
 data_files = [
-    (f'{prefix}/etc/init.d', init_list),
     (f'{prefix}/etc', etc_list),
     (f'{prefix}/etc/rc.d', ['etc/rc.d/ixautomation']),
     (f'{prefix}/etc/sudoers.d', ['etc/sudoers.d/ixautomation']),
