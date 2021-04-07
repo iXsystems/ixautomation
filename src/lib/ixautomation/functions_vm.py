@@ -106,7 +106,7 @@ def vm_install(tmp_vm_dir, vm, systype, sysname, workspace):
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
+def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace, version):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -127,9 +127,11 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace):
             VMIP = line.rstrip().split('//')[1]
             print(f"{sysname}_IP={VMIP}")
             print(f"{sysname}_VM_NAME={vm}")
+            print(f"{sysname}_VERSION={version}")
             nas_config = "[NAS_CONFIG]\n"
             nas_config += f"ip = {VMIP}\n"
             nas_config += "password = testing\n"
+            nas_config += f"version = {version}\n"
             if 'webui' in systype:
                 file = open(f'{testworkspace}/bdd/config.cfg', 'w')
             else:

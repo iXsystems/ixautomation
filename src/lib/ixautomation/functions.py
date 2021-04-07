@@ -180,12 +180,12 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     create_workdir()
     set_sig()
     vm_setup()
-    global select_iso
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
+    version = select_iso.partition('_')[0]
     install = vm_install(tmp_vm_dir, vm, systype, sysname, wrkspc)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc)
+    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc, version)
     if ip == '0.0.0.0' and keep_alive is False:
         exit_fail('iXautomation stop because IP is 0.0.0.0!')
     elif ip == '' and keep_alive is False:
@@ -198,7 +198,7 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr_ip, scale, vm_name, dev_test):
     global vm
     vm = vm_name
-    # ipnc is None start a vm
+    # if ipnc is None start a vm
     if ipnc is None:
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale)
         ip = vm_info['ip']
