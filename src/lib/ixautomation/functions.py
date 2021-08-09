@@ -18,7 +18,7 @@ from functions_vm import vm_destroy_stopped_vm
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
 
 notnics_regex = "(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|faith|" \
-    "ppp|bridge|wg|wlan|ix)[0-9]+|ixautomation|vm-ixautomation|vm-publi"
+    "ppp|bridge|wg|wlan|ix)[0-9]+|ixautomation|vm-*"
 
 capabilities = {
     'RXCSUM,': '-rxcsum',
