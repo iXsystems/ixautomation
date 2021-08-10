@@ -17,24 +17,8 @@ from functions_vm import vm_destroy_stopped_vm
 
 ixautomation_config = '/usr/local/etc/ixautomation.conf'
 
-notnics = [
-    "lo",
-    "fwe",
-    "fwip",
-    "tap",
-    "plip",
-    "pfsync",
-    "pflog",
-    "tun",
-    "sl",
-    "faith",
-    "ppp",
-    "wlan",
-    "bridge",
-    "ixautomation",
-    "vm-ixautomation",
-    "wg"
-]
+notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|faith|" \
+    r"ppp|bridge|wg|wlan|ix)[0-9]+(\s*)|vm-[a-z]+(\s*)"
 
 capabilities = {
     'RXCSUM,': '-rxcsum',
@@ -49,36 +33,54 @@ capabilities = {
 
 def create_ixautomation_interface():
     ncard = 'ifconfig -l'
-    nics = Popen(ncard, shell=True, stdout=PIPE, close_fds=True,
-                 universal_newlines=True)
-    netcard = nics.stdout.readlines()[0].rstrip().split()
-    if "vm-ixautomation" not in netcard and "ixautomation" not in netcard:
+    netcard = Popen(
+        ncard,
+        shell=True,
+        stdout=PIPE,
+        close_fds=True,
+        universal_newlines=True
+    ).stdout.read().strip()
+    if "ixautomation" not in netcard:
         if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
             os.remove('/usr/local/ixautomation/vms/.config/system.conf')
-        for nic in netcard:
-            nc = re.sub(r'\d+', '', nic)
-            if nc not in notnics:
+        # loop true ixautomation config list to get host_nic if setup
+        ixautomationcfglist = open(ixautomation_config, 'r').readlines()
+        for line in ixautomationcfglist:
+            if 'host_nic' in line and "#" not in line:
+                nic = line.rstrip().split('=')[1].replace('"', '').strip()
+                break
+        else:
+            nics = re.sub(notnics_regex, '', netcard).strip().split()
+            for nic in nics:
                 cmd = f'ifconfig {nic}'
-                nic_output = Popen(
+                nic_info = Popen(
                     cmd,
                     shell=True,
                     stdout=PIPE,
                     close_fds=True,
                     universal_newlines=True
-                )
-                nic_info = nic_output.stdout.read()
+                ).stdout.read()
                 if 'status: active' in nic_info:
-                    offload_options = ''
-                    for capability in list(capabilities.keys()):
-                        if capability in nic_info:
-                            offload_options += f' {capabilities[capability]}'
                     break
+            else:
+                print("No network card with active internet connection")
+                exit(1)
+        # remove some capabilities that could stop network
+        nic_output = Popen(
+            f'ifconfig {nic}',
+            shell=True,
+            stdout=PIPE,
+            close_fds=True,
+            universal_newlines=True
+        ).stdout.read()
+        offload_options = ""
+        for capability in list(capabilities.keys()):
+            if capability in nic_output:
+                offload_options += f' {capabilities[capability]}'
         call(f'ifconfig {nic}{offload_options}', shell=True)
         call('vm switch create ixautomation', shell=True)
         call(f'vm switch add ixautomation {nic}', shell=True)
         print("ixautomation switch interface is ready")
-    else:
-        print("ixautomation switch interface already running")
 
 
 def ssh_cmd(command, username, passwrd, host):
