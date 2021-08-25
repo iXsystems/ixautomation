@@ -197,7 +197,7 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
-def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr_ip, scale, vm_name, dev_test):
+def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, server_ip, scale, vm_name, dev_test):
     global vm
     vm = vm_name
     # if ipnc is None start a vm
@@ -211,50 +211,10 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
 
     if test_type != 'vmtest':
-        run_test(wrkspc, test_type, systype, ip, netcard, srvr_ip, scale, dev_test)
+        api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
-
-
-def run_test(wrkspc, test, systype, ip, netcard, server_ip, scale, dev_test):
-    if test == "api-tests":
-        api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
-    elif test == "kyua-tests":
-        kyua_tests(wrkspc, systype, ip, netcard)
-
-
-def kyua_tests(wrkspc, systype, ip, netcard):
-    test_path = f"{wrkspc}/tests"
-    root_report_txt = '/root/test-report.txt'
-    root_report_xml = '/root/test-report.xml'
-    tests_report_txt = f'{test_path}/test-report.txt'
-    tests_report_xml = f'{test_path}/test-report.xml'
-    if os.path.exists(ixautomation_config):
-        copyfile(ixautomation_config, f"{test_path}/config.py")
-    os.chdir(test_path)
-    # run ssh API to enable
-    cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --api 2.0 --test ssh"
-    run(cmd, shell=True)
-    # install kyua
-    cmd = 'pkg update -f'
-    ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = 'pkg install -y kyua'
-    ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "cd /usr/tests; kyua test -k /usr/tests/Kyuafile"
-    ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = "cd /usr/tests; kyua report --verbose " \
-        "--results-filter passed,skipped,xfail," \
-        f"broken,failed --output {root_report_txt}"
-    ssh_cmd(cmd, 'root', 'testing', ip)
-    cmd = f"cd /usr/tests; kyua report-junit --output={root_report_xml}"
-    ssh_cmd(cmd, 'root', 'testing', ip)
-    os.chdir(wrkspc)
-    # get test-report.txt
-    get_file(root_report_txt, tests_report_txt, 'root', 'testing', ip)
-    # get test-report.xml
-    get_file(root_report_xml, tests_report_xml, 'root', 'testing', ip)
 
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test):
