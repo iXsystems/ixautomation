@@ -220,8 +220,6 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, srvr
 def run_test(wrkspc, test, systype, ip, netcard, server_ip, scale, dev_test):
     if test == "api-tests":
         api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
-    elif test == "api2-tests":
-        api2_tests(wrkspc, systype, ip, netcard)
     elif test == "kyua-tests":
         kyua_tests(wrkspc, systype, ip, netcard)
 
@@ -262,22 +260,11 @@ def kyua_tests(wrkspc, systype, ip, netcard):
 def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test):
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name {vm}{scale}{dev_test}"
+        f"--password testing --interface {netcard} --vm-name {vm}{dev_test}"
     print(cmd)
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
-    run(cmd, shell=True)
-    os.chdir(wrkspc)
-
-
-def api2_tests(wrkspc, systype, ip, netcard):
-    test_path = f"{wrkspc}/tests"
-    if os.path.exists(ixautomation_config):
-        copyfile(ixautomation_config, f"{test_path}/config.py")
-    os.chdir(test_path)
-    cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --api 2.0 --vm-name {vm}"
     run(cmd, shell=True)
     os.chdir(wrkspc)
 
