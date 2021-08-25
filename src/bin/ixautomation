@@ -40,7 +40,6 @@ systypelist = list(sys_dict.keys())
 runlist = [
     "vm-tests",
     "api-tests",
-    "kyua-tests",
     "webui-vm"
 ]
 
@@ -58,7 +57,6 @@ Available Commands:
           vm-tests        - Install Freenas in a VM using vm-bhyve and
                             reboot in the installation.
           api-tests       - Start VM with REST API 1.0 tests for FreeNAS
-          kyua-tests      - Start VM and run FreeBSD kyua test
           webui-vm        - Instasll FreeNAS and boot FreeNAS for UI test
 
 --ip                      - IP and network card of the machine targeted to
