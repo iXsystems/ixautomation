@@ -24,7 +24,6 @@ etc_list = [
 
 dot_templates_list = [
     'ixautomation/vms/.templates/freenas.conf',
-    'ixautomation/vms/.templates/freenas11_2.conf',
     'ixautomation/vms/.templates/freenas_webui.conf'
 ]
 

@@ -55,10 +55,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     run(f"vm iso {iso_path}", shell=True)
-    if "11.2" in iso_file:
-        run(f"vm create -t {systype}11_2 {vm}", shell=True)
-    else:
-        run(f"vm create -t {systype} {vm}", shell=True)
+    run(f"vm create -t {systype} {vm}", shell=True)
     run(f"vm install {vm} {new_iso}", shell=True)
     return new_iso
 
