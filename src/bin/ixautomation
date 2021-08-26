@@ -54,10 +54,10 @@ Usage for {app}:
 Available Commands:
 
 --run                     - Runs the given option
-          vm-tests        - Install Freenas in a VM using vm-bhyve and
+          vm-tests        - Install TrueNAS in a VM using vm-bhyve and
                             reboot in the installation.
           api-tests       - Start VM with REST API 1.0 tests for FreeNAS
-          webui-vm        - Instasll FreeNAS and boot FreeNAS for UI test
+          webui-vm        - Install TrueNAS and boot FreeNAS for UI test
 
 --ip                      - IP and network card of the machine targeted to
                             run test against.

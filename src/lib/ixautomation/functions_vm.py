@@ -19,7 +19,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     if ".keepme" in iso_list:
         iso_list.remove(".keepme")
     iso_list.sort()
-    # Download the latest FreeNas ISO if no ISO found in $iso_dir
+    # Download the latest TrueNAS ISO if no ISO found in $iso_dir
     if len(iso_list) == 0:
         print(f'Please put a {sysname} ISO in "{iso_dir}"')
         sys.exit(1)

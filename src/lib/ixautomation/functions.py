@@ -209,8 +209,7 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, serv
         ipnclist = ipnc.split(":")
         ip = ipnclist[0]
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
-
-    if test_type != 'vmtest':
+    if test_type == 'api-tests':
         api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
 
     if keep_alive is False and ipnc is None:
