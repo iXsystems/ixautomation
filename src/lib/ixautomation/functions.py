@@ -197,7 +197,8 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     return {'ip': ip, 'netcard': nic, 'iso': select_iso}
 
 
-def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, server_ip, scale, vm_name, dev_test):
+def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
+                     server_ip, scale, vm_name, dev_test, debug_mode):
     global vm
     vm = vm_name
     # if ipnc is None start a vm
@@ -210,16 +211,19 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive, serv
         ip = ipnclist[0]
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
     if test_type == 'api-tests':
-        api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test)
+        api_tests(wrkspc, systype, ip, netcard, server_ip, scale,
+                  dev_test, debug_mode)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
-def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test):
+def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test,
+              debug_mode):
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name {vm}{dev_test}"
+        f"--password testing --interface {netcard} --vm-name " \
+        f"{vm}{dev_test}{debug_mode}"
     print(cmd)
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
@@ -295,7 +299,8 @@ def new_boot(api_url):
 def delete_old_new_boot_be(api_url, node, new_be):
     bootenv_list = get(f'{api_url}/bootenv/').json()
     for bootenv in bootenv_list:
-        if 'newboot' in bootenv['id'] and new_be != bootenv['id'] and not bootenv['activated']:
+        if ('newboot' in bootenv['id'] and new_be != bootenv['id']
+                and not bootenv['activated']):
             print(f'** Deleting {bootenv["id"]} boot environment on {node} **')
             results = delete(f'{api_url}/bootenv/id/{bootenv["id"]}/')
             job_id = results.json()
