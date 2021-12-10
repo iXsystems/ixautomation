@@ -220,11 +220,11 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test,
               debug_mode):
+    verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --vm-name " \
-        f"{vm}{dev_test}{debug_mode}"
-    print(cmd)
+        f"{vm}{dev_test}{debug_mode}{verbose}"
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)

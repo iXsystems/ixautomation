@@ -6,7 +6,7 @@
 import sys
 from setuptools import setup
 
-__VERSION__ = '20.09.30'
+__VERSION__ = '21.12.10'
 
 PROGRAM_VERSION = __VERSION__
 
