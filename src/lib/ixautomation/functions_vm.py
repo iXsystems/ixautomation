@@ -146,6 +146,8 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace, version):
 def vm_destroy(vm):
     run(f"yes | vm poweroff {vm}", shell=True)
     sleep(2)
+    run(f"vm destroy -f {vm}", shell=True)
+    sleep(1)
 
 
 def clean_vm(vm):
@@ -157,6 +159,8 @@ def clean_vm(vm):
     run(f"rm -rf {iso_dir}", shell=True)
     run(f"rm -rf /tmp/{vm}console.log", shell=True)
     run(f"rm -rf /tmp/ixautomation/{vm}", shell=True)
+    run(f"rm -rf /dev/vmm/{vm}", shell=True)
+    run(f"rm -rf /dev/vmm.io/{vm}.bootrom", shell=True)
 
 
 def vm_stop_all():
@@ -172,6 +176,8 @@ def clean_all_vm():
     run(f"rm -rf {iso_dir}", shell=True)
     run("rm -rf /tmp/*console.log", shell=True)
     run("rm -rf /tmp/ixautomation/*", shell=True)
+    run("rm -rf /dev/vmm/*", shell=True)
+    run("rm -rf /dev/vmm.io/*", shell=True)
 
 
 def vm_destroy_stopped_vm():

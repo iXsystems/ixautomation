@@ -133,26 +133,10 @@ def create_workdir():
     return tmp_vm_dir
 
 
-def cleanup_workdir(tmp_vm_dir):
-    mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
-                    universal_newlines=True)
-    for line in mounted.stdout:
-        if f"on {tmp_vm_dir} /" in line:
-            mountpoint = line.split()[2]
-            run(f"umount -f {mountpoint}", shell=True)
-    mounted = Popen("mount", shell=True, stdout=PIPE, close_fds=True,
-                    universal_newlines=True)
-    # Should be done with unmount
-    if f"on {tmp_vm_dir} /" not in mounted.stdout.read():
-        run(f"chflags -R noschg  {tmp_vm_dir}", shell=True)
-        run(f"rm -rf {tmp_vm_dir}", shell=True)
-    clean_vm(vm)
-
-
 def exit_clean(tmp_vm_dir):
     print('## iXautomation is stopping! Clean up time!')
     vm_destroy(vm)
-    cleanup_workdir(tmp_vm_dir)
+    clean_vm(vm)
     sys.exit(0)
 
 
@@ -160,7 +144,7 @@ def exit_terminated(arg1, arg2):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
     vm_destroy(vm)
-    cleanup_workdir(tmp_vm_dir)
+    clean_vm(vm)
     sys.exit(1)
 
 
@@ -168,7 +152,7 @@ def exit_fail(msg):
     os.system('reset')
     print(f'## {msg} Clean up time!')
     vm_destroy(vm)
-    cleanup_workdir(tmp_vm_dir)
+    clean_vm(vm)
     sys.exit(1)
 
 
