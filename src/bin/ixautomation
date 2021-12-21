@@ -10,7 +10,6 @@ from functions import start_automation, destroy_all_vm, destroy_vm, reset_vm
 from functions import destroy_stopped_vm, create_ixautomation_interface
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
-loginUser = os.getlogin()
 curentUser = getpass.getuser()
 argument = sys.argv
 app = argument[0]
