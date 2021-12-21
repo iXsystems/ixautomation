@@ -10,7 +10,8 @@ __VERSION__ = '21.12.10'
 
 PROGRAM_VERSION = __VERSION__
 
-prefix = sys.prefix
+# Hardcode prefix to /usr/local for BSD, Debian and Docker
+prefix = '/usr/local'
 
 init_list = [
     'etc/init.d/ixautomation',
