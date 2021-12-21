@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
 RUN apt-get -y install git npm python3 python3-pip samba smbclient sshpass
