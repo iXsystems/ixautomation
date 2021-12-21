@@ -12,3 +12,4 @@ build/*
 src/build
 dist
 ixautomation.egg-info
+src/etc/smb.conf
