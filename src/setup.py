@@ -14,6 +14,15 @@ PROGRAM_VERSION = __VERSION__
 
 system = platform.system()
 
+install_requires = [
+    'pytest',
+    'pytest-bdd==4.1.0',
+    'pytest-dependency',
+    'pytest-timeout',
+    'requests',
+    'selenium'
+]
+
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
 prefix = '/usr/local'
 
@@ -62,7 +71,7 @@ setup(
     url='https://github/ixsystems/ixautomation/',
     package_dir={'': '.'},
     data_files=data_files,
-    install_requires=['setuptools'],
+    install_requires=install_requires,
     scripts=['bin/ixautomation']
 )
 
