@@ -10,3 +10,5 @@ RUN cd middleware/src/middlewared/ && python3 ./setup_client.py install && pytho
 RUN ln -s /usr/local/bin/pytest /usr/local/bin/pytest-3
 RUN cp /usr/local/etc/ixautomation.conf.dist /usr/local/etc/ixautomation.conf
 RUN cp /usr/local/etc/smb4.conf /etc/smb4.conf
+RUN git clone https://github.com/lukejpreston/xunit-viewer --depth=1
+RUN cd xunit-viewer/ && npm i -g xunit-viewer
