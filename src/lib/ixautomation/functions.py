@@ -187,6 +187,8 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
     vm = vm_name
     # if ipnc is None start a vm
     if ipnc is None:
+        # create ixautomation interface for bhyve.
+        create_ixautomation_interface()
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
