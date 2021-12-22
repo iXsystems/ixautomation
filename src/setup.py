@@ -15,6 +15,7 @@ PROGRAM_VERSION = __VERSION__
 system = platform.system()
 
 install_requires = [
+    'pexpect',
     'pytest',
     'pytest-bdd==4.1.0',
     'pytest-dependency',
