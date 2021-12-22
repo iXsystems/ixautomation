@@ -16,7 +16,7 @@ system = platform.system()
 
 install_requires = [
     'pexpect',
-    'pytest',
+    'pytest==5.0.0',
     'pytest-bdd==4.1.0',
     'pytest-dependency',
     'pytest-timeout',
