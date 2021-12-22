@@ -8,7 +8,7 @@ import platform
 import shutil
 from setuptools import setup
 
-__VERSION__ = '21.12.21'
+__VERSION__ = '21.12.22'
 
 PROGRAM_VERSION = __VERSION__
 
@@ -29,12 +29,10 @@ prefix = '/usr/local'
 
 init_list = [
     'etc/init.d/ixautomation',
-    'etc/init.d/ixautomation-nat'
 ]
 
 etc_list = [
     'etc/ixautomation.conf.dist',
-    'etc/dnsmasq.conf'
 ]
 
 if system == 'FreeBSD':
@@ -48,13 +46,10 @@ dot_templates_list = [
 lib_ixautomation_list = [
     'lib/ixautomation/functions_vm.py',
     'lib/ixautomation/functions.py',
-    'lib/ixautomation/freenas-11.2-userboot.so'
 ]
 
 data_files = [
     (f'{prefix}/etc', etc_list),
-    (f'{prefix}/etc/rc.d', ['etc/rc.d/ixautomation']),
-    (f'{prefix}/etc/sudoers.d', ['etc/sudoers.d/ixautomation']),
     (f'{prefix}/ixautomation/vms/.templates', dot_templates_list),
     (f'{prefix}/lib/ixautomation', lib_ixautomation_list)
 ]
