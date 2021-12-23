@@ -16,9 +16,10 @@ system = platform.system()
 
 install_requires = [
     'pexpect',
-    'pytest==5.0.0',
+    'pytest==5.3.0',
     'pytest-bdd==4.1.0',
     'pytest-dependency',
+    'pytest-rerunfailures',
     'pytest-timeout',
     'requests',
     'selenium'
