@@ -8,6 +8,7 @@ __pycache__
 config.py
 auto_config.py
 ixautomation.conf
+ixautomation.tar
 build/*
 src/build
 dist
