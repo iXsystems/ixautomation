@@ -200,6 +200,7 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test,
               debug_mode):
+    # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
