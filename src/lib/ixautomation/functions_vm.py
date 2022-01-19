@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import sys
 from subprocess import run, Popen, PIPE
 from time import sleep
@@ -55,7 +56,10 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     run(f"vm iso {iso_path}", shell=True)
-    run(f"vm create -t {systype} {vm}", shell=True)
+    if "TrueNAS-13.0" in iso_file:
+        run(f"vm create -t truenas13 {vm}", shell=True)
+    else:
+        run(f"vm create -t {systype} {vm}", shell=True)
     run(f"vm install {vm} {new_iso}", shell=True)
     return new_iso
 
@@ -113,34 +117,43 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace, version):
     vm_output = f"/tmp/{vm}console.log"
     expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
     run(expectcnd, shell=True)
-    console_file = open(vm_output, 'r').readlines()
-    reversed_console = reversed(console_file)
-    for line in reversed_console:
-        if 'freenas' in systype and 'http://' in line and '172.17' not in line:
-            # Reset/clear to get native term dimensions
-            os.system('reset')
-            os.system('clear')
-            os.chdir(workspace)
-            VMIP = line.rstrip().split('//')[1]
-            print(f"{sysname}_IP={VMIP}")
-            print(f"{sysname}_VM_NAME={vm}")
-            print(f"{sysname}_VERSION={version}")
-            nas_config = "[NAS_CONFIG]\n"
-            nas_config += f"ip = {VMIP}\n"
-            nas_config += "password = testing\n"
-            nas_config += f"version = {version}\n"
-            if 'webui' in systype:
-                file = open(f'{testworkspace}/bdd/config.cfg', 'w')
-            else:
-                file = open(f'{testworkspace}/config.cfg', 'w')
-            file.writelines(nas_config)
-            file.close()
-            return VMIP
+    console_file = open(vm_output, 'r').read()
+    # Reset/clear to get native term dimensions
+    os.system('reset')
+    os.system('clear')
+    os.chdir(workspace)
+    try:
+        url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
+        vmip = url.group().strip().partition('//')[2]
+    except AttributeError:
+        exit_vm_fail('Failed to get an IP!')
+    try:
+        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
+    except AttributeError:
+        exit_vm_fail('Failed to get a network interface!')
+    print(f"{sysname}_IP={vmip}")
+    print(f"{sysname}_VM_NAME={vm}")
+    print(f"{sysname}_VERSION={version}")
+    print(f"{sysname}_NIC={vmnic}")
+    nas_config = "[NAS_CONFIG]\n"
+    nas_config += f"ip = {vmip}\n"
+    nas_config += "password = testing\n"
+    nas_config += f"version = {version}\n"
+    nas_config += f"nic = {vmnic}\n"
+    if 'webui' in systype:
+        file = open(f'{testworkspace}/bdd/config.cfg', 'w')
     else:
-        VMIP = "0.0.0.0"
-        print(f"{sysname}_IP={VMIP}")
-        print(f"{sysname}_VM_NAME={vm}")
-        return VMIP
+        file = open(f'{testworkspace}/config.cfg', 'w')
+    file.writelines(nas_config)
+    file.close()
+    return {'ip': vmip, 'nic': vmnic}
+
+
+def exit_vm_fail(msg, vm):
+    print(f'## {msg} Clean up time!')
+    vm_destroy(vm)
+    clean_vm(vm)
+    sys.exit(1)
 
 
 def vm_destroy(vm):

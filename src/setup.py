@@ -8,7 +8,7 @@ import platform
 import shutil
 from setuptools import setup
 
-__VERSION__ = '21.12.22'
+__VERSION__ = '22.01.19'
 
 PROGRAM_VERSION = __VERSION__
 
@@ -41,7 +41,8 @@ if system == 'FreeBSD':
 
 dot_templates_list = [
     'ixautomation/vms/.templates/freenas.conf',
-    'ixautomation/vms/.templates/freenas_webui.conf'
+    'ixautomation/vms/.templates/freenas_webui.conf',
+    'ixautomation/vms/.templates/truenas13.conf'
 ]
 
 lib_ixautomation_list = [

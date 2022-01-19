@@ -171,14 +171,8 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale):
     install = vm_install(tmp_vm_dir, vm, systype, sysname, wrkspc)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    ip = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc, version)
-    if ip == '0.0.0.0' and keep_alive is False:
-        exit_fail('iXautomation stop because IP is 0.0.0.0!')
-    elif ip == '' and keep_alive is False:
-        exit_fail('iXautomation stop because IP is None!')
-    nic = 'enp0s7' if 'scale' in scale else 'vtnet0'
-    print(nic)
-    return {'ip': ip, 'netcard': nic, 'iso': select_iso}
+    vm_info = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc, version)
+    return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
@@ -206,6 +200,7 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
 
 def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test,
               debug_mode):
+    # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
