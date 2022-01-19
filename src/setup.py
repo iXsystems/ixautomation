@@ -41,7 +41,8 @@ if system == 'FreeBSD':
 
 dot_templates_list = [
     'ixautomation/vms/.templates/freenas.conf',
-    'ixautomation/vms/.templates/freenas_webui.conf'
+    'ixautomation/vms/.templates/freenas_webui.conf',
+    'ixautomation/vms/.templates/truenas13.conf'
 ]
 
 lib_ixautomation_list = [
