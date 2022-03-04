@@ -56,10 +56,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     run(f"vm iso {iso_path}", shell=True)
-    if "TrueNAS-13.0" in iso_file:
-        run(f"vm create -t truenas13 {vm}", shell=True)
-    else:
-        run(f"vm create -t {systype} {vm}", shell=True)
+    run(f"vm create -t {systype} {vm}", shell=True)
     run(f"vm install {vm} {new_iso}", shell=True)
     return new_iso
 
@@ -84,7 +81,7 @@ def vm_stop(vm):
     sleep(2)
 
 
-def vm_install(tmp_vm_dir, vm, systype, sysname, workspace):
+def vm_install(tmp_vm_dir, vm, sysname, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
     sleep(3)
@@ -107,7 +104,7 @@ def vm_install(tmp_vm_dir, vm, systype, sysname, workspace):
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace, version):
+def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -140,7 +137,7 @@ def vm_boot(tmp_vm_dir, vm, systype, sysname, workspace, version):
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
     nas_config += f"nic = {vmnic}\n"
-    if 'webui' in systype:
+    if 'webui' in test_type:
         file = open(f'{testworkspace}/bdd/config.cfg', 'w')
     else:
         file = open(f'{testworkspace}/config.cfg', 'w')

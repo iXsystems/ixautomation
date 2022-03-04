@@ -15,7 +15,7 @@ argument = sys.argv
 app = argument[0]
 sys.stdout.flush()
 
-systype = "freenas"
+systype = "truenas"
 
 # list of argument that should be use.
 optionlist = [
@@ -34,9 +34,8 @@ optionlist = [
     "debug-mode"
 ]
 sys_dict = {
-    "freenas": "FreeNAS",
+    "truenas": "FreeNAS",
 }
-systypelist = list(sys_dict.keys())
 runlist = [
     "vm-tests",
     "api-tests",
@@ -172,7 +171,6 @@ except KeyError:
         sys.exit(1)
 
 sysname = sys_dict[systype]
-systype = f"{systype}_webui" if "webui-" in run else systype
 
 start_automation(
     workspace,
