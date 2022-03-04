@@ -162,16 +162,16 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive, scale):
+def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type):
     create_workdir()
     set_sig()
     vm_setup()
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
     version = select_iso.partition('_')[0]
-    install = vm_install(tmp_vm_dir, vm, systype, sysname, wrkspc)
+    install = vm_install(tmp_vm_dir, vm, sysname, wrkspc)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    vm_info = vm_boot(tmp_vm_dir, vm, systype, sysname, wrkspc, version)
+    vm_info = vm_boot(tmp_vm_dir, vm, test_type, sysname, wrkspc, version)
     return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 
@@ -183,7 +183,8 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
     if ipnc is None:
         # create ixautomation interface for bhyve.
         create_ixautomation_interface()
-        vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale)
+        vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
+                           test_type)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
@@ -191,14 +192,14 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
         ip = ipnclist[0]
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
     if test_type == 'api-tests':
-        api_tests(wrkspc, systype, ip, netcard, server_ip, scale,
+        api_tests(wrkspc, ip, netcard, server_ip, scale,
                   dev_test, debug_mode)
 
     if keep_alive is False and ipnc is None:
         exit_clean(tmp_vm_dir)
 
 
-def api_tests(wrkspc, systype, ip, netcard, server_ip, scale, dev_test,
+def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test,
               debug_mode):
     # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
