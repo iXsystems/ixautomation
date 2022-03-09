@@ -123,11 +123,11 @@ def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version):
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]
     except AttributeError:
-        exit_vm_fail('Failed to get an IP!')
+        exit_vm_fail('Failed to get an IP!', vm)
     try:
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
-        exit_vm_fail('Failed to get a network interface!')
+        exit_vm_fail('Failed to get a network interface!', vm)
     print(f"{sysname}_IP={vmip}")
     print(f"{sysname}_VM_NAME={vm}")
     print(f"{sysname}_VERSION={version}")
