@@ -35,7 +35,7 @@ The scripts in this repository will allow you to start Bhyve VM and run tests fo
 **From GitHub:**
 
 ```
-pkg install python3 py37-pytest py37-requests py37-selenium py37-ws4py vm-bhyve expect sshpass bhyve-firmware dnsmasq
+pkg install python3 py38-pip expect sshpass bhyve-firmware net-snmp geckodriver firefox
 git clone --depth 1 https://github.com/ixsystems/ixautomation.git
 cd ixautomation/src
 sudo python3 setup.py install
