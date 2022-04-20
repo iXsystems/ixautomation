@@ -152,7 +152,9 @@ if run not in runlist:
 # look for workspace
 try:
     workspace = os.environ["WORKSPACE"]
+    jenkins = True
 except KeyError:
+    jenkins = False
     if not os.path.exists(ixautomationconfig):
         print(f"Please add {ixautomationconfig}")
         sys.exit(1)
@@ -183,5 +185,6 @@ start_automation(
     scale,
     vm_name,
     dev_test,
-    debug_mode
+    debug_mode,
+    jenkins
 )
