@@ -156,16 +156,16 @@ def exit_fail(msg):
     sys.exit(1)
 
 
-def set_sig(keep_alive, jenkins):
+def set_sig():
     signal.signal(signal.SIGTERM, exit_terminated)
     signal.signal(signal.SIGHUP, exit_terminated)
-    if not keep_alive and not jenkins:
-        signal.signal(signal.SIGINT, exit_terminated)
+    signal.signal(signal.SIGINT, exit_terminated)
 
 
 def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, jenkins):
     create_workdir()
-    set_sig(keep_alive, jenkins)
+    if not keep_alive and not jenkins:
+        set_sig()
     vm_setup()
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
     version = select_iso.partition('_')[0]
