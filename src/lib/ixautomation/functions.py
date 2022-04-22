@@ -162,21 +162,23 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type):
+def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, jenkins):
     create_workdir()
-    set_sig()
+    if not keep_alive and not jenkins:
+        set_sig()
     vm_setup()
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
     version = select_iso.partition('_')[0]
     install = vm_install(tmp_vm_dir, vm, sysname, wrkspc)
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
-    vm_info = vm_boot(tmp_vm_dir, vm, test_type, sysname, wrkspc, version)
+    vm_info = vm_boot(tmp_vm_dir, vm, test_type, sysname, wrkspc, version,
+                      keep_alive)
     return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
-                     server_ip, scale, vm_name, dev_test, debug_mode):
+                     server_ip, scale, vm_name, dev_test, debug_mode, jenkins):
     global vm
     vm = vm_name
     # if ipnc is None start a vm
@@ -184,7 +186,7 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
         # create ixautomation interface for bhyve.
         create_ixautomation_interface()
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
-                           test_type)
+                           test_type, jenkins)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:

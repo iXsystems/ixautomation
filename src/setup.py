@@ -8,7 +8,7 @@ import platform
 import shutil
 from setuptools import setup
 
-__VERSION__ = '22.03.09'
+__VERSION__ = '22.04.21'
 
 PROGRAM_VERSION = __VERSION__
 

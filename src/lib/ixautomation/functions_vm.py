@@ -104,7 +104,7 @@ def vm_install(tmp_vm_dir, vm, sysname, workspace):
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version):
+def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version, keep_alive):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -123,11 +123,17 @@ def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version):
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]
     except AttributeError:
-        exit_vm_fail('Failed to get an IP!', vm)
+        if keep_alive:
+            exit_and_keep_vm('Failed to get an IP!', vm)
+        else:
+            exit_vm_fail('Failed to get an IP!', vm)
     try:
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
-        exit_vm_fail('Failed to get a network interface!', vm)
+        if keep_alive:
+            exit_and_keep_vm('Failed to get a network interface!', vm)
+        else:
+            exit_vm_fail('Failed to get a network interface!', vm)
     print(f"{sysname}_IP={vmip}")
     print(f"{sysname}_VM_NAME={vm}")
     print(f"{sysname}_VERSION={version}")
@@ -144,6 +150,11 @@ def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version):
     file.writelines(nas_config)
     file.close()
     return {'ip': vmip, 'nic': vmnic}
+
+
+def exit_and_keep_vm(msg, vm):
+    print(f'## {msg}', f'\nVM name: {vm}')
+    sys.exit(1)
 
 
 def exit_vm_fail(msg, vm):
