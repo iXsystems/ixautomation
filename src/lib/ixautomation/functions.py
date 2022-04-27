@@ -162,10 +162,9 @@ def set_sig():
     signal.signal(signal.SIGINT, exit_terminated)
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, jenkins):
+def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type):
     create_workdir()
-    if not keep_alive and not jenkins:
-        set_sig()
+    set_sig()
     vm_setup()
     select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
     version = select_iso.partition('_')[0]
@@ -178,7 +177,7 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, jenkins):
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
-                     server_ip, scale, vm_name, dev_test, debug_mode, jenkins):
+                     server_ip, scale, vm_name, dev_test, debug_mode):
     global vm
     vm = vm_name
     # if ipnc is None start a vm
@@ -186,7 +185,7 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
         # create ixautomation interface for bhyve.
         create_ixautomation_interface()
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
-                           test_type, jenkins)
+                           test_type)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
