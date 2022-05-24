@@ -2,7 +2,6 @@
 *.swp
 vms/*
 __pycache__
-*.xml
 *.pyc
 .cache
 config.py
