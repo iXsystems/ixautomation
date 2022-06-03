@@ -2,15 +2,20 @@
 
 import os
 import sys
-import getpass
 import getopt
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
-from functions import start_automation, destroy_all_vm, destroy_vm, reset_vm
-from functions import destroy_stopped_vm, create_ixautomation_interface
+from functions import (
+    start_automation,
+    destroy_all_vm,
+    destroy_vm,
+    reset_vm,
+    destroy_stopped_vm,
+    create_ixautomation_bridge
+)
+
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
 
-curentUser = getpass.getuser()
 argument = sys.argv
 app = argument[0]
 sys.stdout.flush()
@@ -28,7 +33,7 @@ optionlist = [
     "destroy-vm=",
     "keep-alive",
     "reset-vm=",
-    "start-interface",
+    "setup-bridge=",
     "scale",
     "dev-test",
     "debug-mode"
@@ -42,45 +47,36 @@ runlist = [
     "webui-vm"
 ]
 
-# verify it root user
-if os.getuid() != 0:
-    print(f"You need root privileged to run {app}")
-    sys.exit(1)
-
 UsageMSG = f"""
 Usage for {app}:
 
 Available Commands:
 
---run                     - Runs the given option
+--run                     - Runs the given option see bellow for the options
           vm-tests        - Install TrueNAS in a VM using vm-bhyve and
                             reboot in the installation.
           api-tests       - Start VM with REST API 1.0 tests for FreeNAS
           webui-vm        - Install TrueNAS and boot FreeNAS for UI test
 
---ip                      - IP and network card of the machine targeted to
-                            run test against.
-          0.0.0.0
-          0.0.0.0:card
+--ip <0.0.0.0>           - IP and network card of the machine targeted to
+     or  <0.0.0.0:card>    run test against.
 
---vm-name vmname          - to create vm with a specific name
+--vm-name vmname          - to create VM with a specific name
 
 --scale                   - To use to run scale test
 
---server-ip               - IP of the targeted FreeNAS for TrueCommand
-          0.0.0.0
+--server-ip <0.0.0.0>     - IP of the targeted FreeNAS for TrueCommand
 
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
---destroy-stopped-vm      - Stop all sopped running vm and remove all files
+--destroy-stopped-vm      - Stop all sopped running VM and remove all files
 
---destroy-vm              - Stop VM running, the remove VM directory
-          ABCD            - VM name to stop
+--destroy-vm <vm_name>    - Stop VM running, the remove VM directory
+                            VM name to stop
 
---reset-vm                - Reset the NAS to the the first boot stat
-            0.0.0.0
+--reset-vm <0.0.0.0>      - Reset the NAS to the the first boot stat
 
---start-interface         - Start ixautomation switch interface
+--setup-bridge <em0>   - Start ixautomation switch interface for FreeBSD
 
 --keep-alive              - Keep the VM alive after test are done
 
@@ -132,9 +128,13 @@ for output, arg in myopts:
         ipnc = arg
     elif output == '--server-ip':
         server_ip = arg
-    elif output == '--start-interface':
-        create_ixautomation_interface()
-        exit(0)
+    elif output == '--setup-bridge':
+        if os.getuid() != 0:
+            print("You need root privileged to run --setup-bridge")
+            exit(1)
+        else:
+            create_ixautomation_bridge(arg)
+            exit(0)
     elif output == '--scale':
         scale = ' --scale'
     elif output == '--vm-name':

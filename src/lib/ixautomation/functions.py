@@ -2,6 +2,7 @@
 
 import json
 import os
+import platform
 import re
 import requests
 import signal
@@ -15,72 +16,38 @@ from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
 from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
 from functions_vm import vm_destroy_stopped_vm
 
-ixautomation_config = '/usr/local/etc/ixautomation.conf'
-
-notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|faith|" \
-    r"ppp|bridge|wg|wlan|ix)[0-9]+(\s*)|vm-[a-z]+(\s*)"
-
-capabilities = {
-    'RXCSUM,': '-rxcsum',
-    'TXCSUM,': '-txcsum',
-    'TSO4,': '-tso4',
-    'TSO6,': '-tso6',
-    'LRO,': '-lro',
-    'RXCSUM_IPV6': '-rxcsum6',
-    'TXCSUM_IPV6': '-txcsum6'
-}
+# to be use to detect if FreeBSD, Linux and other OS.
+system = platform.system()
 
 
-def create_ixautomation_interface():
-    ncard = 'ifconfig -l'
-    netcard = Popen(
-        ncard,
+def create_ixautomation_bridge(nic):
+    cmd = 'ifconfig -l'
+    nics_list = Popen(
+        cmd,
         shell=True,
         stdout=PIPE,
         close_fds=True,
         universal_newlines=True
     ).stdout.read().strip()
-    if "ixautomation" not in netcard:
-        if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
-            os.remove('/usr/local/ixautomation/vms/.config/system.conf')
-        # loop true ixautomation config list to get host_nic if setup
-        ixautomationcfglist = open(ixautomation_config, 'r').readlines()
-        for line in ixautomationcfglist:
-            if 'host_nic' in line and "#" not in line:
-                nic = line.rstrip().split('=')[1].replace('"', '').strip()
-                break
-        else:
-            nics = re.sub(notnics_regex, '', netcard).strip().split()
-            for nic in nics:
-                cmd = f'ifconfig {nic}'
-                nic_info = Popen(
-                    cmd,
-                    shell=True,
-                    stdout=PIPE,
-                    close_fds=True,
-                    universal_newlines=True
-                ).stdout.read()
-                if 'status: active' in nic_info:
-                    break
-            else:
-                print("No network card with active internet connection")
-                exit(1)
-        # remove some capabilities that could stop network
-        nic_output = Popen(
-            f'ifconfig {nic}',
-            shell=True,
-            stdout=PIPE,
-            close_fds=True,
-            universal_newlines=True
-        ).stdout.read()
-        offload_options = ""
-        for capability in list(capabilities.keys()):
-            if capability in nic_output:
-                offload_options += f' {capabilities[capability]}'
-        call(f'ifconfig {nic}{offload_options}', shell=True)
-        call('vm switch create ixautomation', shell=True)
-        call(f'vm switch add ixautomation {nic}', shell=True)
-        print("ixautomation switch interface is ready")
+    notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|" \
+                    r"faith|ppp|bridge|wg|wlan|ix)[0-9]+|vm-[a-z]+"
+    if re.search(notnics_regex, nic):
+        print(f"{nic} is not a supported NIC")
+        exit(1)
+
+    # Make sure to destroy the ixautomation bridge and all taps
+    if "vm-ixautomation" in nics_list:
+        run('ifconfig vm-ixautomation destroy', shell=True)
+    taps_regex = r"tap\d+|vnet\d+"
+    taps_list = re.findall(taps_regex, nics_list)
+    for tap in taps_list:
+        run(f'ifconfig {tap} destroy', shell=True)
+    if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
+        os.remove('/usr/local/ixautomation/vms/.config/system.conf')
+
+    call('vm switch create ixautomation', shell=True)
+    call(f'vm switch add ixautomation {nic}', shell=True)
+    print("ixautomation brige is ready interface is ready")
 
 
 def ssh_cmd(command, username, passwrd, host):
@@ -182,8 +149,6 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
     vm = vm_name
     # if ipnc is None start a vm
     if ipnc is None:
-        # create ixautomation interface for bhyve.
-        create_ixautomation_interface()
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
                            test_type)
         ip = vm_info['ip']
@@ -200,8 +165,8 @@ def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
         exit_clean(tmp_vm_dir)
 
 
-def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test,
-              debug_mode):
+def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test, debug_mode):
+    ixautomation_config = '/usr/local/etc/ixautomation.conf'
     # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
