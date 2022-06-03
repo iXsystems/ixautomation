@@ -45,9 +45,9 @@ def create_ixautomation_bridge(nic):
     if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
         os.remove('/usr/local/ixautomation/vms/.config/system.conf')
 
-    call('vm switch create ixautomation', shell=True)
-    call(f'vm switch add ixautomation {nic}', shell=True)
-    print("ixautomation brige is ready interface is ready")
+    run('vm switch create ixautomation', shell=True)
+    run(f'vm switch add ixautomation {nic}', shell=True)
+    print("ixautomation bridge is ready interface is ready")
 
 
 def ssh_cmd(command, username, passwrd, host):
