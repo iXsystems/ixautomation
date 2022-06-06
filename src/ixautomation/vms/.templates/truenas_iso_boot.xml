@@ -1,6 +1,5 @@
 <domain xmlns:bhyve="http://libvirt.org/schemas/domain/bhyve/1.0" type="bhyve">
-  <name>truenas</name>
-  <uuid>df3be7e7-a104-11e3-aeb0-50e5492bd3dc</uuid>
+  <name>nas_name</name>
   <memory unit="KiB">8388608</memory>
   <currentMemory unit="KiB">8388608</currentMemory>
   <vcpu placement="static">2</vcpu>
@@ -20,29 +19,34 @@
   <devices>
     <disk type="file" device="disk">
       <driver name="file" type="raw"/>
-      <source file="/var/lib/libvirt/images/truenas-disk0.img"/>
+      <source file="/var/lib/libvirt/images/nas_name-disk0.img"/>
       <target dev="hda" bus="sata"/>
-      <address type="drive" controller="0" bus="0" target="0" unit="0"/>
     </disk>
-    <controller type="pci" index="0" model="pci-root"/>
-    <controller type="isa" index="0">
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
-    </controller>
-    <controller type="sata" index="0">
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x0"/>
-    </controller>
+    <disk type="file" device="disk">
+      <driver name="file" type="raw"/>
+      <source file="/var/lib/libvirt/images/nas_name-disk1.img"/>
+      <target dev="hdb" bus="sata"/>
+    </disk>
+    <disk type="file" device="disk">
+      <driver name="file" type="raw"/>
+      <source file="/var/lib/libvirt/images/nas_name-disk2.img"/>
+      <target dev="hdc" bus="sata"/>
+    </disk>
+    <disk type="file" device="disk">
+      <driver name="file" type="raw"/>
+      <source file="/var/lib/libvirt/images/nas_name-disk3.img"/>
+      <target dev="hdd" bus="sata"/>
+    </disk>
     <interface type="bridge">
-      <mac address="58:9c:fc:08:f4:b3"/>
-      <source bridge="ixautomation"/>
       <model type="virtio"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0"/>
+      <source bridge="vm-ixautomation"/>
     </interface>
     <serial type="nmdm">
-      <source master="/dev/nmdmdf3be7e7-a104-11e3-aeb0-50e5492bd3dcA" slave="/dev/nmdmdf3be7e7-a104-11e3-aeb0-50e5492bd3dcB"/>
+      <source master="/dev/nmdm-nas_name-A" slave="/dev/nmdm-nas_name-B"/>
       <target port="0"/>
     </serial>
     <console type="nmdm">
-      <source master="/dev/nmdmdf3be7e7-a104-11e3-aeb0-50e5492bd3dcA" slave="/dev/nmdmdf3be7e7-a104-11e3-aeb0-50e5492bd3dcB"/>
+      <source master="/dev/nmdm-nas_name-A" slave="/dev/nmdm-nas_name-B"/>
       <target type="serial" port="0"/>
     </console>
     <graphics type="vnc" port="-1" autoport="yes">
@@ -50,10 +54,9 @@
     </graphics>
     <video>
       <model type="gop" heads="1" primary="yes"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x04" function="0x0"/>
     </video>
   </devices>
   <bhyve:commandline>
-    <bhyve:arg value="-s 6:0,ahci,cd:/var/lib/libvirt/images/TrueNAS-12.0-U8.1.iso"/>
+    <bhyve:arg value="-s 6:0,ahci,cd:iso_path"/>
   </bhyve:commandline>
 </domain>
