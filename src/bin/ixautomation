@@ -3,6 +3,7 @@
 import os
 import sys
 import getopt
+from platform import system
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import (
@@ -11,7 +12,8 @@ from functions import (
     destroy_vm,
     reset_vm,
     destroy_stopped_vm,
-    create_ixautomation_bridge
+    create_ixautomation_bridge,
+    nics_list
 )
 
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
@@ -143,6 +145,12 @@ for output, arg in myopts:
         dev_test = ' --dev-test'
     elif output == '--debug-mode':
         debug_mode = ' --debug-mode'
+
+if system() == "FreeBSD" and "vm-ixautomation" not in nics_list():
+    print("The ixautomation bridge is missing run the following command:")
+    print("# ixautomation --setup-bridge <interface>\n")
+    print("Replace <interface> with you interface like igb1")
+    exit(1)
 
 if run not in runlist:
     print(f"{run} is not a valid --run option")

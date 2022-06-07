@@ -8,4 +8,4 @@ py38-pip
 samba412
 sshpass
 vm-bhyve
-xorg-vfbserve
+xorg-vfbserver

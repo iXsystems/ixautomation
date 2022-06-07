@@ -29,6 +29,12 @@ def setup_FreeBSD():
     sysrc('libvirtd_enable', 'YES')
     freebsd_service('vm', 'start')
     freebsd_service('libvirtd', 'start')
+    print('Install iXautomation with the following command as root:')
+    print('# cd src ; python setup.py install\n')
+    print('After to setup the bridge run ixautomation with --setup-bridge and '
+          'the interface to setup the bridge like bellow: ')
+    print('# ixautomation --setup-bridge <interface>\n')
+    print("Replace <interface> with you interface like igb1")
 
 
 if system() == 'Linux':

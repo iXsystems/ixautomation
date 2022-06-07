@@ -8,7 +8,7 @@ import requests
 import signal
 import sys
 import time
-from subprocess import Popen, run, PIPE, call, DEVNULL
+from subprocess import Popen, run, PIPE, DEVNULL
 from shutil import copyfile
 import random
 import string
@@ -20,15 +20,19 @@ from functions_vm import vm_destroy_stopped_vm
 system = platform.system()
 
 
-def create_ixautomation_bridge(nic):
+def nics_list():
     cmd = 'ifconfig -l'
-    nics_list = Popen(
+    nics = Popen(
         cmd,
         shell=True,
         stdout=PIPE,
         close_fds=True,
         universal_newlines=True
     ).stdout.read().strip()
+    return nics
+
+
+def create_ixautomation_bridge(nic):
     notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|" \
                     r"faith|ppp|bridge|wg|wlan|ix)[0-9]+|vm-[a-z]+"
     if re.search(notnics_regex, nic):
@@ -36,10 +40,10 @@ def create_ixautomation_bridge(nic):
         exit(1)
 
     # Make sure to destroy the ixautomation bridge and all taps
-    if "vm-ixautomation" in nics_list:
+    if "vm-ixautomation" in nics_list():
         run('ifconfig vm-ixautomation destroy', shell=True)
     taps_regex = r"tap\d+|vnet\d+"
-    taps_list = re.findall(taps_regex, nics_list)
+    taps_list = re.findall(taps_regex, nics_list())
     for tap in taps_list:
         run(f'ifconfig {tap} destroy', shell=True)
     if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
