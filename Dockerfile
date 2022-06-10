@@ -9,7 +9,7 @@ RUN apt-get -y update && apt-get -y install --no-install-recommends build-essent
  && cd ixautomation/src && python3 setup.py install \
  && git clone https://github.com/truenas/middleware.git \
  && cd middleware/src/middlewared/ && python3 ./setup_client.py install && python3 ./setup_test.py install \
- && ln -s /usr/local/bin/pytest /usr/local/bin/pytest-3
+ && ln -s /usr/local/bin/pytest /usr/local/bin/pytest-3 \
  && git clone https://github.com/lukejpreston/xunit-viewer --depth=1 \
  && cd xunit-viewer/ && npm i -g xunit-viewer
 
