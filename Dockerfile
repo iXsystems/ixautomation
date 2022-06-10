@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
-RUN apt-get -y install build-essential debootstrap libjson-perl firefox-geckodriver git npm python3 python3-pip python3-venv samba smbclient sshpass squashfs-tools unzip snmp
+RUN apt-get -y install --no-install-recommends build-essential debootstrap libjson-perl firefox-geckodriver git npm python3 python3-pip python3-venv samba smbclient sshpass squashfs-tools unzip snmp
 RUN git clone https://github.com/iXsystems/ixautomation.git --depth=1
 RUN cd ixautomation/src && python3 setup.py install
 RUN git clone https://github.com/truenas/middleware.git
