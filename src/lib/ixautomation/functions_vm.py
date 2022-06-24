@@ -11,7 +11,7 @@ def vm_setup():
     run("vm init", shell=True)
 
 
-def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
+def vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, workspace):
     iso_dir = f"{workspace}/tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
@@ -49,47 +49,47 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
             except ValueError:
                 print("Invalid selection..")
     name_iso = iso_name.replace('.iso', '').partition('_')[0]
-    new_iso = f"{name_iso}_{vm}.iso"
+    new_iso = f"{name_iso}_{vm_name}.iso"
     os.chdir(iso_dir)
     os.rename(iso_name, new_iso)
     os.chdir(workspace)
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     run(f"vm iso {iso_path}", shell=True)
-    run(f"vm create -t {systype} {vm}", shell=True)
-    run(f"vm install {vm} {new_iso}", shell=True)
+    run(f"vm create -t {systype} {vm_name}", shell=True)
+    run(f"vm install {vm_name} {new_iso}", shell=True)
     return new_iso
 
 
-def vm_start(vm):
-    run(f"vm start {vm}", shell=True)
+def vm_start(vm_name):
+    run(f"vm start {vm_name}", shell=True)
     sleep(2)
 
 
-def vm_stop(vm):
-    run(f"yes | vm poweroff {vm}", shell=True)
-    wait_text = f"Waitting for vm {vm} to stop "
+def vm_stop(vm_name):
+    run(f"yes | vm poweroff {vm_name}", shell=True)
+    wait_text = f"Waitting for vm {vm_name} to stop "
     print(wait_text, end='', flush=True)
     while True:
-        if not os.path.exists(f"dev/vmm/{vm}"):
+        if not os.path.exists(f"dev/vmm/{vm_name}"):
             print('.')
             break
-        elif vm in os.listdir(f"/dev/vmm/{vm}"):
+        elif vm_name in os.listdir(f"/dev/vmm/{vm_name}"):
             print('.', end='', flush=True)
         sleep(1)
-    print(f"vm {vm} successfully stop")
+    print(f"vm {vm_name} successfully stop")
     sleep(2)
 
 
-def vm_install(tmp_vm_dir, vm, sysname, workspace):
+def vm_install(tmp_vm_dir, vm_name, sysname, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
     sleep(3)
-    vm_output = f"/tmp/{vm}console.log"
+    vm_output = f"/tmp/{vm_name}console.log"
     # change workspace to test directory
     os.chdir(testworkspace)
     # Run our expect/tcl script to automate the installation dialog
-    expctcmd = f'expect install.exp "{vm}" "{vm_output}"'
+    expctcmd = f'expect install.exp "{vm_name}" "{vm_output}"'
     process = run(expctcmd, shell=True, close_fds=True)
     # console_file = open(vm_output, 'r')
     if process.returncode == 0:
@@ -97,22 +97,22 @@ def vm_install(tmp_vm_dir, vm, sysname, workspace):
         os.system('clear')
         os.chdir(workspace)
         print(f"{sysname} installation successfully completed")
-        vm_stop(vm)
+        vm_stop(vm_name)
         return True
     else:
         print(f"\n{sysname} installation failed")
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version, keep_alive):
-    vm_start(vm)
+def vm_boot(tmp_vm_dir, vm_name, test_type, sysname, workspace, version, keep_alive):
+    vm_start(vm_name)
     testworkspace = f'{workspace}/tests'
     sleep(3)
     # change workspace to test directory
     os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
-    vm_output = f"/tmp/{vm}console.log"
-    expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
+    vm_output = f"/tmp/{vm_name}console.log"
+    expectcnd = f'expect boot.exp "{vm_name}" "{vm_output}"'
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
     # Reset/clear to get native term dimensions
@@ -124,18 +124,18 @@ def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version, keep_alive):
         vmip = url.group().strip().partition('//')[2]
     except AttributeError:
         if keep_alive:
-            exit_and_keep_vm('Failed to get an IP!', vm)
+            exit_and_keep_vm('Failed to get an IP!', vm_name)
         else:
-            exit_vm_fail('Failed to get an IP!', vm)
+            exit_vm_fail('Failed to get an IP!', vm_name)
     try:
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
         if keep_alive:
-            exit_and_keep_vm('Failed to get a network interface!', vm)
+            exit_and_keep_vm('Failed to get a network interface!', vm_name)
         else:
-            exit_vm_fail('Failed to get a network interface!', vm)
+            exit_vm_fail('Failed to get a network interface!', vm_name)
     print(f"{sysname}_IP={vmip}")
-    print(f"{sysname}_VM_NAME={vm}")
+    print(f"{sysname}_VM_NAME={vm_name}")
     print(f"{sysname}_VERSION={version}")
     print(f"{sysname}_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
@@ -157,31 +157,31 @@ def exit_and_keep_vm(msg, vm):
     sys.exit(1)
 
 
-def exit_vm_fail(msg, vm):
+def exit_vm_fail(msg, vm_name):
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    vm_destroy(vm_name)
+    clean_vm(vm_name)
     sys.exit(1)
 
 
-def vm_destroy(vm):
-    run(f"yes | vm poweroff {vm}", shell=True)
+def vm_destroy(vm_name):
+    run(f"yes | vm poweroff {vm_name}", shell=True)
     sleep(2)
-    run(f"vm destroy -f {vm}", shell=True)
+    run(f"vm destroy -f {vm_name}", shell=True)
     sleep(1)
 
 
-def clean_vm(vm):
+def clean_vm(vm_name):
     # Remove vm directory only
-    vm_dir = f"/usr/local/ixautomation/vms/{vm}"
+    vm_dir = f"/usr/local/ixautomation/vms/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
     # Remove vm iso
-    iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm}.iso"
+    iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm_name}.iso"
     run(f"rm -rf {iso_dir}", shell=True)
-    run(f"rm -rf /tmp/{vm}console.log", shell=True)
-    run(f"rm -rf /tmp/ixautomation/{vm}", shell=True)
-    run(f"rm -rf /dev/vmm/{vm}", shell=True)
-    run(f"rm -rf /dev/vmm.io/{vm}.bootrom", shell=True)
+    run(f"rm -rf /tmp/{vm_name}console.log", shell=True)
+    run(f"rm -rf /tmp/ixautomation/{vm_name}", shell=True)
+    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
+    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
 
 
 def vm_stop_all():

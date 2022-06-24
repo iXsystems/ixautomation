@@ -41,7 +41,7 @@ optionlist = [
     "debug-mode"
 ]
 sys_dict = {
-    "truenas": "FreeNAS",
+    "truenas": "TrueNAS",
 }
 runlist = [
     "vm-tests",
@@ -57,8 +57,8 @@ Available Commands:
 --run                     - Runs the given option see bellow for the options
           vm-tests        - Install TrueNAS in a VM using vm-bhyve and
                             reboot in the installation.
-          api-tests       - Start VM with REST API 1.0 tests for FreeNAS
-          webui-vm        - Install TrueNAS and boot FreeNAS for UI test
+          api-tests       - Start VM with REST API 1.0 tests for TrueNAS
+          webui-vm        - Install TrueNAS and boot TrueNAS for UI test
 
 --ip <0.0.0.0>           - IP and network card of the machine targeted to
      or  <0.0.0.0:card>    run test against.
@@ -67,7 +67,7 @@ Available Commands:
 
 --scale                   - To use to run scale test
 
---server-ip <0.0.0.0>     - IP of the targeted FreeNAS for TrueCommand
+--server-ip <0.0.0.0>     - IP of the targeted TrueNAS for TrueCommand
 
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
@@ -178,12 +178,10 @@ except KeyError:
         print(f"Please setup {syscfg} path in {ixautomationconfig}")
         sys.exit(1)
 
-sysname = sys_dict[systype]
-
 start_automation(
     workspace,
     systype,
-    sysname,
+    sys_dict[systype],
     ipnc,
     run,
     keep_alive,

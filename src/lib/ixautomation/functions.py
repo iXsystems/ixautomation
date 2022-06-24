@@ -60,92 +60,89 @@ def create_ixautomation_bridge(nic):
     print("ixautomation bridge is ready interface is ready")
 
 
-def create_workdir():
+def create_workdir(vm_name):
     builddir = "/tmp/ixautomation"
-    global vm
-    if vm is None:
-        vm = ''.join(random.choices(string.ascii_uppercase, k=4))
-    global tmp_vm_dir
-    tmp_vm_dir = f'{builddir}/{vm}'
+    tmp_vm_dir = f'{builddir}/{vm_name}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
     os.makedirs(tmp_vm_dir)
     return tmp_vm_dir
 
 
-def exit_clean(tmp_vm_dir):
+def exit_clean(vm_name):
     print('## iXautomation is stopping! Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    vm_destroy(vm_name)
+    clean_vm(vm_name)
     sys.exit(0)
 
 
-def exit_terminated(arg1, arg2):
+def exit_terminated(arg1, arg2, vm_name):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    vm_destroy(vm_name)
+    clean_vm(vm_name)
     sys.exit(1)
 
 
-def exit_fail(msg):
+def exit_fail(msg, vm_name):
     os.system('reset')
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    vm_destroy(vm_name)
+    clean_vm(vm_name)
     sys.exit(1)
 
 
-def set_sig():
-    signal.signal(signal.SIGTERM, exit_terminated)
-    signal.signal(signal.SIGHUP, exit_terminated)
-    signal.signal(signal.SIGINT, exit_terminated)
+def set_sig(vm_name):
+    signal.signal(signal.SIGTERM, exit_terminated, vm_name)
+    signal.signal(signal.SIGHUP, exit_terminated, vm_name)
+    signal.signal(signal.SIGINT, exit_terminated, vm_name)
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type):
-    create_workdir()
-    set_sig()
+def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, vm_name):
+    tmp_vm_dir = create_workdir()
+    set_sig(vm_name)
     vm_setup()
-    select_iso = vm_select_iso(tmp_vm_dir, vm, systype, sysname, wrkspc)
+    select_iso = vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, wrkspc)
     version = select_iso.partition('_')[0]
-    install = vm_install(tmp_vm_dir, vm, sysname, wrkspc)
+    install = vm_install(tmp_vm_dir, vm_name, sysname, wrkspc)
     if install is False:
-        exit_fail('iXautomation stop on installation failure!')
-    vm_info = vm_boot(tmp_vm_dir, vm, test_type, sysname, wrkspc, version,
+        exit_fail('iXautomation stop on installation failure!', vm_name)
+    vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, wrkspc, version,
                       keep_alive)
     return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
                      server_ip, scale, vm_name, dev_test, debug_mode):
-    global vm
-    vm = vm_name
-    # if ipnc is None start a vm
+    random_uppercase = ''.join(random.choices(string.ascii_uppercase, k=5))
+    vm_name = f'{sysname}-{random_uppercase}' if vm_name is None else vm_name
     if ipnc is None:
         vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
-                           test_type)
+                           test_type, vm_name)
         ip = vm_info['ip']
         netcard = vm_info['netcard']
     else:
         ipnclist = ipnc.split(":")
         ip = ipnclist[0]
         netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
+
     if test_type == 'api-tests':
         api_tests(wrkspc, ip, netcard, server_ip, scale,
-                  dev_test, debug_mode)
+                  dev_test, debug_mode, vm_name)
 
     if keep_alive is False and ipnc is None:
-        exit_clean(tmp_vm_dir)
+        exit_clean(vm_name)
 
 
-def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test, debug_mode):
+def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test, debug_mode,
+              vm_name):
     ixautomation_config = '/usr/local/etc/ixautomation.conf'
     # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
         f"--password testing --interface {netcard} --vm-name " \
-        f"{vm}{dev_test}{debug_mode}{verbose}"
+        f"{vm_name}{dev_test}{debug_mode}{verbose}"
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
@@ -167,11 +164,11 @@ def destroy_stopped_vm():
     sys.exit(0)
 
 
-def destroy_vm(vm):
-    print(f'Poweroff and destroy {vm} VM')
-    vm_destroy(vm)
-    print(f'Removing {vm} VM files and {vm} ISO')
-    clean_vm(vm)
+def destroy_vm(vm_name):
+    print(f'Poweroff and destroy {vm_name} VM')
+    vm_destroy(vm_name)
+    print(f'Removing {vm_name} VM files and {vm_name} ISO')
+    clean_vm(vm_name)
     sys.exit(0)
 
 
