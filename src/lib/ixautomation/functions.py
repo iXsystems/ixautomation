@@ -2,22 +2,28 @@
 
 import json
 import os
-import platform
+
 import re
 import requests
 import signal
 import sys
 import time
+from platform import system
 from subprocess import Popen, run, PIPE, DEVNULL
 from shutil import copyfile
 import random
 import string
-from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
-from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
-from functions_vm import vm_destroy_stopped_vm
-
-# to be use to detect if FreeBSD, Linux and other OS.
-system = platform.system()
+from functions_vm import (
+    vm_destroy,
+    vm_setup,
+    vm_select_iso,
+    clean_vm,
+    vm_boot,
+    vm_install,
+    vm_stop_all,
+    clean_all_vm,
+    vm_destroy_stopped_vm
+)
 
 
 def nics_list():
@@ -52,43 +58,6 @@ def create_ixautomation_bridge(nic):
     run('vm switch create ixautomation', shell=True)
     run(f'vm switch add ixautomation {nic}', shell=True)
     print("ixautomation bridge is ready interface is ready")
-
-
-def ssh_cmd(command, username, passwrd, host):
-    cmd_list = [] if passwrd is None else ["sshpass", "-p", passwrd]
-    cmd_list += [
-        "ssh",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        "-o",
-        "VerifyHostKeyDNS=no",
-        f"{username}@{host}",
-    ]
-    cmd_list += command.split()
-    run(cmd_list)
-
-
-def get_file(file, destination, username, passwrd, host):
-    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
-    cmd += [
-        "scp",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        "-o",
-        "VerifyHostKeyDNS=no",
-        f"{username}@{host}:{file}",
-        destination
-    ]
-    process = run(cmd, stdout=PIPE, universal_newlines=True)
-    output = process.stdout
-    if process.returncode != 0:
-        return {'result': False, 'output': output}
-    else:
-        return {'result': True, 'output': output}
 
 
 def create_workdir():
