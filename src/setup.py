@@ -41,6 +41,8 @@ if system == 'FreeBSD':
 
 dot_templates_list = [
     'ixautomation/vms/.templates/truenas.conf',
+    'ixautomation/vms/.templates/truenas_hdd_boot.xml',
+    'ixautomation/vms/.templates/truenas_iso_boot.xml'
 ]
 
 lib_ixautomation_list = [

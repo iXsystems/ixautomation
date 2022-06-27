@@ -8,6 +8,7 @@ import requests
 import signal
 import sys
 import time
+from functools import partial
 from platform import system
 from subprocess import Popen, run, PIPE, DEVNULL
 from shutil import copyfile
@@ -15,8 +16,8 @@ import random
 import string
 from functions_vm import (
     vm_destroy,
-    vm_setup,
     vm_select_iso,
+    setup_install_template,
     clean_vm,
     vm_boot,
     vm_install,
@@ -76,7 +77,7 @@ def exit_clean(vm_name):
     sys.exit(0)
 
 
-def exit_terminated(arg1, arg2, vm_name):
+def exit_terminated(vm_name, signal, frame):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
     vm_destroy(vm_name)
@@ -93,23 +94,32 @@ def exit_fail(msg, vm_name):
 
 
 def set_sig(vm_name):
-    signal.signal(signal.SIGTERM, exit_terminated, vm_name)
-    signal.signal(signal.SIGHUP, exit_terminated, vm_name)
-    signal.signal(signal.SIGINT, exit_terminated, vm_name)
+    signal.signal(signal.SIGTERM, partial(exit_terminated, vm_name))
+    signal.signal(signal.SIGHUP, partial(exit_terminated, vm_name))
+    signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
 def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, vm_name):
-    tmp_vm_dir = create_workdir()
+    tmp_vm_dir = create_workdir(vm_name)
     set_sig(vm_name)
-    vm_setup()
     select_iso = vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, wrkspc)
-    version = select_iso.partition('_')[0]
-    install = vm_install(tmp_vm_dir, vm_name, sysname, wrkspc)
-    if install is False:
-        exit_fail('iXautomation stop on installation failure!', vm_name)
-    vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, wrkspc, version,
-                      keep_alive)
-    return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
+    iso_path = select_iso['iso-path']
+    version = select_iso['iso-version']
+    if system() == 'FreeBSD':
+        setup_install_template(vm_name, iso_path, tmp_vm_dir)
+        # install = vm_install(tmp_vm_dir, vm_name, sysname, wrkspc)
+        # if install is False:
+        #     exit_fail('iXautomation stop on installation failure!', vm_name)
+        # vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, wrkspc, version,
+        #               keep_alive)
+        pass
+    elif system() == 'Linux':
+        pass
+    else:
+        print(f'{system()} is not supported with iXautomation')
+        exit(1)
+    exit()
+    return {'ip': vm_info['ip'], 'netcard': vm_info['nic']}
 
 
 def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,

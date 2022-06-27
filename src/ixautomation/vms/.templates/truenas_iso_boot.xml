@@ -19,22 +19,22 @@
   <devices>
     <disk type="file" device="disk">
       <driver name="file" type="raw"/>
-      <source file="/var/lib/libvirt/images/nas_name-disk0.img"/>
+      <source file="/tmp/ixautomation/nas_name/disk0.img"/>
       <target dev="hda" bus="sata"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="file" type="raw"/>
-      <source file="/var/lib/libvirt/images/nas_name-disk1.img"/>
+      <source file="/tmp/ixautomation/nas_name/disk1.img"/>
       <target dev="hdb" bus="sata"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="file" type="raw"/>
-      <source file="/var/lib/libvirt/images/nas_name-disk2.img"/>
+      <source file="/tmp/ixautomation/nas_name/disk2.img"/>
       <target dev="hdc" bus="sata"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="file" type="raw"/>
-      <source file="/var/lib/libvirt/images/nas_name-disk3.img"/>
+      <source file="/tmp/ixautomation/nas_name/disk3.img"/>
       <target dev="hdd" bus="sata"/>
     </disk>
     <interface type="bridge">

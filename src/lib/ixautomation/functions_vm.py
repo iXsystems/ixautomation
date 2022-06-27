@@ -48,17 +48,33 @@ def vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, workspace):
                     raise ValueError
             except ValueError:
                 print("Invalid selection..")
-    name_iso = iso_name.replace('.iso', '').partition('_')[0]
-    new_iso = f"{name_iso}_{vm_name}.iso"
-    os.chdir(iso_dir)
-    os.rename(iso_name, new_iso)
-    os.chdir(workspace)
-    iso_file = iso_dir + new_iso
+    # name_iso = iso_name.replace('.iso', '').partition('_')[0]
+    # new_iso = f"{name_iso}_{vm_name}.iso"
+    # os.chdir(iso_dir)
+    # os.rename(iso_name, new_iso)
+    # os.chdir(workspace)
+    iso_file = iso_dir + iso_name
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
-    run(f"vm iso {iso_path}", shell=True)
-    run(f"vm create -t {systype} {vm_name}", shell=True)
-    run(f"vm install {vm_name} {new_iso}", shell=True)
-    return new_iso
+    return {'iso-path': iso_path, 'iso-version': iso_name.replace('.iso', '')}
+
+
+def setup_install_template(vm_name, iso_path, tmp_vm_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/truenas_iso_boot.xml').read()
+    new_template = re.sub('nas_name', vm_name, template)
+    install_template = re.sub('iso_path', iso_path, new_template)
+    save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(install_template)
+    save_template.close()
+    return f'{tmp_vm_dir}/{vm_name}.xml'
+
+
+def setup_first_boot_template(vm_name, tmp_vm_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/truenas_iso_boot.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{tmp_vm_dir}/{vm_name}.xml'
 
 
 def vm_start(vm_name):
