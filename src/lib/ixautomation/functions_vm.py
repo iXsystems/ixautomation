@@ -171,7 +171,7 @@ def vm_destroy(vm_name):
     sleep(1)
     run(f'bhyvectl --destroy --vm={vm_name}', shell=True)
     sleep(1)
-    run(f'rm -rf /usr/vms/{vm_name}')
+    run(f'rm -rf /usr/vms/{vm_name}', shell=True)
     sleep(1)
     run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
     sleep(1)
