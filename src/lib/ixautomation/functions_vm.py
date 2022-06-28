@@ -164,11 +164,18 @@ def exit_vm_fail(msg, vm):
     sys.exit(1)
 
 
-def vm_destroy(vm):
-    run(f"yes | vm poweroff {vm}", shell=True)
-    sleep(2)
-    run(f"vm destroy -f {vm}", shell=True)
+def vm_destroy(vm_name):
+    run(f"yes | vm poweroff {vm_name}", shell=True)
     sleep(1)
+    run(f"vm destroy -f {vm_name}", shell=True)
+    sleep(1)
+    run(f'bhyvectl --destroy --vm={vm_name}', shell=True)
+    sleep(1)
+    run(f'rm -rf /usr/vms/{vm_name}')
+    sleep(1)
+    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
+    sleep(1)
+    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
 
 
 def clean_vm(vm):
@@ -180,8 +187,6 @@ def clean_vm(vm):
     run(f"rm -rf {iso_dir}", shell=True)
     run(f"rm -rf /tmp/{vm}console.log", shell=True)
     run(f"rm -rf /tmp/ixautomation/{vm}", shell=True)
-    run(f"rm -rf /dev/vmm/{vm}", shell=True)
-    run(f"rm -rf /dev/vmm.io/{vm}.bootrom", shell=True)
 
 
 def vm_stop_all():
