@@ -21,8 +21,9 @@ install_requires = [
     'pytest-dependency',
     'pytest-rerunfailures',
     'pytest-timeout',
+    'pytz',
     'requests',
-    'selenium'
+    'selenium==3.141.0'
 ]
 
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
