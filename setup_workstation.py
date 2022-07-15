@@ -26,9 +26,7 @@ def setup_FreeBSD():
     run(f'pkg install -y {packages}', shell=True)
     sysrc('vm_enable', 'YES')
     sysrc('vm_dir', '/usr/local/ixautomation/vms')
-    sysrc('libvirtd_enable', 'YES')
     freebsd_service('vm', 'start')
-    freebsd_service('libvirtd', 'start')
 
 
 if system() == 'Linux':
