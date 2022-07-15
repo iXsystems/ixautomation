@@ -1,0 +1,11 @@
+bhyve-firmware
+dnsmasq
+expect
+firefox
+geckodriver
+libvirt
+py38-pip
+samba412
+sshpass
+vm-bhyve
+xorg-vfbserver
