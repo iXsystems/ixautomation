@@ -1,0 +1,9 @@
+expect
+firefox
+firefox-geckodriver
+python3-pip
+qemu-system
+samba
+smbclient
+sshpass
+xvfb
