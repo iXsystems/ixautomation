@@ -15,6 +15,7 @@ __VERSION__ = '22.04.21'
 PROGRAM_VERSION = __VERSION__
 
 install_requires = [
+    'boto3',
     'pexpect',
     'pytest==5.3.0',
     'pytest-bdd==4.1.0',
