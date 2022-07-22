@@ -23,6 +23,7 @@ install_requires = [
     'pytest-rerunfailures',
     'pytest-timeout',
     'pytz',
+    'pyyaml',
     'requests',
     'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
     'websocket'
