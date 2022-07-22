@@ -3,7 +3,7 @@ dnsmasq
 expect
 firefox
 geckodriver
-py38-pip
+py39-pip
 samba412
 sshpass
 vm-bhyve
