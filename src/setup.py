@@ -24,7 +24,8 @@ install_requires = [
     'pytest-timeout',
     'pytz',
     'requests',
-    'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium'
+    'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
+    'websocket'
 ]
 
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
