@@ -26,7 +26,8 @@ install_requires = [
     'pyyaml',
     'requests',
     'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
-    'websocket'
+    'websocket',
+    'websocket-client'
 ]
 
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
