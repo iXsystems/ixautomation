@@ -26,7 +26,6 @@ install_requires = [
     'pyyaml',
     'requests',
     'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
-    'websocket',
     'websocket-client'
 ]
 
