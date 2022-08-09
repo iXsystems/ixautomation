@@ -84,7 +84,7 @@ def vm_stop(vm):
 def vm_install(tmp_vm_dir, vm, sysname, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
-    sleep(3)
+    sleep(1)
     vm_output = f"/tmp/{vm}console.log"
     # change workspace to test directory
     os.chdir(testworkspace)
