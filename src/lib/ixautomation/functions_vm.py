@@ -48,18 +48,13 @@ def vm_select_iso(workspace):
                     raise ValueError
             except ValueError:
                 print("Invalid selection..")
-    # name_iso = iso_name.replace('.iso', '').partition('_')[0]
-    # new_iso = f"{name_iso}_{vm_name}.iso"
-    # os.chdir(iso_dir)
-    # os.rename(iso_name, new_iso)
-    # os.chdir(workspace)
     iso_file = iso_dir + iso_name
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     return {'iso-path': iso_path, 'iso-version': iso_name.replace('.iso', '')}
 
 
-def setup_install_template(vm_name, iso_path, tmp_vm_dir):
-    template = open('/usr/local/ixautomation/vms/.templates/truenas_iso_boot.xml').read()
+def setup_freebsd_install_template(vm_name, iso_path, tmp_vm_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml').read()
     new_template = re.sub('nas_name', vm_name, template)
     install_template = re.sub('iso_path', iso_path, new_template)
     save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
@@ -68,13 +63,43 @@ def setup_install_template(vm_name, iso_path, tmp_vm_dir):
     return f'{tmp_vm_dir}/{vm_name}.xml'
 
 
-def setup_first_boot_template(vm_name, tmp_vm_dir):
-    template = open('/usr/local/ixautomation/vms/.templates/truenas_iso_boot.xml').read()
+def setup_freebsd_first_boot_template(vm_name, tmp_vm_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml').read()
     boot_template = re.sub('nas_name', vm_name, template)
     save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
     save_template.writelines(boot_template)
     save_template.close()
     return f'{tmp_vm_dir}/{vm_name}.xml'
+
+
+def freebsd_create_disks(vm_name):
+    run(f'truncate -s 32G /tmp/ixautomation/{vm_name}/disk0.img', shell=True)
+    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk1.img', shell=True)
+    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk2.img', shell=True)
+    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk3.img', shell=True)
+
+
+def freebsd_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
+    pass
+
+
+def freebsd_boot_vm():
+    pass
+
+
+def linux_create_disks(vm_name):
+    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk0.qcow2 32G', shell=True)
+    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
+
+
+def linux_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
+    pass
+
+
+def linux_boot_vm():
+    pass
 
 
 def vm_start(vm_name):
