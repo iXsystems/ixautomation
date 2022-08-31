@@ -11,7 +11,7 @@ def vm_setup():
     run("vm init", shell=True)
 
 
-def vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, workspace):
+def vm_select_iso(workspace):
     iso_dir = f"{workspace}/tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
@@ -22,7 +22,7 @@ def vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, workspace):
     iso_list.sort()
     # Download the latest TrueNAS ISO if no ISO found in $iso_dir
     if len(iso_list) == 0:
-        print(f'Please put a {sysname} ISO in "{iso_dir}"')
+        print(f'Please put a TrueNAS ISO in "{iso_dir}"')
         sys.exit(1)
     # Our to-be-determined file name of the ISO to test; must be inside iso_dir
     iso_name = ""
