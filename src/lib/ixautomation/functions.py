@@ -11,16 +11,14 @@ import time
 from functools import partial
 from platform import system
 from subprocess import Popen, run, PIPE, DEVNULL
-from shutil import copyfile
-import random
-import string
 from functions_vm import (
     vm_destroy,
     vm_select_iso,
-    setup_install_template,
+    setup_freebsd_install_template,
+    setup_freebsd_first_boot_template,
     clean_vm,
-    vm_boot,
-    vm_install,
+    # vm_boot,
+    # vm_install,
     vm_stop_all,
     clean_all_vm,
     vm_destroy_stopped_vm
@@ -99,18 +97,19 @@ def set_sig(vm_name):
     signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
-def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, vm_name):
+def start_vm(workspace, systype, sysname, vm_name):
     tmp_vm_dir = create_workdir(vm_name)
     set_sig(vm_name)
-    select_iso = vm_select_iso(tmp_vm_dir, vm_name, systype, sysname, wrkspc)
+    select_iso = vm_select_iso(workspace)
     iso_path = select_iso['iso-path']
-    version = select_iso['iso-version']
+    # version = select_iso['iso-version']
     if system() == 'FreeBSD':
-        setup_install_template(vm_name, iso_path, tmp_vm_dir)
-        # install = vm_install(tmp_vm_dir, vm_name, sysname, wrkspc)
+        setup_freebsd_install_template(vm_name, iso_path, tmp_vm_dir)
+        # install = vm_install(tmp_vm_dir, vm_name, sysname, workspace)
         # if install is False:
         #     exit_fail('iXautomation stop on installation failure!', vm_name)
-        # vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, wrkspc, version,
+        setup_freebsd_first_boot_template(vm_name, tmp_vm_dir)
+        # vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, workspace, version,
         #               keep_alive)
         pass
     elif system() == 'Linux':
@@ -119,45 +118,6 @@ def start_vm(wrkspc, systype, sysname, keep_alive, scale, test_type, vm_name):
         print(f'{system()} is not supported with iXautomation')
         exit(1)
     exit()
-    return {'ip': vm_info['ip'], 'netcard': vm_info['nic']}
-
-
-def start_automation(wrkspc, systype, sysname, ipnc, test_type, keep_alive,
-                     server_ip, scale, vm_name, dev_test, debug_mode):
-    random_uppercase = ''.join(random.choices(string.ascii_uppercase, k=5))
-    vm_name = f'{sysname}-{random_uppercase}' if vm_name is None else vm_name
-    if ipnc is None:
-        vm_info = start_vm(wrkspc, systype, sysname, keep_alive, scale,
-                           test_type, vm_name)
-        ip = vm_info['ip']
-        netcard = vm_info['netcard']
-    else:
-        ipnclist = ipnc.split(":")
-        ip = ipnclist[0]
-        netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
-
-    if test_type == 'api-tests':
-        api_tests(wrkspc, ip, netcard, server_ip, scale,
-                  dev_test, debug_mode, vm_name)
-
-    if keep_alive is False and ipnc is None:
-        exit_clean(vm_name)
-
-
-def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test, debug_mode,
-              vm_name):
-    ixautomation_config = '/usr/local/etc/ixautomation.conf'
-    # scale can be replace with enp0s in netcard
-    verbose = ' -v' if scale else ''
-    test_path = f"{wrkspc}/tests"
-    cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name " \
-        f"{vm_name}{dev_test}{debug_mode}{verbose}"
-    if os.path.exists(ixautomation_config):
-        copyfile(ixautomation_config, f"{test_path}/config.py")
-    os.chdir(test_path)
-    run(cmd, shell=True)
-    os.chdir(wrkspc)
 
 
 def destroy_all_vm():
