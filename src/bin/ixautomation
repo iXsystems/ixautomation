@@ -16,8 +16,6 @@ from functions import (
     nics_list
 )
 
-ixautomationconfig = "/usr/local/etc/ixautomation.conf"
-
 argument = sys.argv
 app = argument[0]
 sys.stdout.flush()
@@ -26,26 +24,19 @@ systype = "truenas"
 
 # list of argument that should be use.
 optionlist = [
-    "run=",
-    "ip=",
-    "server-ip=",
+    "run",
     "vm-name=",
     "destroy-all-vm",
     "destroy-stopped-vm",
     "destroy-vm=",
-    "keep-alive",
     "reset-vm=",
     "setup-bridge=",
-    "scale",
-    "dev-test",
-    "debug-mode"
 ]
 sys_dict = {
     "truenas": "TrueNAS",
 }
 runlist = [
     "vm-tests",
-    "api-tests",
     "webui-vm"
 ]
 
@@ -55,19 +46,13 @@ Usage for {app}:
 Available Commands:
 
 --run                     - Runs the given option see bellow for the options
-          vm-tests        - Install TrueNAS in a VM using vm-bhyve and
-                            reboot in the installation.
-          api-tests       - Start VM with REST API 1.0 tests for TrueNAS
-          webui-vm        - Install TrueNAS and boot TrueNAS for UI test
+          vm-tests    - Install TrueNAS and boot TrueNAS VM for API tests
+          webui-vm  - Install TrueNAS and boot TrueNAS VM for UI test
 
 --ip <0.0.0.0>           - IP and network card of the machine targeted to
      or  <0.0.0.0:card>    run test against.
 
 --vm-name vmname          - to create VM with a specific name
-
---scale                   - To use to run scale test
-
---server-ip <0.0.0.0>     - IP of the targeted TrueNAS for TrueCommand
 
 --destroy-all-vm          - Stop all VM running, remove VM directory and ISO
 
@@ -80,18 +65,12 @@ Available Commands:
 
 --setup-bridge <em0>   - Start ixautomation switch interface for FreeBSD
 
---keep-alive              - Keep the VM alive after test are done
-
---dev-test                - Start API test with --dev-test to only run
-                            development API testing
-
---debug-mode              - Start API test with middleware debug mode
 """
 
 # if have no argument stop
-if len(argument) == 1:
-    print(UsageMSG)
-    exit()
+# if len(argument) == 1:
+#     print(UsageMSG)
+#     exit()
 
 # look if all the argument are there.
 try:
@@ -101,20 +80,17 @@ except getopt.GetoptError as e:
     print(UsageMSG)
     sys.exit(1)
 
-keep_alive = False
-start_interface = False
-ipnc = None
-server_ip = None
-scale = ''
 vm_name = None
-dev_test = ''
-debug_mode = ''
 
 for output, arg in myopts:
-    if output == '--destroy-all-vm':
+    if output == '--run':
+        run = arg
+    elif output == '--vm-name':
+        vm_name = arg
+    elif output == '--destroy-all-vm':
         destroy_all_vm()
         sys.exit(0)
-    if output == '--destroy-stopped-vm':
+    elif output == '--destroy-stopped-vm':
         destroy_stopped_vm()
         sys.exit(0)
     elif output == '--destroy-vm':
@@ -122,14 +98,6 @@ for output, arg in myopts:
         sys.exit(0)
     elif output == "--reset-vm":
         reset_vm(arg)
-    elif output == '--keep-alive':
-        keep_alive = True
-    elif output == '--run':
-        run = arg
-    elif output == '--ip':
-        ipnc = arg
-    elif output == '--server-ip':
-        server_ip = arg
     elif output == '--setup-bridge':
         if os.getuid() != 0:
             print("You need root privileged to run --setup-bridge")
@@ -137,14 +105,6 @@ for output, arg in myopts:
         else:
             create_ixautomation_bridge(arg)
             exit(0)
-    elif output == '--scale':
-        scale = ' --scale'
-    elif output == '--vm-name':
-        vm_name = arg
-    elif output == '--dev-test':
-        dev_test = ' --dev-test'
-    elif output == '--debug-mode':
-        debug_mode = ' --debug-mode'
 
 if system() == "FreeBSD" and "vm-ixautomation" not in nics_list():
     print("The ixautomation bridge is missing run the following command:")
@@ -152,42 +112,29 @@ if system() == "FreeBSD" and "vm-ixautomation" not in nics_list():
     print("Replace <interface> with you interface like igb1")
     exit(1)
 
-if run not in runlist:
-    print(f"{run} is not a valid --run option")
-    print(UsageMSG)
-    sys.exit(1)
+try:
+    if run not in runlist:
+        print(f"{run} is not a valid --run option")
+        print(UsageMSG)
+        sys.exit(1)
+except NameError:
+    pass
 
-# look for workspace
+
+# To be removed later when all the code is cleaned.
 try:
     workspace = os.environ["WORKSPACE"]
 except KeyError:
-    if not os.path.exists(ixautomationconfig):
-        print(f"Please add {ixautomationconfig}")
-        sys.exit(1)
+    workspace = os.getcwd()
 
-    syscfg = "WebUI" if "webui-" in run else sys_dict[systype]
-
-    # loop true ixautomation config list to find syscfg
-    ixautomationcfglist = open(ixautomationconfig, 'r').readlines()
-    for line in ixautomationcfglist:
-        linelist = line.rstrip().split('=')
-        if syscfg in linelist[0] and "#" not in linelist[0]:
-            workspace = linelist[1].replace('"', '').strip()
-            break
-    else:
-        print(f"Please setup {syscfg} path in {ixautomationconfig}")
-        sys.exit(1)
+if not os.path.exists(f'{workspace}/tests/install.exp'):
+    print('tests/install.exp not found make sure you are in a checked out '
+          'middleware repo or webui repo when running!')
+    exit(1)
 
 start_automation(
     workspace,
     systype,
     sys_dict[systype],
-    ipnc,
-    run,
-    keep_alive,
-    server_ip,
-    scale,
     vm_name,
-    dev_test,
-    debug_mode
 )

@@ -36,9 +36,7 @@ init_list = [
     'etc/init.d/ixautomation',
 ]
 
-etc_list = [
-    'etc/ixautomation.conf.dist',
-]
+etc_list = []
 
 if system() == 'FreeBSD':
     etc_list.append('etc/smb4.conf')
