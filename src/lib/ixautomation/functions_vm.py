@@ -100,7 +100,7 @@ def vm_stop(vm_name):
 def vm_install(tmp_vm_dir, vm_name, sysname, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
-    sleep(3)
+    sleep(1)
     vm_output = f"/tmp/{vm_name}console.log"
     # change workspace to test directory
     os.chdir(testworkspace)
@@ -182,9 +182,16 @@ def exit_vm_fail(msg, vm_name):
 
 def vm_destroy(vm_name):
     run(f"yes | vm poweroff {vm_name}", shell=True)
-    sleep(2)
+    sleep(1)
     run(f"vm destroy -f {vm_name}", shell=True)
     sleep(1)
+    run(f'bhyvectl --destroy --vm={vm_name}', shell=True)
+    sleep(1)
+    run(f'rm -rf /usr/vms/{vm_name}', shell=True)
+    sleep(1)
+    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
+    sleep(1)
+    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
 
 
 def clean_vm(vm_name):

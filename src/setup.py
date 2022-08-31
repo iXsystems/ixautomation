@@ -4,17 +4,18 @@
 # License: BSD
 
 import os
-import platform
 import shutil
+from platform import system
 from setuptools import setup
+from time import sleep
+from subprocess import run
 
 __VERSION__ = '22.04.21'
 
 PROGRAM_VERSION = __VERSION__
 
-system = platform.system()
-
 install_requires = [
+    'boto3',
     'pexpect',
     'pytest==5.3.0',
     'pytest-bdd==4.1.0',
@@ -22,8 +23,10 @@ install_requires = [
     'pytest-rerunfailures',
     'pytest-timeout',
     'pytz',
+    'pyyaml',
     'requests',
-    'selenium==3.141.0'
+    'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
+    'websocket-client'
 ]
 
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
@@ -37,7 +40,7 @@ etc_list = [
     'etc/ixautomation.conf.dist',
 ]
 
-if system == 'FreeBSD':
+if system() == 'FreeBSD':
     etc_list.append('etc/smb4.conf')
 
 dot_templates_list = [
@@ -57,7 +60,7 @@ data_files = [
     (f'{prefix}/lib/ixautomation', lib_ixautomation_list)
 ]
 
-if system == 'Linux':
+if system() == 'Linux':
     shutil.copyfile('etc/smb4.conf', 'etc/smb.conf')
     data_files.append(('/etc/samba', ['etc/smb.conf']))
 
@@ -75,5 +78,10 @@ setup(
 )
 
 
-if system == 'Linux':
+if system() == 'Linux':
     os.remove('etc/smb.conf')
+
+# Since we can import a module installed from and in setup.py we run a separate
+# script to path pytest_bdd for Jira.
+sleep(1)
+run('python3 patch_pytest_bdd.py', shell=True)
