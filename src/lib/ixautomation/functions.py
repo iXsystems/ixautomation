@@ -14,11 +14,12 @@ from subprocess import Popen, run, PIPE, DEVNULL
 from functions_vm import (
     vm_destroy,
     vm_select_iso,
-    setup_freebsd_install_template,
-    setup_freebsd_first_boot_template,
+    setup_bhyve_install_template,
+    setup_bhyve_first_boot_template,
+    bhyve_create_disks,
+    setup_kvm_template,
+    kvm_create_disks,
     clean_vm,
-    # vm_boot,
-    # vm_install,
     vm_stop_all,
     clean_all_vm,
     vm_destroy_stopped_vm
@@ -104,16 +105,18 @@ def start_vm(workspace, systype, sysname, vm_name):
     iso_path = select_iso['iso-path']
     # version = select_iso['iso-version']
     if system() == 'FreeBSD':
-        setup_freebsd_install_template(vm_name, iso_path, tmp_vm_dir)
+        setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir)
+        bhyve_create_disks(vm_name)
         # install = vm_install(tmp_vm_dir, vm_name, sysname, workspace)
         # if install is False:
         #     exit_fail('iXautomation stop on installation failure!', vm_name)
-        setup_freebsd_first_boot_template(vm_name, tmp_vm_dir)
+        setup_bhyve_first_boot_template(vm_name, tmp_vm_dir)
         # vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, workspace, version,
         #               keep_alive)
         pass
     elif system() == 'Linux':
-        pass
+        setup_kvm_template(vm_name, tmp_vm_dir)
+        kvm_create_disks(vm_name)
     else:
         print(f'{system()} is not supported with iXautomation')
         exit(1)
