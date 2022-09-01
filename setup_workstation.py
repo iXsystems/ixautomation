@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-# Author: Eric Turgeon
-# License: BSD
-
+import os
 from platform import system
 from subprocess import run
 
@@ -43,3 +41,13 @@ elif system() == 'FreeBSD':
     setup_FreeBSD()
 else:
     print(f'{system()} is not supported yet')
+    exit(1)
+
+# create /data' if it does not exist
+if os.path.exists('/data'):
+    os.system('chown root:libvirt /data')
+    os.system('chmod 770 /data')
+else:
+    os.mkdir('/data')
+    os.system('chown root:libvirt /data')
+    os.system('chmod 770 /data')

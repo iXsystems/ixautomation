@@ -63,7 +63,7 @@ def create_ixautomation_bridge(nic):
 
 
 def create_workdir(vm_name):
-    builddir = "/tmp/ixautomation"
+    builddir = '/data/ixautomation/'
     tmp_vm_dir = f'{builddir}/{vm_name}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
