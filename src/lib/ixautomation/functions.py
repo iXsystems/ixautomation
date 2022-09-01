@@ -116,7 +116,7 @@ def start_vm(workspace, systype, sysname, vm_name):
         xml_template = setup_bhyve_first_boot_template(vm_name, tmp_vm_dir)
         bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
-        os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
+        # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
         setup_kvm_template(vm_name, tmp_vm_dir)
         kvm_create_disks(vm_name)
     else:

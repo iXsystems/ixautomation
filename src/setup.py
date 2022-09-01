@@ -27,7 +27,6 @@ if system() == 'FreeBSD':
     etc_list.append('etc/smb4.conf')
 
 dot_templates_list = [
-    'ixautomation/vms/.templates/truenas.conf',
     'ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml',
     'ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml',
     'ixautomation/vms/.templates/kvm_truenas.xml'

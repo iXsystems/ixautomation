@@ -73,10 +73,10 @@ def setup_bhyve_first_boot_template(vm_name, tmp_vm_dir):
 
 
 def bhyve_create_disks(vm_name):
-    run(f'truncate -s 32G /tmp/ixautomation/{vm_name}/disk0.img', shell=True)
-    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk1.img', shell=True)
-    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk2.img', shell=True)
-    run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk3.img', shell=True)
+    run(f'truncate -s 32G /data/ixautomation/{vm_name}/disk0.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk1.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk2.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk3.img', shell=True)
 
 
 def bhyve_install_vm(tmp_vm_dir, vm_name, xml_template):
@@ -152,10 +152,10 @@ def setup_kvm_template(vm_name, tmp_vm_dir):
 
 
 def kvm_create_disks(vm_name):
-    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk0.qcow2 32G', shell=True)
-    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /tmp/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 32G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
 
 
 def kvm_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
@@ -200,7 +200,7 @@ def clean_vm(vm_name):
     iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm_name}.iso"
     run(f"rm -rf {iso_dir}", shell=True)
     run(f"rm -rf /tmp/{vm_name}console.log", shell=True)
-    run(f"rm -rf /tmp/ixautomation/{vm_name}", shell=True)
+    run(f"rm -rf /data/ixautomation/{vm_name}", shell=True)
     run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
     run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
 
@@ -217,7 +217,7 @@ def clean_all_vm():
     iso_dir = "/usr/local/ixautomation/vms/.iso/*"
     run(f"rm -rf {iso_dir}", shell=True)
     run("rm -rf /tmp/*console.log", shell=True)
-    run("rm -rf /tmp/ixautomation/*", shell=True)
+    run("rm -rf /data/ixautomation/*", shell=True)
     run("rm -rf /dev/vmm/*", shell=True)
     run("rm -rf /dev/vmm.io/*", shell=True)
 
