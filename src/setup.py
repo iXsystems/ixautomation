@@ -62,8 +62,3 @@ setup(
 
 if system() == 'Linux':
     os.remove('etc/smb.conf')
-
-# Since we can import a module installed from and in setup.py we run a separate
-# script to path pytest_bdd for Jira.
-sleep(1)
-run('python3 patch_pytest_bdd.py', shell=True)
