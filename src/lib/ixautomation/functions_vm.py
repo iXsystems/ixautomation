@@ -11,8 +11,8 @@ def vm_setup():
     run("vm init", shell=True)
 
 
-def vm_select_iso(workspace):
-    iso_dir = f"{workspace}/tests/iso/"
+def vm_select_iso():
+    iso_dir = "tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
     # List ISOs in iso_dir and allow the user to select the target

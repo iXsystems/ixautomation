@@ -124,21 +124,9 @@ try:
 except NameError:
     pass
 
-
-# To be removed later when all the code is cleaned.
-try:
-    workspace = os.environ["WORKSPACE"]
-except KeyError:
-    workspace = os.getcwd()
-
-if not os.path.exists(f'{workspace}/tests/install.exp'):
+if not os.path.exists('tests/install.exp'):
     print('tests/install.exp not found make sure you are in a checked out '
           'middleware repo or webui repo when running!')
     exit(1)
 
-start_vm(
-    workspace,
-    systype,
-    sys_dict[systype],
-    vm_name,
-)
+start_vm(vm_name)

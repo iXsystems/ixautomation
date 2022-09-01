@@ -100,10 +100,10 @@ def set_sig(vm_name):
     signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
-def start_vm(workspace, systype, sysname, vm_name):
+def start_vm(systype, sysname, vm_name):
     tmp_vm_dir = create_workdir(vm_name)
     set_sig(vm_name)
-    select_iso = vm_select_iso(workspace)
+    select_iso = vm_select_iso()
     iso_path = select_iso['iso-path']
     version = select_iso['iso-version']
     if system() == 'FreeBSD':
