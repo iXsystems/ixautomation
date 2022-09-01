@@ -7,8 +7,6 @@ import os
 import shutil
 from platform import system
 from setuptools import setup
-from time import sleep
-from subprocess import run
 
 __VERSION__ = '22.04.21'
 
