@@ -64,7 +64,7 @@ def setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir):
 
 
 def setup_bhyve_first_boot_template(vm_name, tmp_vm_dir):
-    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml').read()
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml').read()
     boot_template = re.sub('nas_name', vm_name, template)
     save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
     save_template.writelines(boot_template)
@@ -79,12 +79,67 @@ def bhyve_create_disks(vm_name):
     run(f'truncate -s 20G /tmp/ixautomation/{vm_name}/disk3.img', shell=True)
 
 
-def bhyve_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
-    pass
+def bhyve_install_vm(tmp_vm_dir, vm_name, xml_template):
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    vm_output = f"{tmp_vm_dir}/console.log"
+    expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
+    process = run(expctcmd, shell=True, close_fds=True)
+    # console_file = open(vm_output, 'r')
+    if process.returncode == 0:
+        os.system('reset')
+        os.system('clear')
+        print('\nTrueNAS installation successfully completed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        return True
+    else:
+        print('\nTrueNAS installation failed')
+        return False
 
 
-def bhyve_boot_vm():
-    pass
+def bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version):
+    run(f'virsh undefine {vm_name}', shell=True)
+    sleep(1)
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    # change workspace to test directory
+    # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
+    vm_output = f"{tmp_vm_dir}/console.log"
+    expectcnd = f'expect tests/boot.exp "{vm_name}" "{vm_output}"'
+    run(expectcnd, shell=True)
+    console_file = open(vm_output, 'r').read()
+    # Reset/clear to get native term dimensions
+    os.system('reset')
+    os.system('clear')
+    try:
+        url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
+        vmip = url.group().strip().partition('//')[2]
+    except AttributeError:
+        exit_vm_fail('Failed to get an IP!', vm_name)
+    try:
+        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
+    except AttributeError:
+        exit_vm_fail('Failed to get a network interface!', vm_name)
+    print(f"TreeNAS_IP={vmip}")
+    print(f"TreeNAS_VM_NAME={vm_name}")
+    print(f"TreeNAS_VERSION={version}")
+    print(f"TreeNAS_NIC={vmnic}")
+    nas_config = "[NAS_CONFIG]\n"
+    nas_config += f"ip = {vmip}\n"
+    nas_config += "password = testing\n"
+    nas_config += f"version = {version}\n"
+    nas_config += f"nic = {vmnic}\n"
+    if os.path.exists('tests/bdd'):
+        file = open('tests/bdd/config.cfg', 'w')
+    else:
+        file = open('tests/config.cfg', 'w')
+    file.writelines(nas_config)
+    file.close()
+    # return {'ip': vmip, 'nic': vmnic}
 
 
 def setup_kvm_template(vm_name, tmp_vm_dir):
@@ -109,97 +164,6 @@ def kvm_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
 
 def kvm_boot_vm():
     pass
-
-
-def vm_start(vm_name):
-    run(f"vm start {vm_name}", shell=True)
-    sleep(2)
-
-
-def vm_stop(vm_name):
-    run(f"yes | vm poweroff {vm_name}", shell=True)
-    wait_text = f"Waitting for vm {vm_name} to stop "
-    print(wait_text, end='', flush=True)
-    while True:
-        if not os.path.exists(f"dev/vmm/{vm_name}"):
-            print('.')
-            break
-        elif vm_name in os.listdir(f"/dev/vmm/{vm_name}"):
-            print('.', end='', flush=True)
-        sleep(1)
-    print(f"vm {vm_name} successfully stop")
-    sleep(2)
-
-
-def vm_install(tmp_vm_dir, vm_name, sysname, workspace):
-    testworkspace = f'{workspace}/tests'
-    # Get console device for newly created vm
-    sleep(1)
-    vm_output = f"/tmp/{vm_name}console.log"
-    # change workspace to test directory
-    os.chdir(testworkspace)
-    # Run our expect/tcl script to automate the installation dialog
-    expctcmd = f'expect install.exp "{vm_name}" "{vm_output}"'
-    process = run(expctcmd, shell=True, close_fds=True)
-    # console_file = open(vm_output, 'r')
-    if process.returncode == 0:
-        os.system('reset')
-        os.system('clear')
-        os.chdir(workspace)
-        print(f"{sysname} installation successfully completed")
-        vm_stop(vm_name)
-        return True
-    else:
-        print(f"\n{sysname} installation failed")
-        return False
-
-
-def vm_boot(tmp_vm_dir, vm_name, test_type, sysname, workspace, version, keep_alive):
-    vm_start(vm_name)
-    testworkspace = f'{workspace}/tests'
-    sleep(3)
-    # change workspace to test directory
-    os.chdir(testworkspace)
-    # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
-    vm_output = f"/tmp/{vm_name}console.log"
-    expectcnd = f'expect boot.exp "{vm_name}" "{vm_output}"'
-    run(expectcnd, shell=True)
-    console_file = open(vm_output, 'r').read()
-    # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
-    os.chdir(workspace)
-    try:
-        url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
-        vmip = url.group().strip().partition('//')[2]
-    except AttributeError:
-        if keep_alive:
-            exit_and_keep_vm('Failed to get an IP!', vm_name)
-        else:
-            exit_vm_fail('Failed to get an IP!', vm_name)
-    try:
-        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
-    except AttributeError:
-        if keep_alive:
-            exit_and_keep_vm('Failed to get a network interface!', vm_name)
-        else:
-            exit_vm_fail('Failed to get a network interface!', vm_name)
-    print(f"{sysname}_IP={vmip}")
-    print(f"{sysname}_VM_NAME={vm_name}")
-    print(f"{sysname}_VERSION={version}")
-    print(f"{sysname}_NIC={vmnic}")
-    nas_config = "[NAS_CONFIG]\n"
-    nas_config += f"ip = {vmip}\n"
-    nas_config += "password = testing\n"
-    nas_config += f"version = {version}\n"
-    nas_config += f"nic = {vmnic}\n"
-    if 'webui' in test_type:
-        file = open(f'{testworkspace}/bdd/config.cfg', 'w')
-    else:
-        file = open(f'{testworkspace}/config.cfg', 'w')
-    file.writelines(nas_config)
-    file.close()
-    return {'ip': vmip, 'nic': vmnic}
 
 
 def exit_and_keep_vm(msg, vm):

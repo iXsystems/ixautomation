@@ -16,7 +16,9 @@ from functions_vm import (
     vm_select_iso,
     setup_bhyve_install_template,
     setup_bhyve_first_boot_template,
+    bhyve_install_vm,
     bhyve_create_disks,
+    bhyve_boot_vm,
     setup_kvm_template,
     kvm_create_disks,
     clean_vm,
@@ -103,24 +105,23 @@ def start_vm(workspace, systype, sysname, vm_name):
     set_sig(vm_name)
     select_iso = vm_select_iso(workspace)
     iso_path = select_iso['iso-path']
-    # version = select_iso['iso-version']
+    version = select_iso['iso-version']
     if system() == 'FreeBSD':
-        setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir)
+        os.environ['VIRSH_DEFAULT_CONNECT_URI'] = 'bhyve:///system'
+        xml_template = setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir)
         bhyve_create_disks(vm_name)
-        # install = vm_install(tmp_vm_dir, vm_name, sysname, workspace)
-        # if install is False:
-        #     exit_fail('iXautomation stop on installation failure!', vm_name)
-        setup_bhyve_first_boot_template(vm_name, tmp_vm_dir)
-        # vm_info = vm_boot(tmp_vm_dir, vm_name, test_type, sysname, workspace, version,
-        #               keep_alive)
-        pass
+        installed = bhyve_install_vm(tmp_vm_dir, vm_name, xml_template)
+        if installed is False:
+            exit_fail('iXautomation stop on installation failure!', vm_name)
+        xml_template = setup_bhyve_first_boot_template(vm_name, tmp_vm_dir)
+        bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
+        os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
         setup_kvm_template(vm_name, tmp_vm_dir)
         kvm_create_disks(vm_name)
     else:
         print(f'{system()} is not supported with iXautomation')
         exit(1)
-    exit()
 
 
 def destroy_all_vm():
