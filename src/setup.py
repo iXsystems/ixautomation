@@ -14,21 +14,6 @@ __VERSION__ = '22.04.21'
 
 PROGRAM_VERSION = __VERSION__
 
-install_requires = [
-    'boto3',
-    'pexpect',
-    'pytest==5.3.0',
-    'pytest-bdd==4.1.0',
-    'pytest-dependency',
-    'pytest-rerunfailures',
-    'pytest-timeout',
-    'pytz',
-    'pyyaml',
-    'requests',
-    'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
-    'websocket-client'
-]
-
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
 prefix = '/usr/local'
 
@@ -72,7 +57,6 @@ setup(
     url='https://github/ixsystems/ixautomation/',
     package_dir={'': '.'},
     data_files=data_files,
-    install_requires=install_requires,
     scripts=['bin/ixautomation']
 )
 
