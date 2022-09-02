@@ -92,8 +92,6 @@ def bhyve_install_vm(vm_data_dir, vm_name, xml_template):
     process = run(expctcmd, shell=True, close_fds=True)
     # console_file = open(vm_output, 'r')
     if process.returncode == 0:
-        os.system('reset')
-        os.system('clear')
         print('\nTrueNAS installation successfully completed')
         run(f'virsh destroy {vm_name}', shell=True)
         return True
@@ -116,8 +114,6 @@ def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
     # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
     try:
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]
@@ -173,8 +169,6 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
     process = run(expctcmd, shell=True, close_fds=True)
     # console_file = open(vm_output, 'r')
     if process.returncode == 0:
-        os.system('reset')
-        os.system('clear')
         print('\nTrueNAS installation successfully completed')
         run(f'virsh destroy {vm_name}', shell=True)
         run(f'virsh change-media {vm_name} sde --eject', shell=True)
@@ -194,8 +188,6 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
     # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
     try:
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]

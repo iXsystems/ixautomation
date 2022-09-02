@@ -78,14 +78,12 @@ def exit_clean(vm_name):
 
 
 def exit_terminated(vm_name, signal, frame):
-    os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
     remove_vm(vm_name)
     sys.exit(1)
 
 
 def exit_fail(msg, vm_name):
-    os.system('reset')
     print(f'## {msg} Clean up time!')
     remove_vm(vm_name)
     sys.exit(1)
