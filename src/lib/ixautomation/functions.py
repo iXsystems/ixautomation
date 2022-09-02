@@ -64,11 +64,11 @@ def create_ixautomation_bridge(nic):
 
 def create_workdir(vm_name):
     builddir = '/data/ixautomation/'
-    tmp_vm_dir = f'{builddir}/{vm_name}'
+    vm_data_dir = f'{builddir}/{vm_name}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
-    os.makedirs(tmp_vm_dir)
-    return tmp_vm_dir
+    os.makedirs(vm_data_dir)
+    return vm_data_dir
 
 
 def exit_clean(vm_name):
@@ -100,24 +100,24 @@ def set_sig(vm_name):
     signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
-def start_vm(systype, sysname, vm_name):
-    tmp_vm_dir = create_workdir(vm_name)
+def start_vm(vm_name):
+    vm_data_dir = create_workdir(vm_name)
     set_sig(vm_name)
     select_iso = vm_select_iso()
     iso_path = select_iso['iso-path']
     version = select_iso['iso-version']
     if system() == 'FreeBSD':
         os.environ['VIRSH_DEFAULT_CONNECT_URI'] = 'bhyve:///system'
-        xml_template = setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir)
+        xml_template = setup_bhyve_install_template(vm_name, iso_path, vm_data_dir)
         bhyve_create_disks(vm_name)
-        installed = bhyve_install_vm(tmp_vm_dir, vm_name, xml_template)
+        installed = bhyve_install_vm(vm_data_dir, vm_name, xml_template)
         if installed is False:
             exit_fail('iXautomation stop on installation failure!', vm_name)
-        xml_template = setup_bhyve_first_boot_template(vm_name, tmp_vm_dir)
-        bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version)
+        xml_template = setup_bhyve_first_boot_template(vm_name, vm_data_dir)
+        bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
         # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
-        setup_kvm_template(vm_name, tmp_vm_dir)
+        setup_kvm_template(vm_name, vm_data_dir)
         kvm_create_disks(vm_name)
     else:
         print(f'{system()} is not supported with iXautomation')

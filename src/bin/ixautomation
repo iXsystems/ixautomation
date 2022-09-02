@@ -22,8 +22,6 @@ argument = sys.argv
 app = argument[0]
 sys.stdout.flush()
 
-systype = "truenas"
-
 # list of argument that should be use.
 optionlist = [
     "run",
@@ -34,9 +32,6 @@ optionlist = [
     "reset-vm=",
     "setup-bridge=",
 ]
-sys_dict = {
-    "truenas": "TrueNAS",
-}
 runlist = [
     "vm-tests",
     "webui-vm"
@@ -84,7 +79,7 @@ except getopt.GetoptError as e:
 
 # Crete a default vm name
 random_uppercase = ''.join(random.choices(string.ascii_uppercase, k=5))
-vm_name = f'{sys_dict[systype]}-{random_uppercase}'
+vm_name = f'TrueNAS-{random_uppercase}'
 
 for output, arg in myopts:
     if output == '--run':

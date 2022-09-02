@@ -53,23 +53,23 @@ def vm_select_iso():
     return {'iso-path': iso_path, 'iso-version': iso_name.replace('.iso', '')}
 
 
-def setup_bhyve_install_template(vm_name, iso_path, tmp_vm_dir):
+def setup_bhyve_install_template(vm_name, iso_path, vm_data_dir):
     template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml').read()
     new_template = re.sub('nas_name', vm_name, template)
     install_template = re.sub('iso_path', iso_path, new_template)
-    save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
     save_template.writelines(install_template)
     save_template.close()
-    return f'{tmp_vm_dir}/{vm_name}.xml'
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
-def setup_bhyve_first_boot_template(vm_name, tmp_vm_dir):
+def setup_bhyve_first_boot_template(vm_name, vm_data_dir):
     template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml').read()
     boot_template = re.sub('nas_name', vm_name, template)
-    save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
     save_template.writelines(boot_template)
     save_template.close()
-    return f'{tmp_vm_dir}/{vm_name}.xml'
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
 def bhyve_create_disks(vm_name):
@@ -79,12 +79,12 @@ def bhyve_create_disks(vm_name):
     run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk3.img', shell=True)
 
 
-def bhyve_install_vm(tmp_vm_dir, vm_name, xml_template):
+def bhyve_install_vm(vm_data_dir, vm_name, xml_template):
     run(f'virsh define {xml_template}', shell=True)
     sleep(1)
     run(f'virsh start {vm_name}', shell=True)
     sleep(1)
-    vm_output = f"{tmp_vm_dir}/console.log"
+    vm_output = f"{vm_data_dir}/console.log"
     expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
     process = run(expctcmd, shell=True, close_fds=True)
     # console_file = open(vm_output, 'r')
@@ -99,7 +99,7 @@ def bhyve_install_vm(tmp_vm_dir, vm_name, xml_template):
         return False
 
 
-def bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version):
+def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
     run(f'virsh undefine {vm_name}', shell=True)
     sleep(1)
     run(f'virsh define {xml_template}', shell=True)
@@ -108,7 +108,7 @@ def bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version):
     sleep(1)
     # change workspace to test directory
     # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
-    vm_output = f"{tmp_vm_dir}/console.log"
+    vm_output = f"{vm_data_dir}/console.log"
     expectcnd = f'expect tests/boot.exp "{vm_name}" "{vm_output}"'
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
@@ -124,10 +124,10 @@ def bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version):
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
         exit_vm_fail('Failed to get a network interface!', vm_name)
-    print(f"TreeNAS_IP={vmip}")
-    print(f"TreeNAS_VM_NAME={vm_name}")
-    print(f"TreeNAS_VERSION={version}")
-    print(f"TreeNAS_NIC={vmnic}")
+    print(f"TrueNAS_IP={vmip}")
+    print(f"TrueNAS_VM_NAME={vm_name}")
+    print(f"TrueNAS_VERSION={version}")
+    print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
@@ -142,13 +142,13 @@ def bhyve_boot_vm(tmp_vm_dir, vm_name, xml_template, version):
     # return {'ip': vmip, 'nic': vmnic}
 
 
-def setup_kvm_template(vm_name, tmp_vm_dir):
+def setup_kvm_template(vm_name, vm_data_dir):
     template = open('/usr/local/ixautomation/vms/.templates/kvm_truenas.xml').read()
     boot_template = re.sub('nas_name', vm_name, template)
-    save_template = open(f'{tmp_vm_dir}/{vm_name}.xml', 'w')
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
     save_template.writelines(boot_template)
     save_template.close()
-    return f'{tmp_vm_dir}/{vm_name}.xml'
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
 def kvm_create_disks(vm_name):
@@ -158,7 +158,7 @@ def kvm_create_disks(vm_name):
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
 
 
-def kvm_install_vm(tmp_vm_dir, vm_name, sysname, workspace):
+def kvm_install_vm(vm_data_dir, vm_name, xml_template):
     pass
 
 
