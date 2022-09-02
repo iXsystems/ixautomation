@@ -20,6 +20,8 @@ from functions_vm import (
     bhyve_boot_vm,
     setup_kvm_template,
     kvm_create_disks,
+    kvm_install_vm,
+    kvm_boot_vm,
     remove_vm,
     remove_all_vm,
     remove_stopped_vm
@@ -111,8 +113,10 @@ def start_vm(vm_name):
         bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
         # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
-        setup_kvm_template(vm_name, vm_data_dir)
+        xml_template = setup_kvm_template(vm_name, vm_data_dir)
         kvm_create_disks(vm_name)
+        kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path)
+        kvm_boot_vm(vm_data_dir, vm_name, xml_template, version)
     else:
         print(f'{system()} is not supported with iXautomation')
         exit(1)

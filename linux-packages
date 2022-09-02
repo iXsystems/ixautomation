@@ -1,6 +1,4 @@
 expect
-firefox
-firefox-geckodriver
 libvirt-clients
 libvirt-daemon-system
 python3-pip
