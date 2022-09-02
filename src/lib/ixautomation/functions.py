@@ -12,7 +12,6 @@ from functools import partial
 from platform import system
 from subprocess import Popen, run, PIPE, DEVNULL
 from functions_vm import (
-    vm_destroy,
     vm_select_iso,
     setup_bhyve_install_template,
     setup_bhyve_first_boot_template,
@@ -21,10 +20,9 @@ from functions_vm import (
     bhyve_boot_vm,
     setup_kvm_template,
     kvm_create_disks,
-    clean_vm,
-    vm_stop_all,
-    clean_all_vm,
-    vm_destroy_stopped_vm
+    remove_vm,
+    remove_all_vm,
+    remove_stopped_vm
 )
 
 
@@ -73,24 +71,21 @@ def create_workdir(vm_name):
 
 def exit_clean(vm_name):
     print('## iXautomation is stopping! Clean up time!')
-    vm_destroy(vm_name)
-    clean_vm(vm_name)
+    remove_vm(vm_name)
     sys.exit(0)
 
 
 def exit_terminated(vm_name, signal, frame):
     os.system('reset')
     print('## iXautomation got terminated! Clean up time!')
-    vm_destroy(vm_name)
-    clean_vm(vm_name)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
 def exit_fail(msg, vm_name):
     os.system('reset')
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm_name)
-    clean_vm(vm_name)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
@@ -107,7 +102,6 @@ def start_vm(vm_name):
     iso_path = select_iso['iso-path']
     version = select_iso['iso-version']
     if system() == 'FreeBSD':
-        os.environ['VIRSH_DEFAULT_CONNECT_URI'] = 'bhyve:///system'
         xml_template = setup_bhyve_install_template(vm_name, iso_path, vm_data_dir)
         bhyve_create_disks(vm_name)
         installed = bhyve_install_vm(vm_data_dir, vm_name, xml_template)
@@ -126,23 +120,19 @@ def start_vm(vm_name):
 
 def destroy_all_vm():
     print('Stop all VM')
-    vm_stop_all()
-    print("Removing all VM's files and all ISO's")
-    clean_all_vm()
+    remove_all_vm()
     sys.exit(0)
 
 
 def destroy_stopped_vm():
     print('Stop all VM not running')
-    vm_destroy_stopped_vm()
+    remove_stopped_vm()
     sys.exit(0)
 
 
 def destroy_vm(vm_name):
-    print(f'Poweroff and destroy {vm_name} VM')
-    vm_destroy(vm_name)
     print(f'Removing {vm_name} VM files and {vm_name} ISO')
-    clean_vm(vm_name)
+    remove_vm(vm_name)
     sys.exit(0)
 
 

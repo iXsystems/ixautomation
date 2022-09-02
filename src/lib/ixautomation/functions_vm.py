@@ -3,8 +3,15 @@
 import os
 import re
 import sys
+from platform import system
 from subprocess import run, Popen, PIPE
 from time import sleep
+
+
+if system() == 'FreeBSD':
+    os.environ['VIRSH_DEFAULT_CONNECT_URI'] = 'bhyve:///system'
+else:
+    pass
 
 
 def vm_select_iso():
@@ -218,63 +225,42 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
 
 def exit_vm_fail(msg, vm_name):
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm_name)
-    clean_vm(vm_name)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
-def vm_destroy(vm_name):
-    run(f"yes | vm poweroff {vm_name}", shell=True)
-    sleep(1)
-    run(f"vm destroy -f {vm_name}", shell=True)
-    sleep(1)
-    run(f'bhyvectl --destroy --vm={vm_name}', shell=True)
-    sleep(1)
-    run(f'rm -rf /usr/vms/{vm_name}', shell=True)
-    sleep(1)
-    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
-    sleep(1)
-    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
-
-
-def clean_vm(vm_name):
-    # Remove vm directory only
-    vm_dir = f"/usr/local/ixautomation/vms/{vm_name}"
+def remove_vm(vm_name):
+    run(f'virsh destroy {vm_name}', shell=True)
+    run(f'virsh undefine {vm_name}', shell=True)
+    vm_dir = f"/data/ixautomation/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
-    # Remove vm iso
-    iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm_name}.iso"
-    run(f"rm -rf {iso_dir}", shell=True)
-    run(f"rm -rf /tmp/{vm_name}console.log", shell=True)
-    run(f"rm -rf /data/ixautomation/{vm_name}", shell=True)
-    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
-    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
 
 
-def vm_stop_all():
-    run("vm stopall", shell=True)
-
-
-def clean_all_vm():
-    # Remove all vm directory only
-    vm_dir = "/usr/local/ixautomation/vms/*"
-    run(f"rm -rf {vm_dir}", shell=True)
-    # Remove all iso
-    iso_dir = "/usr/local/ixautomation/vms/.iso/*"
-    run(f"rm -rf {iso_dir}", shell=True)
-    run("rm -rf /tmp/*console.log", shell=True)
-    run("rm -rf /data/ixautomation/*", shell=True)
-    run("rm -rf /dev/vmm/*", shell=True)
-    run("rm -rf /dev/vmm.io/*", shell=True)
-
-
-def vm_destroy_stopped_vm():
-    cmd = "vm list"
+def remove_all_vm():
+    cmd = "virsh list --all"
     vm_list = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
     new_vmlist = vm_list.stdout.read()
     for line in new_vmlist.splitlines():
-        vm_info = line.split()
-        state = vm_info[7]
-        vm_name = vm_info[0]
-        if state == 'Stopped':
-            print(f'Removing {vm_name} VM files and {vm_name} ISO')
-            clean_vm(vm_name)
+        if 'shut off' in line or 'running' in line:
+            vm_info = line.strip().split()
+            vm_name = vm_info[1]
+            print(f'Removing {vm_name} VM files')
+            run(f'virsh destroy {vm_name}', shell=True)
+            run(f'virsh undefine {vm_name}', shell=True)
+    for vm_name in os.listdir('/data/ixautomation'):
+        vm_dir = f"/data/ixautomation/{vm_name}"
+        run(f"rm -rf {vm_dir}", shell=True)
+
+
+def remove_stopped_vm():
+    cmd = "virsh list --inactive"
+    vm_list = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
+    new_vmlist = vm_list.stdout.read()
+    for line in new_vmlist.splitlines():
+        if 'shut off' in line:
+            vm_info = line.strip().split()
+            vm_name = vm_info[1]
+            print(f'Removing {vm_name} VM files')
+            run(f'virsh undefine {vm_name}', shell=True)
+            vm_dir = f"/data/ixautomation/{vm_name}"
+            run(f"rm -rf {vm_dir}", shell=True)
