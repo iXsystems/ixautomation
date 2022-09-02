@@ -7,10 +7,6 @@ from subprocess import run, Popen, PIPE
 from time import sleep
 
 
-def vm_setup():
-    run("vm init", shell=True)
-
-
 def vm_select_iso():
     iso_dir = "tests/iso/"
     if not os.path.isdir(iso_dir):
@@ -158,17 +154,66 @@ def kvm_create_disks(vm_name):
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
 
 
-def kvm_install_vm(vm_data_dir, vm_name, xml_template):
-    pass
+def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh change-media {vm_name} sde {iso_path}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    vm_output = f"{vm_data_dir}/console.log"
+    expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
+    process = run(expctcmd, shell=True, close_fds=True)
+    # console_file = open(vm_output, 'r')
+    if process.returncode == 0:
+        os.system('reset')
+        os.system('clear')
+        print('\nTrueNAS installation successfully completed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        run(f'virsh change-media {vm_name} sde --eject', shell=True)
+        return True
+    else:
+        print('\nTrueNAS installation failed')
+        return False
 
 
-def kvm_boot_vm():
-    pass
-
-
-def exit_and_keep_vm(msg, vm):
-    print(f'## {msg}', f'\nVM name: {vm}')
-    sys.exit(1)
+def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    # change workspace to test directory
+    # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
+    vm_output = f"{vm_data_dir}/console.log"
+    expectcnd = f'expect tests/boot.exp "{vm_name}" "{vm_output}"'
+    run(expectcnd, shell=True)
+    console_file = open(vm_output, 'r').read()
+    # Reset/clear to get native term dimensions
+    os.system('reset')
+    os.system('clear')
+    try:
+        url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
+        vmip = url.group().strip().partition('//')[2]
+    except AttributeError:
+        exit_vm_fail('Failed to get an IP!', vm_name)
+    try:
+        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
+    except AttributeError:
+        exit_vm_fail('Failed to get a network interface!', vm_name)
+    print(f"TrueNAS_IP={vmip}")
+    print(f"TrueNAS_VM_NAME={vm_name}")
+    print(f"TrueNAS_VERSION={version}")
+    print(f"TrueNAS_NIC={vmnic}")
+    nas_config = "[NAS_CONFIG]\n"
+    nas_config += f"ip = {vmip}\n"
+    nas_config += "password = testing\n"
+    nas_config += f"version = {version}\n"
+    nas_config += f"nic = {vmnic}\n"
+    if os.path.exists('tests/bdd'):
+        file = open('tests/bdd/config.cfg', 'w')
+    else:
+        file = open('tests/config.cfg', 'w')
+    file.writelines(nas_config)
+    file.close()
+    # return {'ip': vmip, 'nic': vmnic}
 
 
 def exit_vm_fail(msg, vm_name):
