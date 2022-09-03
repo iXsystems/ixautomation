@@ -63,7 +63,7 @@ def create_ixautomation_bridge(nic):
 
 
 def create_workdir(vm_name):
-    builddir = '/data/ixautomation/'
+    builddir = '/data/ixautomation'
     vm_data_dir = f'{builddir}/{vm_name}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
@@ -96,9 +96,20 @@ def set_sig(vm_name):
 
 
 def start_vm(vm_name):
+    try:
+        # WORKSPACE is from Jenkins
+        workspace = os.environ["WORKSPACE"]
+    except KeyError:
+        workspace = os.getcwd()
+
+    if not os.path.exists(f'{workspace}/tests/install.exp'):
+        print('tests/install.exp not found make sure you are in a checked out '
+              'middleware repo or webui repo when running!')
+        exit(1)
+    os.chdir(workspace)
     vm_data_dir = create_workdir(vm_name)
     set_sig(vm_name)
-    select_iso = vm_select_iso()
+    select_iso = vm_select_iso(workspace)
     iso_path = select_iso['iso-path']
     version = select_iso['iso-version']
     if system() == 'FreeBSD':

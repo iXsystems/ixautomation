@@ -14,8 +14,8 @@ else:
     pass
 
 
-def vm_select_iso():
-    iso_dir = "tests/iso/"
+def vm_select_iso(workspace):
+    iso_dir = f"{workspace}tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
     # List ISOs in iso_dir and allow the user to select the target
@@ -175,6 +175,8 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
         return True
     else:
         print('\nTrueNAS installation failed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        run(f'virsh change-media {vm_name} sde --eject', shell=True)
         return False
 
 
@@ -194,7 +196,7 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
     except AttributeError:
         exit_vm_fail('Failed to get an IP!', vm_name)
     try:
-        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
+        vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
     except AttributeError:
         exit_vm_fail('Failed to get a network interface!', vm_name)
     print(f"TrueNAS_IP={vmip}")

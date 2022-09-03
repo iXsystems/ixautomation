@@ -1,8 +1,6 @@
 bhyve-firmware
 dnsmasq
 expect
-firefox
-geckodriver
 libvirt
 py39-pip
 samba412
