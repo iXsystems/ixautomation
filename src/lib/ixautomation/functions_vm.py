@@ -123,7 +123,7 @@ def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
         exit_vm_fail('Failed to get a network interface!', vm_name)
-    print(f"TrueNAS_IP={vmip}")
+    print(f"\n\nTrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
     print(f"TrueNAS_NIC={vmnic}")
@@ -199,7 +199,7 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
         vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
     except AttributeError:
         exit_vm_fail('Failed to get a network interface!', vm_name)
-    print(f"TrueNAS_IP={vmip}")
+    print(f"\n\nTrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
     print(f"TrueNAS_NIC={vmnic}")
