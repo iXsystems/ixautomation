@@ -2,6 +2,7 @@ expect
 libvirt-clients
 libvirt-daemon-system
 python3-pip
+python3-virtualenv
 qemu-system
 samba
 smbclient

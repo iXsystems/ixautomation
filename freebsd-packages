@@ -3,6 +3,7 @@ dnsmasq
 expect
 libvirt
 py39-pip
+py39-virtualenv
 samba412
 sshpass
 vm-bhyve
