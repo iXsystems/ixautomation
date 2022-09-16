@@ -94,6 +94,7 @@ def bhyve_install_vm(vm_data_dir, vm_name, xml_template):
     if process.returncode == 0:
         print('\nTrueNAS installation successfully completed')
         run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
         return True
     else:
         print('\nTrueNAS installation failed')
@@ -171,12 +172,16 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
     if process.returncode == 0:
         print('\nTrueNAS installation successfully completed')
         run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
         run(f'virsh change-media {vm_name} sde --eject', shell=True)
+        sleep(1)
         return True
     else:
         print('\nTrueNAS installation failed')
         run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
         run(f'virsh change-media {vm_name} sde --eject', shell=True)
+        sleep(1)
         return False
 
 
@@ -225,7 +230,9 @@ def exit_vm_fail(msg, vm_name):
 
 def remove_vm(vm_name):
     run(f'virsh destroy {vm_name}', shell=True)
+    sleep(1)
     run(f'virsh undefine {vm_name}', shell=True)
+    sleep(1)
     vm_dir = f"/data/ixautomation/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
 
@@ -240,6 +247,7 @@ def remove_all_vm():
             vm_name = vm_info[1]
             print(f'Removing {vm_name} VM files')
             run(f'virsh destroy {vm_name}', shell=True)
+            sleep(1)
             run(f'virsh undefine {vm_name}', shell=True)
     for vm_name in os.listdir('/data/ixautomation'):
         vm_dir = f"/data/ixautomation/{vm_name}"
@@ -256,5 +264,6 @@ def remove_stopped_vm():
             vm_name = vm_info[1]
             print(f'Removing {vm_name} VM files')
             run(f'virsh undefine {vm_name}', shell=True)
+            sleep(1)
             vm_dir = f"/data/ixautomation/{vm_name}"
             run(f"rm -rf {vm_dir}", shell=True)
