@@ -4,11 +4,14 @@ import os
 import sys
 import getpass
 import getopt
+import re
 sys.path.append("/usr/local/lib/ixautomation")
 # Source our functions
 from functions import start_automation, destroy_all_vm, destroy_vm, reset_vm
 from functions import destroy_stopped_vm, create_ixautomation_interface
 ixautomationconfig = "/usr/local/etc/ixautomation.conf"
+templates = '/usr/local/ixautomation/vms/.templates'
+profile_list = [re.sub('.conf', '', p) for p in os.listdir(templates)]
 
 curentUser = getpass.getuser()
 argument = sys.argv
@@ -31,7 +34,8 @@ optionlist = [
     "start-interface",
     "scale",
     "dev-test",
-    "debug-mode"
+    "debug-mode",
+    "profile="
 ]
 sys_dict = {
     "truenas": "FreeNAS",
@@ -88,6 +92,8 @@ Available Commands:
                             development API testing
 
 --debug-mode              - Start API test with middleware debug mode
+
+--profile                 - select the profile to create the VMS
 """
 
 # if have no argument stop
@@ -111,6 +117,7 @@ scale = ''
 vm_name = None
 dev_test = ''
 debug_mode = ''
+profile = 'truenas'
 
 for output, arg in myopts:
     if output == '--destroy-all-vm':
@@ -127,7 +134,12 @@ for output, arg in myopts:
     elif output == '--keep-alive':
         keep_alive = True
     elif output == '--run':
-        run = arg
+        if arg in runlist:
+            run = arg
+        else:
+            print(f"{run} is not a valid --run option")
+            print(UsageMSG)
+            sys.exit(1)
     elif output == '--ip':
         ipnc = arg
     elif output == '--server-ip':
@@ -143,11 +155,13 @@ for output, arg in myopts:
         dev_test = ' --dev-test'
     elif output == '--debug-mode':
         debug_mode = ' --debug-mode'
-
-if run not in runlist:
-    print(f"{run} is not a valid --run option")
-    print(UsageMSG)
-    sys.exit(1)
+    elif output == '--profile':
+        if arg in profile_list:
+            profile = arg
+        else:
+            print(f'Profile "{arg}" not support')
+            print(f'Use one of these profile in {profile_list}')
+            exit(1)
 
 # look for workspace
 try:
@@ -170,12 +184,8 @@ except KeyError:
         print(f"Please setup {syscfg} path in {ixautomationconfig}")
         sys.exit(1)
 
-sysname = sys_dict[systype]
-
 start_automation(
     workspace,
-    systype,
-    sysname,
     ipnc,
     run,
     keep_alive,
@@ -183,5 +193,6 @@ start_automation(
     scale,
     vm_name,
     dev_test,
-    debug_mode
+    debug_mode,
+    profile
 )

@@ -10,7 +10,7 @@ from setuptools import setup
 from time import sleep
 from subprocess import run
 
-__VERSION__ = '22.04.21'
+__VERSION__ = '22.09.19'
 
 PROGRAM_VERSION = __VERSION__
 
@@ -44,6 +44,7 @@ if system() == 'FreeBSD':
     etc_list.append('etc/smb4.conf')
 
 dot_templates_list = [
+    'ixautomation/vms/.templates/scale-api.conf',
     'ixautomation/vms/.templates/truenas.conf',
 ]
 
