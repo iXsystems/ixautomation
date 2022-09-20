@@ -139,7 +139,7 @@
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source index='6'/>
+      <source index='12'/>
       <target dev='sdl' bus='scsi'/>
       <readonly/>
       <serial></serial>
