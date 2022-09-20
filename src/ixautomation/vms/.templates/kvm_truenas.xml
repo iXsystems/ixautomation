@@ -77,7 +77,7 @@
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='6'/>
-      <target dev='sdk' bus='scsi'/>
+      <target dev='sdl' bus='scsi'/>
       <readonly/>
       <serial></serial>
       <boot order='1'/>
