@@ -11,7 +11,7 @@ def vm_setup():
     run("vm init", shell=True)
 
 
-def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
+def vm_select_iso(tmp_vm_dir, vm, workspace, profile):
     iso_dir = f"{workspace}/tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
@@ -22,7 +22,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_list.sort()
     # Download the latest TrueNAS ISO if no ISO found in $iso_dir
     if len(iso_list) == 0:
-        print(f'Please put a {sysname} ISO in "{iso_dir}"')
+        print(f'Please put a TrueNAS ISO in "{iso_dir}"')
         sys.exit(1)
     # Our to-be-determined file name of the ISO to test; must be inside iso_dir
     iso_name = ""
@@ -56,7 +56,7 @@ def vm_select_iso(tmp_vm_dir, vm, systype, sysname, workspace):
     iso_file = iso_dir + new_iso
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
     run(f"vm iso {iso_path}", shell=True)
-    run(f"vm create -t {systype} {vm}", shell=True)
+    run(f"vm create -t {profile} {vm}", shell=True)
     run(f"vm install {vm} {new_iso}", shell=True)
     return new_iso
 
@@ -81,7 +81,7 @@ def vm_stop(vm):
     sleep(2)
 
 
-def vm_install(tmp_vm_dir, vm, sysname, workspace):
+def vm_install(tmp_vm_dir, vm, workspace):
     testworkspace = f'{workspace}/tests'
     # Get console device for newly created vm
     sleep(1)
@@ -96,15 +96,15 @@ def vm_install(tmp_vm_dir, vm, sysname, workspace):
         os.system('reset')
         os.system('clear')
         os.chdir(workspace)
-        print(f"{sysname} installation successfully completed")
+        print("TrueNAS installation successfully completed")
         vm_stop(vm)
         return True
     else:
-        print(f"\n{sysname} installation failed")
+        print("\nTrueNAS installation failed")
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version, keep_alive):
+def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -134,10 +134,10 @@ def vm_boot(tmp_vm_dir, vm, test_type, sysname, workspace, version, keep_alive):
             exit_and_keep_vm('Failed to get a network interface!', vm)
         else:
             exit_vm_fail('Failed to get a network interface!', vm)
-    print(f"{sysname}_IP={vmip}")
-    print(f"{sysname}_VM_NAME={vm}")
-    print(f"{sysname}_VERSION={version}")
-    print(f"{sysname}_NIC={vmnic}")
+    print(f"TrueNAS_IP={vmip}")
+    print(f"TrueNAS_VM_NAME={vm}")
+    print(f"TrueNAS_VERSION={version}")
+    print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
