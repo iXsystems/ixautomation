@@ -133,7 +133,7 @@
       <source file='/data/ixautomation/nas_name/disk10.qcow2' index='1'/>
       <backingStore/>
       <target dev='sdk' bus='scsi'/>
-      <serial>PCJUAJ9X</serial>
+      <serial>PCJUA10X</serial>
       <alias name='scsi0-0-0-10'/>
       <address type='drive' controller='0' bus='0' target='0' unit='10'/>
     </disk>
