@@ -246,6 +246,8 @@ def remove_vm(vm_name):
     sleep(1)
     run(f'virsh undefine {vm_name}', shell=True)
     sleep(1)
+    run(f'virsh undefine --nvram {vm_name}', shell=True)
+    sleep(1)
     vm_dir = f"/data/ixautomation/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
 
@@ -262,6 +264,8 @@ def remove_all_vm():
             run(f'virsh destroy {vm_name}', shell=True)
             sleep(1)
             run(f'virsh undefine {vm_name}', shell=True)
+            sleep(1)
+            run(f'virsh undefine --nvram {vm_name}', shell=True)
     for vm_name in os.listdir('/data/ixautomation'):
         vm_dir = f"/data/ixautomation/{vm_name}"
         run(f"rm -rf {vm_dir}", shell=True)
@@ -278,5 +282,6 @@ def remove_stopped_vm():
             print(f'Removing {vm_name} VM files')
             run(f'virsh undefine {vm_name}', shell=True)
             sleep(1)
+            run(f'virsh undefine --nvram {vm_name}', shell=True)
             vm_dir = f"/data/ixautomation/{vm_name}"
             run(f"rm -rf {vm_dir}", shell=True)
