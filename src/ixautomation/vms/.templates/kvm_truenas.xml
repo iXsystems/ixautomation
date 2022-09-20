@@ -77,11 +77,11 @@
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='6'/>
-      <target dev='sdl' bus='scsi'/>
+      <target dev='sde' bus='scsi'/>
       <readonly/>
       <serial></serial>
       <boot order='1'/>
-      <alias name='scsi0-0-0-11'/>
+      <alias name='scsi0-0-0-4'/>
       <address type='drive' controller='0' bus='0' target='0' unit='4'/>
     </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>

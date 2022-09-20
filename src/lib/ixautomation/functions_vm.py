@@ -174,7 +174,7 @@ def kvm_create_disks(vm_name, profile):
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
     run(f'virsh define {xml_template}', shell=True)
     sleep(1)
-    run(f'virsh change-media {vm_name} sdl {iso_path}', shell=True)
+    run(f'virsh change-media {vm_name} sde {iso_path}', shell=True)
     sleep(1)
     run(f'virsh start {vm_name}', shell=True)
     sleep(1)
@@ -193,7 +193,7 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
         print('\nTrueNAS installation failed')
         run(f'virsh destroy {vm_name}', shell=True)
         sleep(1)
-        run(f'virsh change-media {vm_name} sdl --eject', shell=True)
+        run(f'virsh change-media {vm_name} sde --eject', shell=True)
         sleep(1)
         return False
 
