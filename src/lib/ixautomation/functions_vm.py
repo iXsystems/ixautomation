@@ -76,7 +76,7 @@ def setup_bhyve_first_boot_template(vm_name, vm_data_dir):
 
 
 def bhyve_create_disks(vm_name):
-    run(f'truncate -s 32G /data/ixautomation/{vm_name}/disk0.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk0.img', shell=True)
     run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk1.img', shell=True)
     run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk2.img', shell=True)
     run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk3.img', shell=True)
@@ -142,8 +142,8 @@ def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
     # return {'ip': vmip, 'nic': vmnic}
 
 
-def setup_kvm_template(vm_name, vm_data_dir):
-    template = open('/usr/local/ixautomation/vms/.templates/kvm_truenas.xml').read()
+def setup_kvm_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}.xml').read()
     boot_template = re.sub('nas_name', vm_name, template)
     save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
     save_template.writelines(boot_template)
@@ -151,17 +151,30 @@ def setup_kvm_template(vm_name, vm_data_dir):
     return f'{vm_data_dir}/{vm_name}.xml'
 
 
-def kvm_create_disks(vm_name):
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 32G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
+def kvm_create_disks(vm_name, profile):
+    if profile == 'kvm_scale_api':
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk7.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 8G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 8G', shell=True)
+    else:
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
     run(f'virsh define {xml_template}', shell=True)
     sleep(1)
-    run(f'virsh change-media {vm_name} sde {iso_path}', shell=True)
+    run(f'virsh change-media {vm_name} sdl {iso_path}', shell=True)
     sleep(1)
     run(f'virsh start {vm_name}', shell=True)
     sleep(1)
@@ -180,7 +193,7 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
         print('\nTrueNAS installation failed')
         run(f'virsh destroy {vm_name}', shell=True)
         sleep(1)
-        run(f'virsh change-media {vm_name} sde --eject', shell=True)
+        run(f'virsh change-media {vm_name} sdl --eject', shell=True)
         sleep(1)
         return False
 
