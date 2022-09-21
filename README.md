@@ -1,7 +1,7 @@
 Tool to automate TrueNAS VM creation for Jenkins for API, UI testing
 ===========
 
-iXautomation allow you to start TrueNAS VMs with Bhyve and KVM to run the API and UI tests for TrueNAS either as an automated job from Jenkins or manually.
+iXautomation allow you to start TrueNAS VMs with Bhyve on FreeBSD and KVM on Debian it can be use to spin VM either as an automated job from Jenkins or manually for for API test and UI test.
 
 ### Requirements
 
@@ -9,8 +9,8 @@ iXautomation allow you to start TrueNAS VMs with Bhyve and KVM to run the API an
 
 * CPU: 4 Cores or more
 * Memory: 16GB
-* Disk: 100GB
-* Wired Ethernet connection for vm-bhyve bridge
+* Disk: 200GB
+* Wired Ethernet connection
 
 **Required OS:**
 
