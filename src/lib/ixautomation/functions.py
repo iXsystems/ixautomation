@@ -95,7 +95,7 @@ def set_sig(vm_name):
     signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
-def start_vm(vm_name):
+def start_vm(vm_name, profile):
     try:
         # WORKSPACE is from Jenkins
         workspace = os.environ["WORKSPACE"]
@@ -122,8 +122,8 @@ def start_vm(vm_name):
         bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
         # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
-        xml_template = setup_kvm_template(vm_name, vm_data_dir)
-        kvm_create_disks(vm_name)
+        xml_template = setup_kvm_template(vm_name, vm_data_dir, profile)
+        kvm_create_disks(vm_name, profile)
         kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path)
         kvm_boot_vm(vm_data_dir, vm_name, xml_template, version)
     else:
