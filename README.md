@@ -1,7 +1,7 @@
-Jenkins automation testing framework for iX projects
+Tool to automate TrueNAS VM creation for Jenkins for API, UI testing
 ===========
 
-The scripts in this repository will allow you to start Bhyve VM and run tests for some FreeNAS and TrueNAS, either as an automated job from Jenkins or manually.
+iXautomation allow you to start TrueNAS VMs with Bhyve and KVM to run the API and UI tests for TrueNAS either as an automated job from Jenkins or manually.
 
 ### Requirements
 
@@ -14,8 +14,8 @@ The scripts in this repository will allow you to start Bhyve VM and run tests fo
 
 **Required OS:**
 
-* [FreeBSD](https://www.freebsd.org/where.html)
-* [GhostBSD](https://www.ghostbsd.org/download)
+* FreeBSD base
+* Debian base
 
 **Jenkins Requirements:**
 * One master node
@@ -30,84 +30,66 @@ The scripts in this repository will allow you to start Bhyve VM and run tests fo
 * [Workspace Cleanup](https://wiki.jenkins.io/display/JENKINS/Workspace+Cleanup+Plugin)
 
 
-### Install the framework on FreeBSD and GhostBSD
+### Install and setup iXautomation on FreeBSD or Debian.
 
 **From GitHub:**
 
 ```
-pkg install python3 py38-pip expect sshpass bhyve-firmware net-snmp geckodriver firefox
-git clone --depth 1 https://github.com/ixsystems/ixautomation.git
-cd ixautomation/src
+git clone --depth 1 --branch libvirt https://github.com/ixsystems/ixautomation.git
+cd ixautomation/
+sudo python3 setup_workstation.py
+cd src
 sudo python3 setup.py install
 ```
 
-### Setting iXautomation
-
-Configure vm-bhyve for ixautomation
-
-```
-sysrc -f /etc/rc.conf vm_enable="YES"
-sysrc -f /etc/rc.conf vm_dir="/usr/local/ixautomation/vms"
-```
-### To use manually
-
-Set location of the git repository with the tests in **/user/local/etc/ixautomation.conf**
-
-```
-## When running outside of Jenkins set WORKSPACE to the path of the local git repository containing tests
-FreeNAS = "/home/eturgeon/projects/ixsystems/freenas"
-WebUI = "/home/eturgeon/projects/ixsystems/webui"
-```
-Put the iso to run with the VM in **freenas/tests/iso/**
+Put the iso to run with the VM in **middleware/tests/iso/** or **webui/tests/iso/**
 
 #### Start VM and clean
 Create a VM, and test the installation using vm-bhyve.
 
 ```
+cd middleware
+```
+or
+```
+cd webui
 sudo ixautomation --run vm-tests
 ```
 
-To keep the vm running use --keep-alive option.
+Starting ixautomation with WORKSPACE and custom name
 ```
-sudo ixautomation --run vm-tests --keep-alive
+WORKSPACE=/path/to/middleware ixautomation --vm-name scale-vm
 ```
 
-To shutdown, and clean up all running vms.
+To stop, and clean up all running vms.
 ```
 sudo ixautomation --destroy-all-vm
 ```
 
 To shutdown, and clean up a VM.
 ```
-sudo ixautomation --destroy-vm ABCD
+sudo ixautomation --destroy-vm the-vm-name
 ```
 
-#### FreeNAS REST API tests
-
-Creating a VM and run API 1.0 tests.
-
+To stop and and clean olly the stopped vms
 ```
-sudo ixautomation --run api-tests
+sudo ixautomation --destroy-stopped-vm
 ```
 
-Creating a VM and run API 2.0 tests.
+iXautomaion will output the vm ip, name, ISO version and network interface like below
+```
+TrueNAS_IP=192.186.0.58
+TrueNAS_VM_NAME=scale-vm
+TrueNAS_VERSION=TrueNAS-SCALE-22.12-MASTER-20220921-015225
+TrueNAS_NIC=enp1s0
+```
+
+It also create tests/config.cfg that webui test and pipeline uses ti looks like bellow.
 
 ```
-sudo ixautomation --run api2-tests
-```
-
-Run API test on a Bhyve VM.
-
-```
-sudo ixautomation --run api-tests --ip 192.168.0.10
-```
-For a VM or a real machine add the interface to use.
-
-```
-sudo ixautomation --run api-tests --ip 192.168.0.10:re0
-```
-Run Kyua test on a VM or a real machine
-
-```
-sudo ixautomation --run kyua-tests --ip 192.168.0.10
+[NAS_CONFIG]
+ip = 192.186.0.58
+password = testing
+version = TrueNAS-SCALE-22.12-MASTER-20220921-015225
+nic = enp1s0
 ```
