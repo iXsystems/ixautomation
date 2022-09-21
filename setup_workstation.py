@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 
 import os
+import re
 from platform import system
 from subprocess import run
+from time import sleep
+
+BRIDGE_RULES = """ACTION=="add", SUBSYSTEM=="module", KERNEL=="br_netfilter", \
+      RUN+="/usr/lib/systemd/systemd-sysctl --prefix=/net/bridge"
+"""
+
+BRIDGE_CONF = """net.bridge.bridge-nf-call-arptables = 0
+net.bridge.bridge-nf-call-ip6tables = 0
+net.bridge.bridge-nf-call-iptables = 0
+"""
 
 
 def sysrc(service, option, rc_path=None):
@@ -17,6 +28,27 @@ def freebsd_service(service, option):
 def setup_Linux():
     packages = open('linux-packages').read().replace('\n', ' ')
     run(f'apt install -y {packages}', shell=True)
+    sleep(1)
+    qemuconf = open('/etc/libvirt/qemu.conf').read()
+    if '#user = "root"' in qemuconf:
+        qemuconf = re.sub(r'#user = "root"', 'user = "root"', qemuconf)
+    if '#user = "root"' in qemuconf:
+        qemuconf = re.sub(r'#group = "root"', 'group = "root"', qemuconf)
+    save_parser_file = open('/etc/libvirt/qemu.conf', 'w')
+    save_parser_file.writelines(qemuconf)
+    save_parser_file.close()
+
+    save_bridge_rules = open('/etc/udev/rules.d/99-bridge.rules', 'w')
+    save_bridge_rules.writelines(BRIDGE_RULES)
+    save_bridge_rules.close()
+
+    save_bridge_conf = open('/etc/sysctl.d/bridge.conf', 'w')
+    save_bridge_conf.writelines(BRIDGE_CONF)
+    save_bridge_conf.close()
+    sleep(1)
+    run('sysctl -p /etc/sysctl.d/bridge.conf', shell=True)
+    run('systemctl restart libvirtd', shell=True)
+    sleep(1)
 
 
 def setup_FreeBSD():
