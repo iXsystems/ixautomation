@@ -152,23 +152,18 @@ def setup_kvm_template(vm_name, vm_data_dir, profile):
 
 
 def kvm_create_disks(vm_name, profile):
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
     if profile == 'kvm_scale_api':
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk7.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 8G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 8G', shell=True)
-    else:
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk7.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 20G', shell=True)
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
