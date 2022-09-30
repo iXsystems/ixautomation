@@ -251,11 +251,8 @@
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </controller>
     <interface type='bridge'>
-      <mac address='52:54:00:67:4a:51'/>
       <source bridge='br0'/>
-      <target dev='vnet19'/>
       <model type='virtio'/>
-      <alias name='net0'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
     <serial type='pty'>

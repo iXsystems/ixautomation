@@ -1,6 +1,5 @@
 <domain type='kvm' id='20'>
   <name>nas_name</name>
-<!--   <uuid>a2f9d2c1-fd7b-443d-895f-59e7354739fb</uuid> -->
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://debian.org/debian/11"/>
@@ -188,11 +187,8 @@
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </controller>
     <interface type='bridge'>
-      <mac address='52:54:00:67:4a:51'/>
       <source bridge='br0'/>
-      <target dev='vnet19'/>
       <model type='virtio'/>
-      <alias name='net0'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
     <serial type='pty'>
