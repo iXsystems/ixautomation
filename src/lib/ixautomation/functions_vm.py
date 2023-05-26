@@ -127,12 +127,12 @@ def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
     print(f"\n\nTrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
-    #print(f"TrueNAS_NIC={vmnic}")
+    # print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
-    #nas_config += f"nic = {vmnic}\n"
+    # nas_config += f"nic = {vmnic}\n"
     if os.path.exists('tests/bdd'):
         file = open('tests/bdd/config.cfg', 'w')
     else:
@@ -208,19 +208,19 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
         vmip = url.group().strip().partition('//')[2]
     except AttributeError:
         exit_vm_fail('Failed to get an IP!', vm_name)
-    try:
-        vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
-    except AttributeError:
-        exit_vm_fail('Failed to get a network interface!', vm_name)
+    # try:
+    #     vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
+    # except AttributeError:
+    #     exit_vm_fail('Failed to get a network interface!', vm_name)
     print(f"\n\nTrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
-    print(f"TrueNAS_NIC={vmnic}")
+    # print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
-    nas_config += f"nic = {vmnic}\n"
+    # nas_config += f"nic = {vmnic}\n"
     if os.path.exists('tests/bdd'):
         file = open('tests/bdd/config.cfg', 'w')
     else:
