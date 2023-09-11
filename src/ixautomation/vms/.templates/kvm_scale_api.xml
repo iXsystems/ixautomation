@@ -8,7 +8,7 @@
   </metadata>
   <memory unit='KiB'>8388608</memory>
   <currentMemory unit='KiB'>8388608</currentMemory>
-  <vcpu placement='static'>2</vcpu>
+  <vcpu placement='static'>4</vcpu>
   <resource>
     <partition>/machine</partition>
   </resource>
