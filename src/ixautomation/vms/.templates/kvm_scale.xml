@@ -43,6 +43,7 @@
       <backingStore/>
       <target dev='sda' bus='scsi'/>
       <serial>PCJUAJ6X</serial>
+      <boot order='2'/>
       <alias name='scsi0-0-0-0'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
