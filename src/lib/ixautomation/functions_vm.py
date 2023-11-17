@@ -169,7 +169,7 @@ def kvm_create_disks(vm_name, profile):
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
-    cdrom = 'sdn' if profile == 'kvm_scale' else 'sde'
+    cdrom = 'sr0' if profile == 'kvm_scale' else 'sde'
     print(cdrom)
     print(profile)
     run(f'virsh define {xml_template}', shell=True)
