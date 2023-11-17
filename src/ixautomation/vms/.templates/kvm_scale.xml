@@ -153,7 +153,7 @@
       <backingStore/>
       <target dev='sdm' bus='scsi'/>
       <serial>PCJUA11X</serial>
-      <alias name='scsi0-0-0-11'/>
+      <alias name='scsi0-0-0-12'/>
       <address type='drive' controller='0' bus='0' target='0' unit='12'/>
     </disk>
     <disk type='file' device='disk'>
@@ -162,7 +162,7 @@
       <backingStore/>
       <target dev='sdn' bus='scsi'/>
       <serial>PCJUA12X</serial>
-      <alias name='scsi0-0-0-11'/>
+      <alias name='scsi0-0-0-13'/>
       <address type='drive' controller='0' bus='0' target='0' unit='13'/>
     </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
