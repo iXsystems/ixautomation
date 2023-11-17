@@ -53,6 +53,7 @@
       <backingStore/>
       <target dev='sdb' bus='scsi'/>
       <serial>PCJUT7BX</serial>
+      <boot order='3'/>
       <alias name='scsi0-0-0-1'/>
       <address type='drive' controller='0' bus='0' target='0' unit='1'/>
     </disk>
@@ -62,6 +63,7 @@
       <backingStore/>
       <target dev='sdc' bus='scsi'/>
       <serial>PCJUAJ7X</serial>
+      <boot order='4'/>
       <alias name='scsi0-0-0-2'/>
       <address type='drive' controller='0' bus='0' target='0' unit='2'/>
     </disk>
@@ -71,13 +73,14 @@
       <backingStore/>
       <target dev='sdd' bus='scsi'/>
       <serial>PCJUT9CX</serial>
+      <boot order='5'/>
       <alias name='scsi0-0-0-3'/>
       <address type='drive' controller='0' bus='0' target='0' unit='3'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='5'/>
-      <target dev='sde' bus='scsi'/>
+      <target dev='sr0' bus='scsi'/>
       <readonly/>
       <serial></serial>
       <boot order='1'/>
@@ -90,6 +93,7 @@
       <backingStore/>
       <target dev='sdf' bus='scsi'/>
       <serial>PCJUAK7X</serial>
+      <boot order='6'/>
       <alias name='scsi0-0-0-5'/>
       <address type='drive' controller='0' bus='0' target='0' unit='5'/>
     </disk>
