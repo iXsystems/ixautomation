@@ -164,6 +164,8 @@ def kvm_create_disks(vm_name, profile):
         run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 20G', shell=True)
         run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 20G', shell=True)
         run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk11.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk12.qcow2 20G', shell=True)
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path):
