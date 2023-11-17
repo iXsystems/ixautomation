@@ -80,7 +80,7 @@
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='5'/>
-      <target dev='sr0' bus='scsi'/>
+      <target dev='sdn' bus='scsi'/>
       <readonly/>
       <serial></serial>
       <boot order='1'/>
@@ -91,7 +91,7 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk4.qcow2' index='6'/>
       <backingStore/>
-      <target dev='sdf' bus='scsi'/>
+      <target dev='sde' bus='scsi'/>
       <serial>PCJUAK7X</serial>
       <boot order='6'/>
       <alias name='scsi0-0-0-5'/>
@@ -101,8 +101,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk5.qcow2' index='7'/>
       <backingStore/>
-      <target dev='sdg' bus='scsi'/>
+      <target dev='sdf' bus='scsi'/>
       <serial>PCJUT7CX</serial>
+      <boot order='7'/>
       <alias name='scsi0-0-0-6'/>
       <address type='drive' controller='0' bus='0' target='0' unit='6'/>
     </disk>
@@ -110,8 +111,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk6.qcow2' index='8'/>
       <backingStore/>
-      <target dev='sdh' bus='scsi'/>
+      <target dev='sdg' bus='scsi'/>
       <serial>PCJUAJ8X</serial>
+      <boot order='8'/>
       <alias name='scsi0-0-0-7'/>
       <address type='drive' controller='0' bus='0' target='0' unit='7'/>
     </disk>
@@ -119,8 +121,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk7.qcow2' index='9'/>
       <backingStore/>
-      <target dev='sdi' bus='scsi'/>
+      <target dev='sdh' bus='scsi'/>
       <serial>PCJUT7DX</serial>
+      <boot order='9'/>
       <alias name='scsi0-0-0-8'/>
       <address type='drive' controller='0' bus='0' target='0' unit='8'/>
     </disk>
@@ -128,8 +131,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk8.qcow2' index='10'/>
       <backingStore/>
-      <target dev='sdj' bus='scsi'/>
+      <target dev='sdi' bus='scsi'/>
       <serial>PCJUT7EX</serial>
+      <boot order='10'/>
       <alias name='scsi0-0-0-9'/>
       <address type='drive' controller='0' bus='0' target='0' unit='9'/>
     </disk>
@@ -137,8 +141,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk9.qcow2' index='11'/>
       <backingStore/>
-      <target dev='sdk' bus='scsi'/>
+      <target dev='sdj' bus='scsi'/>
       <serial>PCJUAJ9X</serial>
+      <boot order='11'/>
       <alias name='scsi0-0-0-10'/>
       <address type='drive' controller='0' bus='0' target='0' unit='10'/>
     </disk>
@@ -146,8 +151,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk10.qcow2' index='12'/>
       <backingStore/>
-      <target dev='sdl' bus='scsi'/>
+      <target dev='sdk' bus='scsi'/>
       <serial>PCJUA10X</serial>
+      <boot order='12'/>
       <alias name='scsi0-0-0-11'/>
       <address type='drive' controller='0' bus='0' target='0' unit='11'/>
     </disk>
@@ -155,8 +161,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk11.qcow2' index='13'/>
       <backingStore/>
-      <target dev='sdm' bus='scsi'/>
+      <target dev='sdl' bus='scsi'/>
       <serial>PCJUA11X</serial>
+      <boot order='13'/>
       <alias name='scsi0-0-0-12'/>
       <address type='drive' controller='0' bus='0' target='0' unit='12'/>
     </disk>
@@ -164,8 +171,9 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk12.qcow2' index='14'/>
       <backingStore/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sdm' bus='scsi'/>
       <serial>PCJUA12X</serial>
+      <boot order='14'/>
       <alias name='scsi0-0-0-13'/>
       <address type='drive' controller='0' bus='0' target='0' unit='13'/>
     </disk>
