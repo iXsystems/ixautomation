@@ -149,7 +149,7 @@
     </disk>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/data/ixautomation/nas_name/disk10.qcow2' index='13'/>
+      <source file='/data/ixautomation/nas_name/disk11.qcow2' index='13'/>
       <backingStore/>
       <target dev='sdl' bus='scsi'/>
       <serial>PCJUA10X</serial>
@@ -158,7 +158,7 @@
     </disk>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/data/ixautomation/nas_name/disk10.qcow2' index='14'/>
+      <source file='/data/ixautomation/nas_name/disk12.qcow2' index='14'/>
       <backingStore/>
       <target dev='sdl' bus='scsi'/>
       <serial>PCJUA10X</serial>
