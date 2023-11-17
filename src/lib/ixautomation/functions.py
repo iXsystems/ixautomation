@@ -124,7 +124,7 @@ def start_vm(vm_name, profile):
         # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
         xml_template = setup_kvm_template(vm_name, vm_data_dir, profile)
         kvm_create_disks(vm_name, profile)
-        kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path)
+        kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile)
         kvm_boot_vm(vm_data_dir, vm_name, xml_template, version)
     else:
         print(f'{system()} is not supported with iXautomation')
