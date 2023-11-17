@@ -44,7 +44,6 @@
       <backingStore/>
       <target dev='sda' bus='scsi'/>
       <serial>PCJUAJ6X</serial>
-      <boot order='2'/>
       <alias name='scsi0-0-0-0'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
@@ -54,7 +53,6 @@
       <backingStore/>
       <target dev='sdb' bus='scsi'/>
       <serial>PCJUT7BX</serial>
-      <boot order='3'/>
       <alias name='scsi0-0-0-1'/>
       <address type='drive' controller='0' bus='0' target='0' unit='1'/>
     </disk>
@@ -64,7 +62,6 @@
       <backingStore/>
       <target dev='sdc' bus='scsi'/>
       <serial>PCJUAJ7X</serial>
-      <boot order='4'/>
       <alias name='scsi0-0-0-2'/>
       <address type='drive' controller='0' bus='0' target='0' unit='2'/>
     </disk>
@@ -74,7 +71,6 @@
       <backingStore/>
       <target dev='sdd' bus='scsi'/>
       <serial>PCJUT9CX</serial>
-      <boot order='5'/>
       <alias name='scsi0-0-0-3'/>
       <address type='drive' controller='0' bus='0' target='0' unit='3'/>
     </disk>
@@ -84,7 +80,6 @@
       <target dev='sde' bus='scsi'/>
       <readonly/>
       <serial></serial>
-      <boot order='1'/>
       <alias name='scsi0-0-0-4'/>
       <address type='drive' controller='0' bus='0' target='0' unit='4'/>
     </disk>
@@ -94,7 +89,6 @@
       <backingStore/>
       <target dev='sdf' bus='scsi'/>
       <serial>PCJUAK7X</serial>
-      <boot order='6'/>
       <alias name='scsi0-0-0-5'/>
       <address type='drive' controller='0' bus='0' target='0' unit='5'/>
     </disk>
@@ -104,7 +98,6 @@
       <backingStore/>
       <target dev='sdg' bus='scsi'/>
       <serial>PCJUT7CX</serial>
-      <boot order='7'/>
       <alias name='scsi0-0-0-6'/>
       <address type='drive' controller='0' bus='0' target='0' unit='6'/>
     </disk>
@@ -114,7 +107,6 @@
       <backingStore/>
       <target dev='sdh' bus='scsi'/>
       <serial>PCJUAJ8X</serial>
-      <boot order='8'/>
       <alias name='scsi0-0-0-7'/>
       <address type='drive' controller='0' bus='0' target='0' unit='7'/>
     </disk>
@@ -124,7 +116,6 @@
       <backingStore/>
       <target dev='sdi' bus='scsi'/>
       <serial>PCJUT7DX</serial>
-      <boot order='9'/>
       <alias name='scsi0-0-0-8'/>
       <address type='drive' controller='0' bus='0' target='0' unit='8'/>
     </disk>
@@ -134,7 +125,6 @@
       <backingStore/>
       <target dev='sdj' bus='scsi'/>
       <serial>PCJUT7EX</serial>
-      <boot order='10'/>
       <alias name='scsi0-0-0-9'/>
       <address type='drive' controller='0' bus='0' target='0' unit='9'/>
     </disk>
@@ -144,7 +134,6 @@
       <backingStore/>
       <target dev='sdk' bus='scsi'/>
       <serial>PCJUAJ9X</serial>
-      <boot order='11'/>
       <alias name='scsi0-0-0-10'/>
       <address type='drive' controller='0' bus='0' target='0' unit='10'/>
     </disk>
@@ -154,7 +143,6 @@
       <backingStore/>
       <target dev='sdl' bus='scsi'/>
       <serial>PCJUA10X</serial>
-      <boot order='12'/>
       <alias name='scsi0-0-0-11'/>
       <address type='drive' controller='0' bus='0' target='0' unit='11'/>
     </disk>
@@ -164,7 +152,6 @@
       <backingStore/>
       <target dev='sdm' bus='scsi'/>
       <serial>PCJUA11X</serial>
-      <boot order='13'/>
       <alias name='scsi0-0-0-12'/>
       <address type='drive' controller='0' bus='0' target='0' unit='12'/>
     </disk>
@@ -174,7 +161,6 @@
       <backingStore/>
       <target dev='sdn' bus='scsi'/>
       <serial>PCJUA12X</serial>
-      <boot order='14'/>
       <alias name='scsi0-0-0-13'/>
       <address type='drive' controller='0' bus='0' target='0' unit='13'/>
     </disk>
