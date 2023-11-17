@@ -157,7 +157,7 @@
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='13'/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sr0' bus='scsi'/>
       <readonly/>
       <alias name='scsi0-0-0-13'/>
       <address type='drive' controller='0' bus='0' target='0' unit='13'/>
