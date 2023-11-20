@@ -214,7 +214,7 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
 
 
 def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
-    run(f'virsh undefine {vm_name}', shell=True)
+    run(f'virsh undefine --nvram {vm_name}', shell=True)
     sleep(1)
     run(f'virsh define {xml_template}', shell=True)
     sleep(1)
@@ -263,10 +263,12 @@ def exit_vm_fail(msg, vm_name):
 def remove_vm(vm_name):
     run(f'virsh destroy {vm_name}', shell=True)
     sleep(1)
-    run(f'virsh undefine {vm_name}', shell=True)
-    sleep(1)
-    run(f'virsh undefine --nvram {vm_name}', shell=True)
-    sleep(1)
+    if system() == 'FreeBSD':
+        run(f'virsh undefine {vm_name}', shell=True)
+        sleep(1)
+    else:
+        run(f'virsh undefine --nvram {vm_name}', shell=True)
+        sleep(1)
     vm_dir = f"/data/ixautomation/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
 
