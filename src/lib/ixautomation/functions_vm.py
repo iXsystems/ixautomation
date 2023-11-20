@@ -66,6 +66,13 @@ def setup_bhyve_install_template(vm_name, iso_path, vm_data_dir):
     return f'{vm_data_dir}/{vm_name}.xml'
 
 
+def setup_bhyve_first_boot_template(vm_name, vm_data_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
 def bhyve_create_disks(vm_name):
