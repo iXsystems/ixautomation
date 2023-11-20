@@ -151,6 +151,24 @@ def setup_kvm_template(vm_name, vm_data_dir, profile):
     return f'{vm_data_dir}/{vm_name}.xml'
 
 
+def setup_kvm_install_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}_install.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
+
+
+def setup_kvm_boot_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}_boot.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
+
+
 def kvm_create_disks(vm_name, profile):
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
@@ -169,7 +187,7 @@ def kvm_create_disks(vm_name, profile):
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
-    cdrom = 'sde'
+    cdrom = 'sdb'
     run(f'virsh define {xml_template}', shell=True)
     sleep(1)
     run(f'virsh change-media {vm_name} {cdrom} {iso_path}', shell=True)
@@ -179,7 +197,6 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
     vm_output = f"{vm_data_dir}/console.log"
     expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
     process = run(expctcmd, shell=True, close_fds=True)
-    # console_file = open(vm_output, 'r')
     if process.returncode == 0:
         print('\nTrueNAS installation successfully completed')
         run(f'virsh destroy {vm_name}', shell=True)
@@ -197,6 +214,10 @@ def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
 
 
 def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
+    run(f'virsh undefine {vm_name}', shell=True)
+    sleep(1)
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
     run(f'virsh start {vm_name}', shell=True)
     sleep(1)
     # change workspace to test directory
