@@ -7,27 +7,10 @@ import os
 import shutil
 from platform import system
 from setuptools import setup
-from time import sleep
-from subprocess import run
 
 __VERSION__ = '22.09.19'
 
 PROGRAM_VERSION = __VERSION__
-
-install_requires = [
-    'boto3',
-    'pexpect',
-    'pytest==5.3.0',
-    'pytest-bdd==4.1.0',
-    'pytest-dependency',
-    'pytest-rerunfailures',
-    'pytest-timeout',
-    'pytz',
-    'pyyaml',
-    'requests',
-    'selenium==3.141.0' if system() == 'FreeBSD' else 'selenium',
-    'websocket-client'
-]
 
 # Hardcode prefix to /usr/local for BSD, Debian and Docker
 prefix = '/usr/local'
@@ -36,16 +19,18 @@ init_list = [
     'etc/init.d/ixautomation',
 ]
 
-etc_list = [
-    'etc/ixautomation.conf.dist',
-]
+etc_list = []
 
 if system() == 'FreeBSD':
     etc_list.append('etc/smb4.conf')
 
 dot_templates_list = [
-    'ixautomation/vms/.templates/scale-api.conf',
-    'ixautomation/vms/.templates/truenas.conf',
+    'ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml',
+    'ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml',
+    'ixautomation/vms/.templates/kvm_scale.xml',
+    'ixautomation/vms/.templates/kvm_scale_boot.xml',
+    'ixautomation/vms/.templates/kvm_scale_install.xml',
+    'ixautomation/vms/.templates/kvm_truenas.xml'
 ]
 
 lib_ixautomation_list = [
@@ -72,15 +57,9 @@ setup(
     url='https://github/ixsystems/ixautomation/',
     package_dir={'': '.'},
     data_files=data_files,
-    install_requires=install_requires,
     scripts=['bin/ixautomation']
 )
 
 
 if system() == 'Linux':
     os.remove('etc/smb.conf')
-
-# Since we can import a module installed from and in setup.py we run a separate
-# script to path pytest_bdd for Jira.
-sleep(1)
-run('python3 patch_pytest_bdd.py', shell=True)

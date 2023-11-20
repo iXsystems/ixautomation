@@ -2,238 +2,157 @@
 
 import json
 import os
+
 import re
 import requests
 import signal
 import sys
 import time
-from subprocess import Popen, run, PIPE, call, DEVNULL
-from shutil import copyfile
-import random
-import string
-from functions_vm import vm_destroy, vm_setup, vm_select_iso, clean_vm
-from functions_vm import vm_boot, vm_install, vm_stop_all, clean_all_vm
-from functions_vm import vm_destroy_stopped_vm
-
-ixautomation_config = '/usr/local/etc/ixautomation.conf'
-
-notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|faith|" \
-    r"ppp|bridge|wg|wlan|ix)[0-9]+(\s*)|vm-[a-z]+(\s*)"
-
-capabilities = {
-    'RXCSUM,': '-rxcsum',
-    'TXCSUM,': '-txcsum',
-    'TSO4,': '-tso4',
-    'TSO6,': '-tso6',
-    'LRO,': '-lro',
-    'RXCSUM_IPV6': '-rxcsum6',
-    'TXCSUM_IPV6': '-txcsum6'
-}
+from functools import partial
+from platform import system
+from subprocess import Popen, run, PIPE, DEVNULL
+from functions_vm import (
+    vm_select_iso,
+    setup_bhyve_install_template,
+    setup_bhyve_first_boot_template,
+    bhyve_install_vm,
+    bhyve_create_disks,
+    bhyve_boot_vm,
+    setup_kvm_install_template,
+    setup_kvm_boot_template,
+    setup_kvm_template,
+    kvm_create_disks,
+    kvm_install_vm,
+    kvm_boot_vm,
+    remove_vm,
+    remove_all_vm,
+    remove_stopped_vm
+)
 
 
-def create_ixautomation_interface():
-    ncard = 'ifconfig -l'
-    netcard = Popen(
-        ncard,
+def nics_list():
+    cmd = 'ifconfig -l'
+    nics = Popen(
+        cmd,
         shell=True,
         stdout=PIPE,
         close_fds=True,
         universal_newlines=True
     ).stdout.read().strip()
-    if "ixautomation" not in netcard:
-        if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
-            os.remove('/usr/local/ixautomation/vms/.config/system.conf')
-        # loop true ixautomation config list to get host_nic if setup
-        ixautomationcfglist = open(ixautomation_config, 'r').readlines()
-        for line in ixautomationcfglist:
-            if 'host_nic' in line and "#" not in line:
-                nic = line.rstrip().split('=')[1].replace('"', '').strip()
-                break
-        else:
-            nics = re.sub(notnics_regex, '', netcard).strip().split()
-            for nic in nics:
-                cmd = f'ifconfig {nic}'
-                nic_info = Popen(
-                    cmd,
-                    shell=True,
-                    stdout=PIPE,
-                    close_fds=True,
-                    universal_newlines=True
-                ).stdout.read()
-                if 'status: active' in nic_info:
-                    break
-            else:
-                print("No network card with active internet connection")
-                exit(1)
-        # remove some capabilities that could stop network
-        nic_output = Popen(
-            f'ifconfig {nic}',
-            shell=True,
-            stdout=PIPE,
-            close_fds=True,
-            universal_newlines=True
-        ).stdout.read()
-        offload_options = ""
-        for capability in list(capabilities.keys()):
-            if capability in nic_output:
-                offload_options += f' {capabilities[capability]}'
-        call(f'ifconfig {nic}{offload_options}', shell=True)
-        call('vm switch create ixautomation', shell=True)
-        call(f'vm switch add ixautomation {nic}', shell=True)
-        print("ixautomation switch interface is ready")
+    return nics
 
 
-def ssh_cmd(command, username, passwrd, host):
-    cmd_list = [] if passwrd is None else ["sshpass", "-p", passwrd]
-    cmd_list += [
-        "ssh",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        "-o",
-        "VerifyHostKeyDNS=no",
-        f"{username}@{host}",
-    ]
-    cmd_list += command.split()
-    run(cmd_list)
+def create_ixautomation_bridge(nic):
+    notnics_regex = r"(enc|lo|fwe|fwip|tap|plip|pfsync|pflog|ipfw|tun|sl|" \
+                    r"faith|ppp|bridge|wg|wlan|ix)[0-9]+|vm-[a-z]+"
+    if re.search(notnics_regex, nic):
+        print(f"{nic} is not a supported NIC")
+        exit(1)
+
+    # Make sure to destroy the ixautomation bridge and all taps
+    if "vm-ixautomation" in nics_list():
+        run('ifconfig vm-ixautomation destroy', shell=True)
+    taps_regex = r"tap\d+|vnet\d+"
+    taps_list = re.findall(taps_regex, nics_list())
+    for tap in taps_list:
+        run(f'ifconfig {tap} destroy', shell=True)
+    if os.path.exists('/usr/local/ixautomation/vms/.config/system.conf'):
+        os.remove('/usr/local/ixautomation/vms/.config/system.conf')
+
+    run('vm switch create ixautomation', shell=True)
+    run(f'vm switch add ixautomation {nic}', shell=True)
+    print("ixautomation bridge is ready interface is ready")
 
 
-def get_file(file, destination, username, passwrd, host):
-    cmd = [] if passwrd is None else ["sshpass", "-p", passwrd]
-    cmd += [
-        "scp",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        "-o",
-        "VerifyHostKeyDNS=no",
-        f"{username}@{host}:{file}",
-        destination
-    ]
-    process = run(cmd, stdout=PIPE, universal_newlines=True)
-    output = process.stdout
-    if process.returncode != 0:
-        return {'result': False, 'output': output}
-    else:
-        return {'result': True, 'output': output}
-
-
-def create_workdir():
-    builddir = "/tmp/ixautomation"
-    global vm
-    if vm is None:
-        vm = ''.join(random.choices(string.ascii_uppercase, k=4))
-    global tmp_vm_dir
-    tmp_vm_dir = f'{builddir}/{vm}'
+def create_workdir(vm_name):
+    builddir = '/data/ixautomation'
+    vm_data_dir = f'{builddir}/{vm_name}'
     if not os.path.exists(builddir):
         os.makedirs(builddir)
-    os.makedirs(tmp_vm_dir)
-    return tmp_vm_dir
+    os.makedirs(vm_data_dir)
+    return vm_data_dir
 
 
-def exit_clean(tmp_vm_dir):
+def exit_clean(vm_name):
     print('## iXautomation is stopping! Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    remove_vm(vm_name)
     sys.exit(0)
 
 
-def exit_terminated(arg1, arg2):
-    os.system('reset')
+def exit_terminated(vm_name, signal, frame):
     print('## iXautomation got terminated! Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
-def exit_fail(msg):
-    os.system('reset')
+def exit_fail(msg, vm_name):
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
-def set_sig():
-    signal.signal(signal.SIGTERM, exit_terminated)
-    signal.signal(signal.SIGHUP, exit_terminated)
-    signal.signal(signal.SIGINT, exit_terminated)
+def set_sig(vm_name):
+    signal.signal(signal.SIGTERM, partial(exit_terminated, vm_name))
+    signal.signal(signal.SIGHUP, partial(exit_terminated, vm_name))
+    signal.signal(signal.SIGINT, partial(exit_terminated, vm_name))
 
 
-def start_vm(wrkspc, keep_alive, scale, test_type, profile):
-    create_workdir()
-    set_sig()
-    vm_setup()
-    select_iso = vm_select_iso(tmp_vm_dir, vm, wrkspc, profile)
-    version = select_iso.partition('_')[0]
-    install = vm_install(tmp_vm_dir, vm, wrkspc)
-    if install is False:
-        exit_fail('iXautomation stop on installation failure!')
-    vm_info = vm_boot(tmp_vm_dir, vm, test_type, wrkspc, version,
-                      keep_alive)
-    return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
+def start_vm(vm_name, profile):
+    try:
+        # WORKSPACE is from Jenkins
+        workspace = os.environ["WORKSPACE"]
+    except KeyError:
+        workspace = os.getcwd()
 
-
-def start_automation(wrkspc, ipnc, test_type, keep_alive,
-                     server_ip, scale, vm_name, dev_test, debug_mode, profile):
-    global vm
-    vm = vm_name
-    # if ipnc is None start a vm
-    if ipnc is None:
-        # create ixautomation interface for bhyve.
-        create_ixautomation_interface()
-        vm_info = start_vm(wrkspc, keep_alive, scale,
-                           test_type, profile)
-        ip = vm_info['ip']
-        netcard = vm_info['netcard']
+    if not os.path.exists(f'{workspace}/tests/install.exp'):
+        print('tests/install.exp not found make sure you are in a checked out '
+              'middleware repo or webui repo when running!')
+        exit(1)
+    os.chdir(workspace)
+    vm_data_dir = create_workdir(vm_name)
+    set_sig(vm_name)
+    select_iso = vm_select_iso(workspace)
+    iso_path = select_iso['iso-path']
+    version = select_iso['iso-version']
+    if system() == 'FreeBSD':
+        xml_template = setup_bhyve_install_template(vm_name, iso_path, vm_data_dir)
+        bhyve_create_disks(vm_name)
+        installed = bhyve_install_vm(vm_data_dir, vm_name, xml_template)
+        if installed is False:
+            exit_fail('iXautomation stop on installation failure!', vm_name)
+        xml_template = setup_bhyve_first_boot_template(vm_name, vm_data_dir)
+        bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version)
+    elif system() == 'Linux':
+        # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
+        if profile == 'kvm_scale':
+            xml_template = setup_kvm_install_template(vm_name, vm_data_dir, profile)
+        else:
+            xml_template = setup_kvm_template(vm_name, vm_data_dir, profile)
+        kvm_create_disks(vm_name, profile)
+        kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile)
+        if profile == 'kvm_scale':
+            xml_template = setup_kvm_boot_template(vm_name, vm_data_dir, profile)
+        kvm_boot_vm(vm_data_dir, vm_name, xml_template, version)
     else:
-        ipnclist = ipnc.split(":")
-        ip = ipnclist[0]
-        netcard = 'vtnet0' if len(ipnclist) == 1 else ipnclist[1]
-    if test_type == 'api-tests':
-        api_tests(wrkspc, ip, netcard, server_ip, scale,
-                  dev_test, debug_mode)
-
-    if keep_alive is False and ipnc is None:
-        exit_clean(tmp_vm_dir)
-
-
-def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test,
-              debug_mode):
-    # scale can be replace with enp0s in netcard
-    verbose = ' -v' if scale else ''
-    test_path = f"{wrkspc}/tests"
-    cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name " \
-        f"{vm}{dev_test}{debug_mode}{verbose}"
-    if os.path.exists(ixautomation_config):
-        copyfile(ixautomation_config, f"{test_path}/config.py")
-    os.chdir(test_path)
-    run(cmd, shell=True)
-    os.chdir(wrkspc)
+        print(f'{system()} is not supported with iXautomation')
+        exit(1)
 
 
 def destroy_all_vm():
     print('Stop all VM')
-    vm_stop_all()
-    print("Removing all VM's files and all ISO's")
-    clean_all_vm()
+    remove_all_vm()
     sys.exit(0)
 
 
 def destroy_stopped_vm():
     print('Stop all VM not running')
-    vm_destroy_stopped_vm()
+    remove_stopped_vm()
     sys.exit(0)
 
 
-def destroy_vm(vm):
-    print(f'Poweroff and destroy {vm} VM')
-    vm_destroy(vm)
-    print(f'Removing {vm} VM files and {vm} ISO')
-    clean_vm(vm)
+def destroy_vm(vm_name):
+    print(f'Removing {vm_name} VM files and {vm_name} ISO')
+    remove_vm(vm_name)
     sys.exit(0)
 
 

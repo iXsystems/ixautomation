@@ -1,9 +1,4 @@
 expect
-firefox
-firefox-geckodriver
-python3-pip
+libvirt-clients
+libvirt-daemon-system
 qemu-system
-samba
-smbclient
-sshpass
-xvfb

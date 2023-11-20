@@ -1,9 +1,9 @@
 bhyve-firmware
 dnsmasq
 expect
-firefox
-geckodriver
+libvirt
 py39-pip
+py39-virtualenv
 samba412
 sshpass
 vm-bhyve

@@ -3,15 +3,18 @@
 import os
 import re
 import sys
+from platform import system
 from subprocess import run, Popen, PIPE
 from time import sleep
 
 
-def vm_setup():
-    run("vm init", shell=True)
+if system() == 'FreeBSD':
+    os.environ['VIRSH_DEFAULT_CONNECT_URI'] = 'bhyve:///system'
+else:
+    pass
 
 
-def vm_select_iso(tmp_vm_dir, vm, workspace, profile):
+def vm_select_iso(workspace):
     iso_dir = f"{workspace}/tests/iso/"
     if not os.path.isdir(iso_dir):
         os.makedirs(iso_dir)
@@ -48,172 +51,258 @@ def vm_select_iso(tmp_vm_dir, vm, workspace, profile):
                     raise ValueError
             except ValueError:
                 print("Invalid selection..")
-    name_iso = iso_name.replace('.iso', '').partition('_')[0]
-    new_iso = f"{name_iso}_{vm}.iso"
-    os.chdir(iso_dir)
-    os.rename(iso_name, new_iso)
-    os.chdir(workspace)
-    iso_file = iso_dir + new_iso
+    iso_file = iso_dir + iso_name
     iso_path = iso_file.replace("(", r"\(").replace(")", r"\)")
-    run(f"vm iso {iso_path}", shell=True)
-    run(f"vm create -t {profile} {vm}", shell=True)
-    run(f"vm install {vm} {new_iso}", shell=True)
-    return new_iso
+    return {'iso-path': iso_path, 'iso-version': iso_name.replace('.iso', '')}
 
 
-def vm_start(vm):
-    run(f"vm start {vm}", shell=True)
-    sleep(2)
+def setup_bhyve_install_template(vm_name, iso_path, vm_data_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml').read()
+    new_template = re.sub('nas_name', vm_name, template)
+    install_template = re.sub('iso_path', iso_path, new_template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(install_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
-def vm_stop(vm):
-    run(f"yes | vm poweroff {vm}", shell=True)
-    wait_text = f"Waitting for vm {vm} to stop "
-    print(wait_text, end='', flush=True)
-    while True:
-        if not os.path.exists(f"dev/vmm/{vm}"):
-            print('.')
-            break
-        elif vm in os.listdir(f"/dev/vmm/{vm}"):
-            print('.', end='', flush=True)
-        sleep(1)
-    print(f"vm {vm} successfully stop")
-    sleep(2)
+def setup_bhyve_first_boot_template(vm_name, vm_data_dir):
+    template = open('/usr/local/ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
-def vm_install(tmp_vm_dir, vm, workspace):
-    testworkspace = f'{workspace}/tests'
-    # Get console device for newly created vm
+def bhyve_create_disks(vm_name):
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk0.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk1.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk2.img', shell=True)
+    run(f'truncate -s 20G /data/ixautomation/{vm_name}/disk3.img', shell=True)
+
+
+def bhyve_install_vm(vm_data_dir, vm_name, xml_template):
+    run(f'virsh define {xml_template}', shell=True)
     sleep(1)
-    vm_output = f"/tmp/{vm}console.log"
-    # change workspace to test directory
-    os.chdir(testworkspace)
-    # Run our expect/tcl script to automate the installation dialog
-    expctcmd = f'expect install.exp "{vm}" "{vm_output}"'
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    vm_output = f"{vm_data_dir}/console.log"
+    expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
     process = run(expctcmd, shell=True, close_fds=True)
     # console_file = open(vm_output, 'r')
     if process.returncode == 0:
-        os.system('reset')
-        os.system('clear')
-        os.chdir(workspace)
-        print("TrueNAS installation successfully completed")
-        vm_stop(vm)
+        print('\nTrueNAS installation successfully completed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
         return True
     else:
-        print("\nTrueNAS installation failed")
+        print('\nTrueNAS installation failed')
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive):
-    vm_start(vm)
-    testworkspace = f'{workspace}/tests'
-    sleep(3)
+def bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version):
+    run(f'virsh undefine {vm_name}', shell=True)
+    sleep(1)
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
     # change workspace to test directory
-    os.chdir(testworkspace)
     # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
-    vm_output = f"/tmp/{vm}console.log"
-    expectcnd = f'expect boot.exp "{vm}" "{vm_output}"'
+    vm_output = f"{vm_data_dir}/console.log"
+    expectcnd = f'expect tests/boot.exp "{vm_name}" "{vm_output}"'
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
     # Reset/clear to get native term dimensions
-    os.system('reset')
-    os.system('clear')
-    os.chdir(workspace)
     try:
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]
     except AttributeError:
-        if keep_alive:
-            exit_and_keep_vm('Failed to get an IP!', vm)
-        else:
-            exit_vm_fail('Failed to get an IP!', vm)
-    try:
-        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
-    except AttributeError:
-        if keep_alive:
-            exit_and_keep_vm('Failed to get a network interface!', vm)
-        else:
-            exit_vm_fail('Failed to get a network interface!', vm)
-    print(f"TrueNAS_IP={vmip}")
-    print(f"TrueNAS_VM_NAME={vm}")
+        exit_vm_fail('Failed to get an IP!', vm_name)
+    # try:
+    #     vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
+    # except AttributeError:
+    #     exit_vm_fail('Failed to get a network interface!', vm_name)
+    print(f"\n\nTrueNAS_IP={vmip}")
+    print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
-    print(f"TrueNAS_NIC={vmnic}")
+    # print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
-    nas_config += f"nic = {vmnic}\n"
-    if 'webui' in test_type:
-        file = open(f'{testworkspace}/bdd/config.cfg', 'w')
+    # nas_config += f"nic = {vmnic}\n"
+    if os.path.exists('tests/bdd'):
+        file = open('tests/bdd/config.cfg', 'w')
     else:
-        file = open(f'{testworkspace}/config.cfg', 'w')
+        file = open('tests/config.cfg', 'w')
     file.writelines(nas_config)
     file.close()
-    return {'ip': vmip, 'nic': vmnic}
+    # return {'ip': vmip, 'nic': vmnic}
 
 
-def exit_and_keep_vm(msg, vm):
-    print(f'## {msg}', f'\nVM name: {vm}')
-    sys.exit(1)
+def setup_kvm_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
 
 
-def exit_vm_fail(msg, vm):
+def setup_kvm_install_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}_install.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
+
+
+def setup_kvm_boot_template(vm_name, vm_data_dir, profile):
+    template = open(f'/usr/local/ixautomation/vms/.templates/{profile}_boot.xml').read()
+    boot_template = re.sub('nas_name', vm_name, template)
+    save_template = open(f'{vm_data_dir}/{vm_name}.xml', 'w')
+    save_template.writelines(boot_template)
+    save_template.close()
+    return f'{vm_data_dir}/{vm_name}.xml'
+
+
+def kvm_create_disks(vm_name, profile):
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
+    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
+    if profile == 'kvm_scale':
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk7.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk11.qcow2 20G', shell=True)
+        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk12.qcow2 20G', shell=True)
+
+
+def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
+    cdrom = 'sdb' if profile == 'kvm_scale' else 'sde'
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh change-media {vm_name} {cdrom} {iso_path}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    vm_output = f"{vm_data_dir}/console.log"
+    expctcmd = f'expect tests/install.exp "{vm_name}" "{vm_output}"'
+    process = run(expctcmd, shell=True, close_fds=True)
+    if process.returncode == 0:
+        print('\nTrueNAS installation successfully completed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
+        run(f'virsh change-media {vm_name} {cdrom} --eject', shell=True)
+        sleep(1)
+        return True
+    else:
+        print('\nTrueNAS installation failed')
+        run(f'virsh destroy {vm_name}', shell=True)
+        sleep(1)
+        run(f'virsh change-media {vm_name} {cdrom} --eject', shell=True)
+        sleep(1)
+        return False
+
+
+def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
+    run(f'virsh undefine --nvram {vm_name}', shell=True)
+    sleep(1)
+    run(f'virsh define {xml_template}', shell=True)
+    sleep(1)
+    run(f'virsh start {vm_name}', shell=True)
+    sleep(1)
+    # change workspace to test directory
+    # COM_LISTEN = `cat ${vm_dir}/${vm}/console | cut -d/ -f3`
+    vm_output = f"{vm_data_dir}/console.log"
+    expectcnd = f'expect tests/boot.exp "{vm_name}" "{vm_output}"'
+    run(expectcnd, shell=True)
+    console_file = open(vm_output, 'r').read()
+    # Reset/clear to get native term dimensions
+    try:
+        url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
+        vmip = url.group().strip().partition('//')[2]
+    except AttributeError:
+        exit_vm_fail('Failed to get an IP!', vm_name)
+    # try:
+    #     vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
+    # except AttributeError:
+    #     exit_vm_fail('Failed to get a network interface!', vm_name)
+    print(f"\n\nTrueNAS_IP={vmip}")
+    print(f"TrueNAS_VM_NAME={vm_name}")
+    print(f"TrueNAS_VERSION={version}")
+    # print(f"TrueNAS_NIC={vmnic}")
+    nas_config = "[NAS_CONFIG]\n"
+    nas_config += f"ip = {vmip}\n"
+    nas_config += "password = testing\n"
+    nas_config += f"version = {version}\n"
+    # nas_config += f"nic = {vmnic}\n"
+    if os.path.exists('tests/bdd'):
+        file = open('tests/bdd/config.cfg', 'w')
+    else:
+        file = open('tests/config.cfg', 'w')
+    file.writelines(nas_config)
+    file.close()
+    # return {'ip': vmip, 'nic': vmnic}
+
+
+def exit_vm_fail(msg, vm_name):
     print(f'## {msg} Clean up time!')
-    vm_destroy(vm)
-    clean_vm(vm)
+    remove_vm(vm_name)
     sys.exit(1)
 
 
-def vm_destroy(vm_name):
-    run(f"yes | vm poweroff {vm_name}", shell=True)
+def remove_vm(vm_name):
+    run(f'virsh destroy {vm_name}', shell=True)
     sleep(1)
-    run(f"vm destroy -f {vm_name}", shell=True)
-    sleep(1)
-    run(f'bhyvectl --destroy --vm={vm_name}', shell=True)
-    sleep(1)
-    run(f'rm -rf /usr/vms/{vm_name}', shell=True)
-    sleep(1)
-    run(f"rm -rf /dev/vmm/{vm_name}", shell=True)
-    sleep(1)
-    run(f"rm -rf /dev/vmm.io/{vm_name}.bootrom", shell=True)
-
-
-def clean_vm(vm):
-    # Remove vm directory only
-    vm_dir = f"/usr/local/ixautomation/vms/{vm}"
+    if system() == 'FreeBSD':
+        run(f'virsh undefine {vm_name}', shell=True)
+        sleep(1)
+    else:
+        run(f'virsh undefine --nvram {vm_name}', shell=True)
+        sleep(1)
+    vm_dir = f"/data/ixautomation/{vm_name}"
     run(f"rm -rf {vm_dir}", shell=True)
-    # Remove vm iso
-    iso_dir = f"/usr/local/ixautomation/vms/.iso/*{vm}.iso"
-    run(f"rm -rf {iso_dir}", shell=True)
-    run(f"rm -rf /tmp/{vm}console.log", shell=True)
-    run(f"rm -rf /tmp/ixautomation/{vm}", shell=True)
 
 
-def vm_stop_all():
-    run("vm stopall", shell=True)
-
-
-def clean_all_vm():
-    # Remove all vm directory only
-    vm_dir = "/usr/local/ixautomation/vms/*"
-    run(f"rm -rf {vm_dir}", shell=True)
-    # Remove all iso
-    iso_dir = "/usr/local/ixautomation/vms/.iso/*"
-    run(f"rm -rf {iso_dir}", shell=True)
-    run("rm -rf /tmp/*console.log", shell=True)
-    run("rm -rf /tmp/ixautomation/*", shell=True)
-    run("rm -rf /dev/vmm/*", shell=True)
-    run("rm -rf /dev/vmm.io/*", shell=True)
-
-
-def vm_destroy_stopped_vm():
-    cmd = "vm list"
+def remove_all_vm():
+    cmd = "virsh list --all"
     vm_list = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
     new_vmlist = vm_list.stdout.read()
     for line in new_vmlist.splitlines():
-        vm_info = line.split()
-        state = vm_info[7]
-        vm_name = vm_info[0]
-        if state == 'Stopped':
-            print(f'Removing {vm_name} VM files and {vm_name} ISO')
-            clean_vm(vm_name)
+        if 'shut off' in line or 'running' in line:
+            vm_info = line.strip().split()
+            vm_name = vm_info[1]
+            print(f'Removing {vm_name} VM files')
+            run(f'virsh destroy {vm_name}', shell=True)
+            sleep(1)
+            run(f'virsh undefine {vm_name}', shell=True)
+            sleep(1)
+            run(f'virsh undefine --nvram {vm_name}', shell=True)
+    for vm_name in os.listdir('/data/ixautomation'):
+        vm_dir = f"/data/ixautomation/{vm_name}"
+        run(f"rm -rf {vm_dir}", shell=True)
+
+
+def remove_stopped_vm():
+    cmd = "virsh list --inactive"
+    vm_list = Popen(cmd, shell=True, stdout=PIPE, universal_newlines=True)
+    new_vmlist = vm_list.stdout.read()
+    for line in new_vmlist.splitlines():
+        if 'shut off' in line:
+            vm_info = line.strip().split()
+            vm_name = vm_info[1]
+            print(f'Removing {vm_name} VM files')
+            run(f'virsh undefine {vm_name}', shell=True)
+            sleep(1)
+            run(f'virsh undefine --nvram {vm_name}', shell=True)
+            vm_dir = f"/data/ixautomation/{vm_name}"
+            run(f"rm -rf {vm_dir}", shell=True)
