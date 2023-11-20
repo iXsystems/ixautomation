@@ -28,6 +28,8 @@ dot_templates_list = [
     'ixautomation/vms/.templates/bhyve_truenas_hdd_boot.xml',
     'ixautomation/vms/.templates/bhyve_truenas_iso_boot.xml',
     'ixautomation/vms/.templates/kvm_scale.xml',
+    'ixautomation/vms/.templates/kvm_scale_boot.xml',
+    'ixautomation/vms/.templates/kvm_scale_install.xml',
     'ixautomation/vms/.templates/kvm_truenas.xml'
 ]
 
