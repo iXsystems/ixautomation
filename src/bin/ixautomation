@@ -86,7 +86,7 @@ except getopt.GetoptError as e:
 # Crete a default vm name
 random_uppercase = ''.join(random.choices(string.ascii_uppercase, k=5))
 vm_name = f'TrueNAS-{random_uppercase}'
-profile = 'kvm_truenas' if system() == 'Linux' else 'bhyve_truenas'
+profile = 'kvm_scale' if system() == 'Linux' else 'bhyve_truenas'
 
 for output, arg in myopts:
     if output == '--run':
