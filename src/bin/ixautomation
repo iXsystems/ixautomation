@@ -5,7 +5,7 @@ import sys
 import getpass
 import getopt
 import re
-sys.path.append("tmpixauto")
+sys.path.append("tmpixauto/lib/ixautomation")
 # Source our functions
 from functions import start_automation, destroy_all_vm, destroy_vm, reset_vm
 from functions import destroy_stopped_vm, create_ixautomation_interface
