@@ -127,29 +127,21 @@ def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive):
             exit_and_keep_vm('Failed to get an IP!', vm)
         else:
             exit_vm_fail('Failed to get an IP!', vm)
-    try:
-        vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
-    except AttributeError:
-        if keep_alive:
-            exit_and_keep_vm('Failed to get a network interface!', vm)
-        else:
-            exit_vm_fail('Failed to get a network interface!', vm)
+
     print(f"TrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm}")
     print(f"TrueNAS_VERSION={version}")
-    print(f"TrueNAS_NIC={vmnic}")
     nas_config = "[NAS_CONFIG]\n"
     nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
-    nas_config += f"nic = {vmnic}\n"
     if 'webui' in test_type:
         file = open(f'{testworkspace}/bdd/config.cfg', 'w')
     else:
         file = open(f'{testworkspace}/config.cfg', 'w')
     file.writelines(nas_config)
     file.close()
-    return {'ip': vmip, 'nic': vmnic}
+    return {'ip': vmip, 'nic': None}
 
 
 def exit_and_keep_vm(msg, vm):

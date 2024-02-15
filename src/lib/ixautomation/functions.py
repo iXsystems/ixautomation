@@ -206,7 +206,7 @@ def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test,
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
     cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name " \
+        f"--password testing --vm-name " \
         f"{vm}{dev_test}{debug_mode}{verbose}"
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
