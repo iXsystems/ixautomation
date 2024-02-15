@@ -172,7 +172,7 @@ def start_vm(wrkspc, keep_alive, scale, test_type, profile):
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
     vm_info = vm_boot(tmp_vm_dir, vm, test_type, wrkspc, version,
-                      keep_alive)
+                      keep_alive, scale)
     return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 
@@ -205,9 +205,14 @@ def api_tests(wrkspc, ip, netcard, server_ip, scale, dev_test,
     # scale can be replace with enp0s in netcard
     verbose = ' -v' if scale else ''
     test_path = f"{wrkspc}/tests"
-    cmd = f"python3 runtest.py --ip {ip} " \
-        f"--password testing --interface {netcard} --vm-name " \
-        f"{vm}{dev_test}{debug_mode}{verbose}"
+    if netcard is None:
+        cmd = f"python3 runtest.py --ip {ip} " \
+            f"--password testing --vm-name " \
+            f"{vm}{dev_test}{debug_mode}{verbose}"
+    else:
+        cmd = f"python3 runtest.py --ip {ip} " \
+            f"--password testing --interface {netcard} --vm-name " \
+            f"{vm}{dev_test}{debug_mode}{verbose}"
     if os.path.exists(ixautomation_config):
         copyfile(ixautomation_config, f"{test_path}/config.py")
     os.chdir(test_path)
