@@ -172,7 +172,7 @@ def start_vm(wrkspc, keep_alive, scale, test_type, profile):
     if install is False:
         exit_fail('iXautomation stop on installation failure!')
     vm_info = vm_boot(tmp_vm_dir, vm, test_type, wrkspc, version,
-                      keep_alive)
+                      keep_alive, scale)
     return {'ip': vm_info['ip'], 'netcard': vm_info['nic'], 'iso': select_iso}
 
 

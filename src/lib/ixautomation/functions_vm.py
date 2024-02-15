@@ -104,7 +104,7 @@ def vm_install(tmp_vm_dir, vm, workspace):
         return False
 
 
-def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive):
+def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive, scale):
     vm_start(vm)
     testworkspace = f'{workspace}/tests'
     sleep(3)
@@ -130,7 +130,9 @@ def vm_boot(tmp_vm_dir, vm, test_type, workspace, version, keep_alive):
     try:
         vmnic = re.search(r'(em|vtnet|enp0s)[0-9]+', console_file).group()
     except AttributeError:
-        if keep_alive:
+        if scale:
+            vmnic = None
+        elif keep_alive:
             exit_and_keep_vm('Failed to get a network interface!', vm)
         else:
             exit_vm_fail('Failed to get a network interface!', vm)
