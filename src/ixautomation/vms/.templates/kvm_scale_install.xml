@@ -6,8 +6,8 @@
       <libosinfo:os id="http://debian.org/debian/11"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit='KiB'>8388608</memory>
-  <currentMemory unit='KiB'>8388608</currentMemory>
+  <memory unit='GiB'>16</memory>
+  <currentMemory unit='GiB'>16</currentMemory>
   <vcpu placement='static'>4</vcpu>
   <resource>
     <partition>/machine</partition>
@@ -200,9 +200,7 @@
     <input type='keyboard' bus='ps2'>
       <alias name='input2'/>
     </input>
-    <graphics type='spice' port='5900' autoport='yes' listen='127.0.0.1'>
-      <listen type='address' address='127.0.0.1'/>
-    </graphics>
+    <graphics type='vnc' port='-1' autoport='yes' keymap='en-us'/>
     <sound model='ich9'>
       <alias name='sound0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x1b' function='0x0'/>
