@@ -227,31 +227,30 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
     run(expectcnd, shell=True)
     console_file = open(vm_output, 'r').read()
     # Reset/clear to get native term dimensions
+    nas_config = "[NAS_CONFIG]\n"
     try:
         url = re.search(r'http://[0-9]+.[0-9]+.[0-9]+.[0-9]+', console_file)
         vmip = url.group().strip().partition('//')[2]
+        print(f"\n\nTrueNAS_IP={vmip}")
+        nas_config += f"ip = {vmip}\n"
     except AttributeError:
         exit_vm_fail('Failed to get an IP!', vm_name)
-    # try:
-    #     vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
-    # except AttributeError:
-    #     exit_vm_fail('Failed to get a network interface!', vm_name)
-    print(f"\n\nTrueNAS_IP={vmip}")
     print(f"TrueNAS_VM_NAME={vm_name}")
     print(f"TrueNAS_VERSION={version}")
-    # print(f"TrueNAS_NIC={vmnic}")
-    nas_config = "[NAS_CONFIG]\n"
-    nas_config += f"ip = {vmip}\n"
     nas_config += "password = testing\n"
     nas_config += f"version = {version}\n"
-    # nas_config += f"nic = {vmnic}\n"
+    try:
+        vmnic = re.search(r'(vtnet|enp0s|enp1s)[0-9]+', console_file).group()
+        print(f"TrueNAS_NIC={vmnic}")
+        nas_config += f"nic = {vmnic}\n"
+    except AttributeError:
+        pass
     if os.path.exists('tests/bdd'):
         file = open('tests/bdd/config.cfg', 'w')
     else:
         file = open('tests/config.cfg', 'w')
     file.writelines(nas_config)
     file.close()
-    # return {'ip': vmip, 'nic': vmnic}
 
 
 def exit_vm_fail(msg, vm_name):
