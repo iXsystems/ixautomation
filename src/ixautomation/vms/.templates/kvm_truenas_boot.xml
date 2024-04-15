@@ -75,6 +75,15 @@
       <alias name='scsi0-0-0-3'/>
       <address type='drive' controller='0' bus='0' target='0' unit='3'/>
     </disk>
+        <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk4.qcow2' index='5'/>
+      <backingStore/>
+      <target dev='sde' bus='scsi'/>
+      <serial>PCJUT7EX</serial>
+      <alias name='scsi0-0-0-4'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='4'/>
+    </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
       <alias name='usb'/>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
@@ -201,11 +210,6 @@
       <alias name='channel0'/>
       <address type='virtio-serial' controller='0' bus='0' port='1'/>
     </channel>
-    <channel type='spicevmc'>
-      <target type='virtio' name='com.redhat.spice.0' state='disconnected'/>
-      <alias name='channel1'/>
-      <address type='virtio-serial' controller='0' bus='0' port='2'/>
-    </channel>
     <input type='tablet' bus='usb'>
       <alias name='input0'/>
       <address type='usb' bus='0' port='1'/>
@@ -226,14 +230,6 @@
       <alias name='video0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0'/>
     </video>
-    <redirdev bus='usb' type='spicevmc'>
-      <alias name='redir0'/>
-      <address type='usb' bus='0' port='2'/>
-    </redirdev>
-    <redirdev bus='usb' type='spicevmc'>
-      <alias name='redir1'/>
-      <address type='usb' bus='0' port='3'/>
-    </redirdev>
     <memballoon model='virtio'>
       <alias name='balloon0'/>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
