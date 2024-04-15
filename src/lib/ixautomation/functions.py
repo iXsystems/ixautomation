@@ -123,15 +123,10 @@ def start_vm(vm_name, profile):
         xml_template = setup_bhyve_first_boot_template(vm_name, vm_data_dir)
         bhyve_boot_vm(vm_data_dir, vm_name, xml_template, version)
     elif system() == 'Linux':
-        # os.environ['VIRSH_DEFAULT_CONNECT_URI'] = ''
-        if profile == 'kvm_scale':
-            xml_template = setup_kvm_install_template(vm_name, vm_data_dir, profile)
-        else:
-            xml_template = setup_kvm_template(vm_name, vm_data_dir, profile)
+        xml_template = setup_kvm_install_template(vm_name, vm_data_dir, profile)
         kvm_create_disks(vm_name, profile)
         kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile)
-        if profile == 'kvm_scale':
-            xml_template = setup_kvm_boot_template(vm_name, vm_data_dir, profile)
+        xml_template = setup_kvm_boot_template(vm_name, vm_data_dir, profile)
         kvm_boot_vm(vm_data_dir, vm_name, xml_template, version)
     else:
         print(f'{system()} is not supported with iXautomation')
