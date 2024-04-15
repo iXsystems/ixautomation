@@ -79,17 +79,16 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk4.qcow2' index='5'/>
       <backingStore/>
-      <target dev='sde' bus='scsi'/>
+      <target dev='sdf' bus='scsi'/>
       <serial>PCJUT7EX</serial>
-      <alias name='scsi0-0-0-4'/>
-      <address type='drive' controller='0' bus='0' target='0' unit='4'/>
+      <alias name='scsi0-0-0-5'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='5'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source index='5'/>
       <target dev='sde' bus='scsi'/>
       <readonly/>
-      <serial></serial>
       <boot order='1'/>
       <alias name='scsi0-0-0-4'/>
       <address type='drive' controller='0' bus='0' target='0' unit='4'/>

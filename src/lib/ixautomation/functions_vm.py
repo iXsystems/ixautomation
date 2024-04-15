@@ -175,7 +175,6 @@ def kvm_create_disks(vm_name, profile):
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
     run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 20G', shell=True)
     if profile == 'kvm_scale':
         run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 20G', shell=True)
         run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 20G', shell=True)
