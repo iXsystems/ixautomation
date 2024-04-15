@@ -30,6 +30,8 @@ dot_templates_list = [
     'ixautomation/vms/.templates/kvm_scale.xml',
     'ixautomation/vms/.templates/kvm_scale_boot.xml',
     'ixautomation/vms/.templates/kvm_scale_install.xml',
+    'ixautomation/vms/.templates/kvm_truenas_boot.xml',
+    'ixautomation/vms/.templates/kvm_truenas_install.xml',
     'ixautomation/vms/.templates/kvm_truenas.xml'
 ]
 
