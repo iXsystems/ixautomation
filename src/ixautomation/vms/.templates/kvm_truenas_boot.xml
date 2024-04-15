@@ -75,6 +75,15 @@
       <alias name='scsi0-0-0-3'/>
       <address type='drive' controller='0' bus='0' target='0' unit='3'/>
     </disk>
+        <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk4.qcow2' index='5'/>
+      <backingStore/>
+      <target dev='sde' bus='scsi'/>
+      <serial>PCJUT7EX</serial>
+      <alias name='scsi0-0-0-4'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='4'/>
+    </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
       <alias name='usb'/>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
