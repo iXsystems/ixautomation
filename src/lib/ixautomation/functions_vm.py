@@ -244,7 +244,9 @@ def kvm_boot_vm(vm_data_dir, vm_name, xml_template, version):
         print(f"TrueNAS_NIC={vmnic}")
         nas_config += f"nic = {vmnic}\n"
     except AttributeError:
-        pass
+        # send default value if not found
+        vmnic = 'enp1s0'
+        nas_config += f"nic = {vmnic}\n"
     if os.path.exists('tests/bdd'):
         file = open('tests/bdd/config.cfg', 'w')
     else:
