@@ -170,20 +170,27 @@ def setup_kvm_boot_template(vm_name, vm_data_dir, profile):
 
 
 def kvm_create_disks(vm_name, profile):
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk0.qcow2 16G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk1.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk2.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk3.qcow2 20G', shell=True)
-    run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk4.qcow2 20G', shell=True)
+    run(
+        f'qemu-img create -f qcow2 -O qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk0.qcow2 16G',
+        shell=True
+    )
+    disk_num = 12 if profile == 'kvm_scale' else 5
+    for num in range(1,disk_num):
+        run(
+            f'qemu-img create -f qcow2 -O qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 20G',
+            shell=True
+        )
     if profile == 'kvm_scale':
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk5.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk6.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk7.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk8.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk9.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk10.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk11.qcow2 20G', shell=True)
-        run(f'qemu-img create -f qcow2 /data/ixautomation/{vm_name}/disk12.qcow2 20G', shell=True)
+        for num in range(13, 15):
+            run(
+                f'qemu-img create -f qcow2 -O qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 25G',
+                shell=True
+            )
+        for num in range(15, 17):
+            run(
+                f'qemu-img create -f qcow2 -O qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 15G',
+                shell=True
+            )
 
 
 def kvm_install_vm(vm_data_dir, vm_name, xml_template, iso_path, profile):
