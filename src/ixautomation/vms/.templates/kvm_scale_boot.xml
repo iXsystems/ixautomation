@@ -161,7 +161,7 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk13.qcow2' index='14'/>
       <backingStore/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sdo' bus='scsi'/>
       <serial>PCJUA13X</serial>
       <alias name='scsi0-0-0-13'/>
       <address type='drive' controller='0' bus='0' target='0' unit='13'/>
@@ -170,7 +170,7 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk14.qcow2' index='15'/>
       <backingStore/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sdp' bus='scsi'/>
       <serial>PCJUA14X</serial>
       <alias name='scsi0-0-0-14'/>
       <address type='drive' controller='0' bus='0' target='0' unit='14'/>
@@ -179,7 +179,7 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk15.qcow2' index='16'/>
       <backingStore/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sdq' bus='scsi'/>
       <serial>PCJUA15X</serial>
       <alias name='scsi0-0-0-15'/>
       <address type='drive' controller='0' bus='0' target='0' unit='15'/>
@@ -188,7 +188,7 @@
       <driver name='qemu' type='qcow2'/>
       <source file='/data/ixautomation/nas_name/disk16.qcow2' index='17'/>
       <backingStore/>
-      <target dev='sdn' bus='scsi'/>
+      <target dev='sdr' bus='scsi'/>
       <serial>PCJUA16X</serial>
       <alias name='scsi0-0-0-16'/>
       <address type='drive' controller='0' bus='0' target='0' unit='16'/>
