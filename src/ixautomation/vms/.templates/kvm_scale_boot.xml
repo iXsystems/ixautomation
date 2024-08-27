@@ -202,6 +202,60 @@
       <alias name='scsi0-0-0-17'/>
       <address type='drive' controller='0' bus='0' target='0' unit='17'/>
     </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk18.qcow2' index='19'/>
+      <backingStore/>
+      <target dev='sdt' bus='scsi'/>
+      <serial>PCJUA18X</serial>
+      <alias name='scsi0-0-0-18'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='18'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk19.qcow2' index='20'/>
+      <backingStore/>
+      <target dev='sdu' bus='scsi'/>
+      <serial>PCJUA19X</serial>
+      <alias name='scsi0-0-0-19'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='19'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk20.qcow2' index='21'/>
+      <backingStore/>
+      <target dev='sdv' bus='scsi'/>
+      <serial>PCJUA20X</serial>
+      <alias name='scsi0-0-0-20'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='20'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk21.qcow2' index='22'/>
+      <backingStore/>
+      <target dev='sdw' bus='scsi'/>
+      <serial>PCJUA21X</serial>
+      <alias name='scsi0-0-0-21'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='21'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk22.qcow2' index='23'/>
+      <backingStore/>
+      <target dev='sdx' bus='scsi'/>
+      <serial>PCJUA22X</serial>
+      <alias name='scsi0-0-0-22'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='22'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/data/ixautomation/nas_name/disk23.qcow2' index='24'/>
+      <backingStore/>
+      <target dev='sdy' bus='scsi'/>
+      <serial>PCJUA23X</serial>
+      <alias name='scsi0-0-0-23'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='23'/>
+    </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
       <alias name='usb'/>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
