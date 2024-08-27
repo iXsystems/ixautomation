@@ -174,24 +174,24 @@ def kvm_create_disks(vm_name, profile):
         f'qemu-img create -f qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk0.qcow2 16G',
         shell=True
     )
-    disk_num = 19 if profile == 'kvm_scale' else 5
+    disk_num = 13 if profile == 'kvm_scale' else 5
     for num in range(1, disk_num):
         run(
             f'qemu-img create -f qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 20G',
             shell=True
         )
     if profile == 'kvm_scale':
-        for num in range(19, 21):
+        for num in range(13, 15):
             run(
                 f'qemu-img create -f qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 25G',
                 shell=True
             )
-        for num in range(21, 23):
+        for num in range(15, 17):
             run(
                 f'qemu-img create -f qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 15G',
                 shell=True
             )
-        for num in range(23, 24):
+        for num in range(17, 18):
             run(
                 f'qemu-img create -f qcow2 -o preallocation=off /data/ixautomation/{vm_name}/disk{num}.qcow2 17G',
                 shell=True
